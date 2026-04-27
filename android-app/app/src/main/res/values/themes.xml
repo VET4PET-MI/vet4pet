@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.VET4PET" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.VET4PET" parent="Theme.Material3.DayNight.NoActionBar" />
+
+    <style name="ShapeAppearanceOverlay.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>

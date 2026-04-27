@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="age_years">
+        <item quantity="one">%d yr</item>
+        <item quantity="other">%d yrs</item>
+    </plurals>
+    <plurals name="age_months">
+        <item quantity="one">%d mo</item>
+        <item quantity="other">%d mo</item>
+    </plurals>
+</resources>

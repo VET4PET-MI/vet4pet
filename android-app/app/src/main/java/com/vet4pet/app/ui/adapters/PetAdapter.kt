@@ -1,0 +1,74 @@
+package com.vet4pet.app.ui.adapters
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.vet4pet.app.R
+import com.vet4pet.app.data.enums.Gender
+import com.vet4pet.app.data.models.Pet
+import java.time.Instant
+import java.time.LocalDate
+import java.time.Period
+import java.time.ZoneId
+
+class PetAdapter(
+    private val onItemClick: (Pet) -> Unit
+) : ListAdapter<Pet, PetAdapter.ViewHolder>(DiffCallback) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_pet, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.bind(getItem(position))
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val tvName: TextView = itemView.findViewById(R.id.tv_pet_name)
+        private val tvBreed: TextView = itemView.findViewById(R.id.tv_pet_breed)
+        private val tvGender: TextView = itemView.findViewById(R.id.tv_pet_gender)
+        private val tvAge: TextView = itemView.findViewById(R.id.tv_pet_age)
+
+        fun bind(pet: Pet) {
+            tvName.text = pet.name
+            tvBreed.text = pet.breed?.takeIf { it.isNotBlank() } ?: pet.species
+            tvGender.text = itemView.context.getString(pet.gender.toLabelRes())
+            tvAge.text = pet.dateOfBirth?.let { formatAge(it) }
+                ?: itemView.context.getString(R.string.age_unknown)
+            itemView.setOnClickListener { onItemClick(pet) }
+        }
+
+        private fun formatAge(epochMs: Long): String {
+            val dob = Instant.ofEpochMilli(epochMs)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+            val period = Period.between(dob, LocalDate.now())
+            return when {
+                period.years > 0 -> itemView.context.resources
+                    .getQuantityString(R.plurals.age_years, period.years, period.years)
+                period.months > 0 -> itemView.context.resources
+                    .getQuantityString(R.plurals.age_months, period.months, period.months)
+                else -> itemView.context.getString(R.string.age_less_than_one_month)
+            }
+        }
+    }
+
+    private companion object {
+        val DiffCallback = object : DiffUtil.ItemCallback<Pet>() {
+            override fun areItemsTheSame(old: Pet, new: Pet) = old.id == new.id
+            override fun areContentsTheSame(old: Pet, new: Pet) = old == new
+        }
+    }
+}
+
+private fun Gender.toLabelRes(): Int = when (this) {
+    Gender.MALE -> R.string.gender_male
+    Gender.FEMALE -> R.string.gender_female
+    Gender.UNKNOWN -> R.string.gender_unknown
+}
