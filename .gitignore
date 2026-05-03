@@ -1,0 +1,17 @@
+# IDE
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Claude Code internal state
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploaded files (runtime artefacts, not source)
+backend/uploads/
