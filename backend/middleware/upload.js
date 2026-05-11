@@ -1,16 +1,28 @@
-const multer = require('multer');
-const path   = require('path');
-const crypto = require('crypto');
+const multer              = require('multer');
+const path                = require('path');
+const { v2: cloudinary }  = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const ALLOWED_EXT  = /\.(pdf|jpg|jpeg|png|gif|webp)$/i;
 const ALLOWED_MIME = /^(application\/pdf|image\/(jpeg|png|gif|webp))$/;
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '../uploads')),
-  filename:    (req, file, cb) => {
-    const ext    = path.extname(file.originalname).toLowerCase();
-    const unique = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}`;
-    cb(null, unique + ext);
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    const ext     = path.extname(file.originalname).toLowerCase().replace('.', '');
+    const isPdf   = file.mimetype === 'application/pdf';
+    return {
+      folder:        'vet4pet',
+      resource_type: isPdf ? 'raw' : 'image',
+      format:        ext,
+      public_id:     `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    };
   },
 });
 

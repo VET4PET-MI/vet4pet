@@ -43,7 +43,7 @@ function formatBytes(b) {
 // ─── FileAttachment ───────────────────────────────────────────────────────────
 
 function FileAttachment({ fileUrl, originalFileName }) {
-  const href = `${API_BASE}${fileUrl}`
+  const href = /^https?:\/\//i.test(fileUrl) ? fileUrl : `${API_BASE}${fileUrl}`
   const name = originalFileName || fileUrl.split('/').pop()
 
   if (isImage(fileUrl)) {

@@ -4,12 +4,12 @@ import { PawPrint, Eye, EyeOff, Loader2 } from 'lucide-react'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 
-export default function Login() {
+export default function Register() {
   const { login } = useAuth()
   const navigate  = useNavigate()
 
-  const [tab, setTab]         = useState('vet')
-  const [form, setForm]       = useState({ email: '', password: '' })
+  const [tab, setTab]         = useState('owner')
+  const [form, setForm]       = useState({ name: '', email: '', password: '', confirm: '' })
   const [showPw, setShowPw]   = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState(null)
@@ -21,16 +21,23 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault()
+    if (form.password !== form.confirm) {
+      setError('Passwords do not match.')
+      return
+    }
+    if (form.password.length < 6) {
+      setError('Password must be at least 6 characters.')
+      return
+    }
     setLoading(true)
     setError(null)
     try {
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', form)
-      if (data.user.role !== tab) {
-        const expected = data.user.role === 'vet' ? 'Veterinarian' : 'Pet Owner'
-        setError(`This account is registered as a ${expected}. Please switch to the ${expected} tab.`)
-        setLoading(false)
-        return
-      }
+      const { data } = await axios.post('http://localhost:5000/api/auth/register', {
+        name:     form.name,
+        email:    form.email,
+        password: form.password,
+        role:     tab,
+      })
       login(data.user, data.token)
       navigate('/', { replace: true })
     } catch (err) {
@@ -52,10 +59,13 @@ export default function Login() {
             <PawPrint className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-wide">VET 4 PET</h1>
-          <p className="text-slate-400 text-sm mt-1">Veterinary Portal</p>
+          <p className="text-slate-400 text-sm mt-1">Create your account</p>
         </div>
 
         {/* Role tab */}
+        <p className="text-center text-slate-300 text-sm font-medium mb-2">
+          I am registering as:
+        </p>
         <div className="flex rounded-2xl border border-slate-700 overflow-hidden mb-6 bg-slate-800/50">
           {[
             { id: 'vet',   label: 'Veterinarian' },
@@ -80,15 +90,31 @@ export default function Login() {
         {/* Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-8">
           <h2 className="text-xl font-bold text-slate-800 mb-1">
-            {isVet ? 'Welcome back, Doctor' : 'Welcome back'}
+            {isVet ? 'Join as a veterinarian' : 'Join as a pet owner'}
           </h2>
           <p className="text-slate-400 text-sm mb-7">
             {isVet
-              ? 'Sign in to access your patient dashboard.'
-              : 'Sign in to manage your pets and appointments.'}
+              ? 'Create an account to manage your patients.'
+              : 'Create an account to book and track appointments.'}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Full name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder={isVet ? 'Dr. Jane Smith' : 'Jane Smith'}
+                required
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
+            </div>
+
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
@@ -116,8 +142,9 @@ export default function Login() {
                   name="password"
                   value={form.password}
                   onChange={handleChange}
-                  placeholder="••••••••"
+                  placeholder="At least 6 characters"
                   required
+                  minLength={6}
                   className="w-full px-4 py-3 pr-12 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                 />
                 <button
@@ -128,6 +155,23 @@ export default function Login() {
                   {showPw ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+            </div>
+
+            {/* Confirm password */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Confirm password
+              </label>
+              <input
+                type={showPw ? 'text' : 'password'}
+                name="confirm"
+                value={form.confirm}
+                onChange={handleChange}
+                placeholder="Repeat password"
+                required
+                minLength={6}
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              />
             </div>
 
             {/* Error */}
@@ -144,22 +188,16 @@ export default function Login() {
               className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? 'Signing in…' : 'Sign In'}
+              {loading ? 'Creating account…' : 'Create Account'}
             </button>
           </form>
         </div>
 
         <p className="text-center text-slate-400 text-sm mt-6">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-medium">
-            Sign up
+          Already have an account?{' '}
+          <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-medium">
+            Sign in
           </Link>
-        </p>
-
-        <p className="text-center text-slate-500 text-xs mt-2">
-          {isVet
-            ? 'Vet account access is managed by your clinic administrator.'
-            : <>Test credentials: <span className="text-indigo-400 font-medium">owner@test.com / owner123</span></>}
         </p>
       </div>
     </div>
