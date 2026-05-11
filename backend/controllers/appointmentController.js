@@ -1,7 +1,7 @@
-const Appointment   = require('../models/Appointment');
-const VetSchedule   = require('../models/VetSchedule');
-const TimeBlock     = require('../models/TimeBlock');
-const Message       = require('../models/Message');
+const Appointment = require('../models/Appointment');
+const VetSchedule = require('../models/VetSchedule');
+const TimeBlock   = require('../models/TimeBlock');
+const Message     = require('../models/Message');
 
 function makeConvId(a, b) { return [a, b].sort().join('::'); }
 
@@ -26,76 +26,100 @@ function dayBounds(dateStr) {
 // ── Controllers ────────────────────────────────────────────────────────────────
 
 async function getAppointments(req, res) {
-  const { date, status } = req.query;
-  const filter = {};
-  if (date) {
-    const { start, end } = dayBounds(date);
-    filter.date = { $gte: start, $lte: end };
+  try {
+    const { date, status } = req.query;
+    const filter = {};
+    if (date) {
+      const { start, end } = dayBounds(date);
+      filter.date = { $gte: start, $lte: end };
+    }
+    if (status) filter.status = status;
+    if (req.user.role === 'owner') filter.ownerId = req.user.id;
+    const appointments = await Appointment.find(filter).sort({ time: 1 });
+    res.json(appointments);
+  } catch (err) {
+    console.error('[Appointment] getAppointments error:', err.message);
+    res.status(500).json({ message: err.message });
   }
-  if (status) filter.status = status;
-  // Owners can only see their own appointments
-  if (req.user.role === 'owner') filter.ownerId = req.user.id;
-  const appointments = await Appointment.find(filter).sort({ time: 1 });
-  res.json(appointments);
 }
 
 async function getAppointmentById(req, res) {
-  const appt = await Appointment.findById(req.params.id);
-  if (!appt) return res.status(404).json({ message: 'Appointment not found.' });
-  res.json(appt);
+  try {
+    const appt = await Appointment.findById(req.params.id);
+    if (!appt) return res.status(404).json({ message: 'Appointment not found.' });
+    res.json(appt);
+  } catch (err) {
+    console.error('[Appointment] getAppointmentById error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
 }
 
 async function createAppointment(req, res) {
-  const payload = { ...req.body };
-  if (req.user.role === 'vet') {
-    payload.vetId   = req.user.id;
-    payload.vetName = payload.vetName || req.user.name;
-  } else {
-    // Owner booking: ownerId comes from token, vetId must be in body
-    payload.ownerId   = req.user.id;
-    payload.ownerName = payload.ownerName || req.user.name;
+  try {
+    const payload = { ...req.body };
+    if (req.user.role === 'vet') {
+      payload.vetId   = req.user.id;
+      payload.vetName = payload.vetName || req.user.name;
+    } else {
+      payload.ownerId   = req.user.id;
+      payload.ownerName = payload.ownerName || req.user.name;
+    }
+    const appt = await Appointment.create(payload);
+    console.log('[Appointment] created:', appt._id);
+    res.status(201).json(appt);
+  } catch (err) {
+    console.error('[Appointment] createAppointment error:', err.message);
+    res.status(500).json({ message: err.message });
   }
-  const appt = await Appointment.create(payload);
-  res.status(201).json(appt);
 }
 
 async function updateAppointment(req, res) {
-  const appt = await Appointment.findByIdAndUpdate(req.params.id, req.body, {
-    new: true, runValidators: true,
-  });
-  if (!appt) return res.status(404).json({ message: 'Appointment not found.' });
-  res.json(appt);
+  try {
+    const appt = await Appointment.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, runValidators: true,
+    });
+    if (!appt) return res.status(404).json({ message: 'Appointment not found.' });
+    res.json(appt);
+  } catch (err) {
+    console.error('[Appointment] updateAppointment error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
 }
 
 async function cancelAppointment(req, res) {
-  const appt = await Appointment.findById(req.params.id);
-  if (!appt) return res.status(404).json({ message: 'Appointment not found.' });
-  if (req.user.role === 'owner' && appt.ownerId !== req.user.id) {
-    return res.status(403).json({ message: 'Forbidden.' });
-  }
-  appt.status = 'cancelled';
-  await appt.save();
-
-  // Auto-notify the owner when a vet cancels
-  if (req.user.role === 'vet' && appt.ownerId) {
-    try {
-      const dateStr = new Date(appt.date).toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric',
-      });
-      await Message.create({
-        conversationId: makeConvId(req.user.id, appt.ownerId),
-        senderId:       req.user.id,
-        senderName:     req.user.name || 'Your Vet',
-        receiverId:     appt.ownerId,
-        receiverName:   appt.ownerName || 'Pet Owner',
-        content: `Your appointment on ${dateStr} at ${appt.time} has been cancelled by the clinic. Please contact us to reschedule.`,
-      });
-    } catch (msgErr) {
-      console.error('[Appointment] Failed to send cancellation notification:', msgErr.message);
+  try {
+    const appt = await Appointment.findById(req.params.id);
+    if (!appt) return res.status(404).json({ message: 'Appointment not found.' });
+    if (req.user.role === 'owner' && appt.ownerId !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden.' });
     }
-  }
+    appt.status = 'cancelled';
+    await appt.save();
 
-  res.json(appt);
+    // Auto-notify the owner when a vet cancels
+    if (req.user.role === 'vet' && appt.ownerId) {
+      try {
+        const dateStr = new Date(appt.date).toLocaleDateString('en-US', {
+          weekday: 'long', month: 'long', day: 'numeric',
+        });
+        await Message.create({
+          conversationId: makeConvId(req.user.id, appt.ownerId),
+          senderId:       req.user.id,
+          senderName:     req.user.name || 'Your Vet',
+          receiverId:     appt.ownerId,
+          receiverName:   appt.ownerName || 'Pet Owner',
+          content: `Your appointment on ${dateStr} at ${appt.time} has been cancelled by the clinic. Please contact us to reschedule.`,
+        });
+      } catch (msgErr) {
+        console.error('[Appointment] Failed to send cancellation notification:', msgErr.message);
+      }
+    }
+
+    res.json(appt);
+  } catch (err) {
+    console.error('[Appointment] cancelAppointment error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
 }
 
 // ── getAvailableSlots ──────────────────────────────────────────────────────────
@@ -104,58 +128,56 @@ async function cancelAppointment(req, res) {
 // Overlap condition: cur < apptEnd AND slotEnd > apptStart
 //
 async function getAvailableSlots(req, res) {
-  const { date, duration = '30', vetId } = req.query;
-  if (!date) return res.status(400).json({ message: 'date query param is required (YYYY-MM-DD).' });
+  try {
+    const { date, duration = '30', vetId } = req.query;
+    if (!date) return res.status(400).json({ message: 'date query param is required (YYYY-MM-DD).' });
 
-  const slotDuration = Math.max(15, parseInt(duration, 10));
+    const slotDuration = Math.max(15, parseInt(duration, 10));
 
-  // Load vet schedule if vetId provided
-  const schedule = vetId ? await VetSchedule.findOne({ vetId }) : null;
-  const WORK_START  = timeToMins(schedule?.workStart ?? '08:00');
-  const WORK_END    = timeToMins(schedule?.workEnd   ?? '18:00');
-  const workingDays = schedule?.workingDays ?? [1, 2, 3, 4, 5];
+    const schedule    = vetId ? await VetSchedule.findOne({ vetId }) : null;
+    const WORK_START  = timeToMins(schedule?.workStart ?? '08:00');
+    const WORK_END    = timeToMins(schedule?.workEnd   ?? '18:00');
+    const workingDays = schedule?.workingDays ?? [1, 2, 3, 4, 5];
 
-  // Check if the requested date is a working day
-  const requestedDay = new Date(date + 'T12:00:00Z').getDay(); // use noon UTC to avoid TZ edge cases
-  if (!workingDays.includes(requestedDay)) {
-    return res.json({ date, duration: slotDuration, slots: [] });
+    const requestedDay = new Date(date + 'T12:00:00Z').getDay();
+    if (!workingDays.includes(requestedDay)) {
+      return res.json({ date, duration: slotDuration, slots: [] });
+    }
+
+    const { start, end } = dayBounds(date);
+    const bookedFilter = {
+      date:   { $gte: start, $lte: end },
+      status: { $nin: ['cancelled'] },
+    };
+    if (vetId) bookedFilter.vetId = vetId;
+    const booked     = await Appointment.find(bookedFilter).select('time duration');
+    const timeBlocks = vetId ? await TimeBlock.find({ vetId, date }).select('startTime endTime') : [];
+
+    const STEP = 30;
+    const slots = [];
+    let cur = WORK_START;
+
+    while (cur + slotDuration <= WORK_END) {
+      const slotEnd = cur + slotDuration;
+      const overlapsAppt = booked.some(appt => {
+        const aStart = timeToMins(appt.time);
+        const aEnd   = aStart + appt.duration;
+        return cur < aEnd && slotEnd > aStart;
+      });
+      const overlapsBlock = timeBlocks.some(b => {
+        const bStart = timeToMins(b.startTime);
+        const bEnd   = timeToMins(b.endTime);
+        return cur < bEnd && slotEnd > bStart;
+      });
+      if (!overlapsAppt && !overlapsBlock) slots.push(minsToTime(cur));
+      cur += STEP;
+    }
+
+    res.json({ date, duration: slotDuration, slots });
+  } catch (err) {
+    console.error('[Appointment] getAvailableSlots error:', err.message);
+    res.status(500).json({ message: err.message });
   }
-
-  const { start, end } = dayBounds(date);
-  const bookedFilter = {
-    date:   { $gte: start, $lte: end },
-    status: { $nin: ['cancelled'] },
-  };
-  if (vetId) bookedFilter.vetId = vetId;
-  const booked = await Appointment.find(bookedFilter).select('time duration');
-
-  // Fetch manual time blocks for this vet + date
-  const timeBlocks = vetId ? await TimeBlock.find({ vetId, date }).select('startTime endTime') : [];
-
-  const STEP = 30;
-  const slots = [];
-  let cur = WORK_START;
-
-  while (cur + slotDuration <= WORK_END) {
-    const slotEnd = cur + slotDuration;
-
-    const overlapsAppt = booked.some(appt => {
-      const aStart = timeToMins(appt.time);
-      const aEnd   = aStart + appt.duration;
-      return cur < aEnd && slotEnd > aStart;
-    });
-
-    const overlapsBlock = timeBlocks.some(b => {
-      const bStart = timeToMins(b.startTime);
-      const bEnd   = timeToMins(b.endTime);
-      return cur < bEnd && slotEnd > bStart;
-    });
-
-    if (!overlapsAppt && !overlapsBlock) slots.push(minsToTime(cur));
-    cur += STEP;
-  }
-
-  res.json({ date, duration: slotDuration, slots });
 }
 
 module.exports = {
