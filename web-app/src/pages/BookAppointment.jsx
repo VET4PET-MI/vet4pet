@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Loader2, Calendar, Clock, Check } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Loader2, Calendar, Clock, Check, Stethoscope, MapPin } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import api from '../api'
 import AppLayout from '../components/AppLayout'
@@ -25,7 +25,12 @@ function todayStr() { return new Date().toISOString().slice(0, 10) }
 
 function Steps({ current }) {
   const { t } = useTranslation()
-  const steps = [t('bookAppointment.step1'), t('bookAppointment.step2'), t('bookAppointment.step3')]
+  const steps = [
+    t('bookAppointment.step1'),
+    t('bookAppointment.step2'),
+    t('bookAppointment.step3'),
+    t('bookAppointment.step4'),
+  ]
   return (
     <div className="flex items-center justify-center gap-0 mb-8">
       {steps.map((label, i) => {
@@ -42,10 +47,10 @@ function Steps({ current }) {
               ].join(' ')}>
                 {done ? <Check className="w-4 h-4" /> : i + 1}
               </div>
-              <span className={`text-xs mt-1 font-medium ${active ? 'text-indigo-600' : 'text-slate-400'}`}>{label}</span>
+              <span className={`text-xs mt-1 font-medium text-center max-w-[5rem] leading-tight ${active ? 'text-indigo-600' : 'text-slate-400'}`}>{label}</span>
             </div>
             {i < steps.length - 1 && (
-              <div className={`w-16 h-0.5 mb-4 mx-1 ${done ? 'bg-indigo-600' : 'bg-slate-200'}`} />
+              <div className={`w-10 h-0.5 mb-4 mx-1 ${done ? 'bg-indigo-600' : 'bg-slate-200'}`} />
             )}
           </div>
         )
@@ -64,7 +69,9 @@ export default function BookAppointment() {
 
   const [step, setStep]         = useState(1)
   const [pets, setPets]         = useState([])
+  const [vets, setVets]         = useState([])
   const [selectedPet, setPet]   = useState(null)
+  const [selectedVet, setVet]   = useState(null)
   const [date, setDate]         = useState(todayStr())
   const [duration, setDuration] = useState(30)
   const [slots, setSlots]       = useState(null)
@@ -78,16 +85,20 @@ export default function BookAppointment() {
 
   useEffect(() => {
     api.get('/api/pets').then(r => setPets(r.data)).catch(() => {})
+    api.get('/api/users/vets').then(r => setVets(r.data)).catch(() => {})
   }, [])
 
   useEffect(() => {
-    if (step !== 2 || !date) return
+    if (step !== 3 || !date) return
     setSL(true); setSlots(null); setSlot(null)
-    api.get(`/api/appointments/available-slots?date=${date}&duration=${duration}`)
+    const params = { date, duration }
+    if (selectedVet?._id) params.vetId = selectedVet._id
+    const qs = new URLSearchParams(params).toString()
+    api.get(`/api/appointments/available-slots?${qs}`)
       .then(r => setSlots(r.data.slots))
       .catch(() => setSlots([]))
       .finally(() => setSL(false))
-  }, [step, date, duration])
+  }, [step, date, duration, selectedVet])
 
   async function handleBook() {
     setLoading(true); setError(null)
@@ -95,6 +106,8 @@ export default function BookAppointment() {
       await api.post('/api/appointments', {
         petId:     selectedPet._id,
         petName:   selectedPet.name,
+        vetId:     selectedVet?._id,
+        vetName:   selectedVet?.name,
         date,
         time:      selectedSlot,
         duration,
@@ -177,10 +190,71 @@ export default function BookAppointment() {
           </div>
         )}
 
-        {/* Step 2: Date + Time */}
+        {/* Step 2: Select Vet */}
         {step === 2 && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <button onClick={() => setStep(1)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors">
+              <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> {t('bookAppointment.back')}
+            </button>
+
+            <h2 className="text-base font-semibold text-slate-800">{t('bookAppointment.whichVet')}</h2>
+
+            {vets.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+                <Stethoscope className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                <p className="font-medium text-slate-600">{t('bookAppointment.noVets')}</p>
+                <p className="text-sm text-slate-400 mt-1">{t('bookAppointment.noVetsHint')}</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {vets.map(vet => {
+                  const isSelected = selectedVet?._id === vet._id
+                  return (
+                    <button
+                      key={vet._id}
+                      onClick={() => setVet(vet)}
+                      className={[
+                        'w-full flex items-center gap-4 px-5 py-4 rounded-2xl border text-start transition-all rtl:flex-row-reverse',
+                        isSelected
+                          ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200'
+                          : 'border-slate-200 bg-white hover:border-indigo-300',
+                      ].join(' ')}
+                    >
+                      <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
+                        <Stethoscope className="w-6 h-6 text-indigo-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-slate-800">{vet.clinicName || vet.name}</p>
+                        {vet.clinicName && vet.name && (
+                          <p className="text-sm text-slate-400">{vet.name}</p>
+                        )}
+                        {vet.address && (
+                          <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                            <MapPin className="w-3 h-3 shrink-0" /> {vet.address}
+                          </p>
+                        )}
+                      </div>
+                      {isSelected && <Check className="w-5 h-5 text-indigo-600 shrink-0" />}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            <button
+              onClick={() => setStep(3)}
+              disabled={!selectedVet}
+              className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+            >
+              {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+            </button>
+          </div>
+        )}
+
+        {/* Step 3: Date + Time */}
+        {step === 3 && (
+          <div className="space-y-6">
+            <button onClick={() => setStep(2)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors">
               <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> {t('bookAppointment.back')}
             </button>
 
@@ -241,7 +315,7 @@ export default function BookAppointment() {
             </div>
 
             <button
-              onClick={() => setStep(3)}
+              onClick={() => setStep(4)}
               disabled={!selectedSlot}
               className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
@@ -250,10 +324,10 @@ export default function BookAppointment() {
           </div>
         )}
 
-        {/* Step 3: Confirm */}
-        {step === 3 && (
+        {/* Step 4: Confirm */}
+        {step === 4 && (
           <div className="space-y-6">
-            <button onClick={() => setStep(2)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors">
+            <button onClick={() => setStep(3)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors">
               <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> {t('bookAppointment.back')}
             </button>
 
@@ -262,6 +336,7 @@ export default function BookAppointment() {
               <div className="space-y-2 text-sm">
                 {[
                   [t('bookAppointment.summaryPet'),      selectedPet?.name],
+                  [t('bookAppointment.summaryVet'),      selectedVet?.name],
                   [t('bookAppointment.summaryDate'),     new Date(date + 'T12:00:00').toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })],
                   [t('bookAppointment.summaryTime'),     selectedSlot],
                   [t('bookAppointment.summaryDuration'), t('bookAppointment.minutes', { n: duration })],

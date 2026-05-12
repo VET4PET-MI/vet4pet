@@ -96,6 +96,17 @@ async function createAppointment(req, res) {
       payload.ownerId   = req.user.id;
       payload.ownerName = payload.ownerName || req.user.name;
     }
+
+    // Reject appointments scheduled in the past
+    if (payload.date && payload.time) {
+      const [h, m] = payload.time.split(':').map(Number);
+      const apptDateTime = new Date(payload.date);
+      apptDateTime.setHours(h, m, 0, 0);
+      if (apptDateTime.getTime() <= Date.now()) {
+        return res.status(400).json({ message: 'Cannot book an appointment in the past.' });
+      }
+    }
+
     const appt = await Appointment.create(payload);
     console.log('[Appointment] created:', appt._id);
 
@@ -218,6 +229,12 @@ async function getAvailableSlots(req, res) {
       return res.json({ date, duration: slotDuration, slots: [] });
     }
 
+    // If the date is today, skip slots that have already started
+    const now = new Date();
+    const todayLocal = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const isToday = date === todayLocal;
+    const currentMins = now.getHours() * 60 + now.getMinutes();
+
     const { start, end } = dayBounds(date);
     const bookedFilter = {
       date:   { $gte: start, $lte: end },
@@ -233,6 +250,7 @@ async function getAvailableSlots(req, res) {
 
     while (cur + slotDuration <= WORK_END) {
       const slotEnd = cur + slotDuration;
+      const isPast = isToday && cur <= currentMins;
       const overlapsAppt = booked.some(appt => {
         const aStart = timeToMins(appt.time);
         const aEnd   = aStart + appt.duration;
@@ -243,7 +261,7 @@ async function getAvailableSlots(req, res) {
         const bEnd   = timeToMins(b.endTime);
         return cur < bEnd && slotEnd > bStart;
       });
-      if (!overlapsAppt && !overlapsBlock) slots.push(minsToTime(cur));
+      if (!isPast && !overlapsAppt && !overlapsBlock) slots.push(minsToTime(cur));
       cur += STEP;
     }
 

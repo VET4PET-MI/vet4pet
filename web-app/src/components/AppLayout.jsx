@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   PawPrint, LayoutDashboard, Calendar, MessageSquare,
-  Video, Settings, Menu, X, LogOut,
+  Video, Settings, Menu, X, LogOut, Siren,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
@@ -29,11 +29,12 @@ export default function AppLayout({ title, subtitle, actions, children }) {
   ]
 
   const OWNER_NAV = [
-    { icon: LayoutDashboard, label: t('nav.home'),          path: '/' },
-    { icon: PawPrint,        label: t('nav.myPets'),        path: '/my-pets' },
-    { icon: Calendar,        label: t('nav.appointments'),  path: '/my-appointments' },
-    { icon: MessageSquare,   label: t('nav.messages'),      path: '/messages' },
-    { icon: Video,           label: t('nav.consultations'), path: '/consultations' },
+    { icon: LayoutDashboard, label: t('nav.home'),           path: '/' },
+    { icon: PawPrint,        label: t('nav.myPets'),         path: '/my-pets' },
+    { icon: Calendar,        label: t('nav.appointments'),   path: '/my-appointments' },
+    { icon: MessageSquare,   label: t('nav.messages'),       path: '/messages' },
+    { icon: Video,           label: t('nav.consultations'),  path: '/consultations' },
+    { icon: Siren,           label: t('emergency.navLabel'), path: '/emergency' },
   ]
 
   const NAV = isOwner ? OWNER_NAV : VET_NAV

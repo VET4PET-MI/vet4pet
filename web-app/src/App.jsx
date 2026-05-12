@@ -12,6 +12,7 @@ import Settings         from './pages/Settings'
 import OwnerMyPets      from './pages/OwnerMyPets'
 import OwnerAppointments from './pages/OwnerAppointments'
 import BookAppointment  from './pages/BookAppointment'
+import EmergencyVets    from './pages/EmergencyVets'
 
 // Requires a logged-in user of any role
 function ProtectedRoute({ children }) {
@@ -54,6 +55,7 @@ export default function App() {
       <Route path="/my-pets" element={<RoleRoute role="owner"><OwnerMyPets /></RoleRoute>} />
       <Route path="/my-appointments" element={<RoleRoute role="owner"><OwnerAppointments /></RoleRoute>} />
       <Route path="/book-appointment" element={<RoleRoute role="owner"><BookAppointment /></RoleRoute>} />
+      <Route path="/emergency" element={<RoleRoute role="owner"><EmergencyVets /></RoleRoute>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
