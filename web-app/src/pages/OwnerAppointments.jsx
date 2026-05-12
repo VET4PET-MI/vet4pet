@@ -104,21 +104,21 @@ export default function OwnerAppointments() {
       subtitle={t('ownerAppointments.subtitle')}
       actions={
         <button onClick={() => navigate('/book-appointment')}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+          className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
           <Plus className="w-4 h-4" /> {t('ownerAppointments.bookAppointment')}
         </button>
       }
     >
       <div className="max-w-3xl mx-auto px-6 py-6 space-y-8">
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-indigo-400" /></div>
+          <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
         ) : appts.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
             <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-4" />
             <p className="font-semibold text-slate-600">{t('ownerAppointments.noTitle')}</p>
             <p className="text-sm text-slate-400 mt-1 mb-6">{t('ownerAppointments.noHint')}</p>
             <button onClick={() => navigate('/book-appointment')}
-              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors">
+              className="px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-xl transition-colors">
               {t('ownerAppointments.bookNow')}
             </button>
           </div>
@@ -127,7 +127,7 @@ export default function OwnerAppointments() {
             {upcoming.length > 0 && (
               <section className="space-y-3">
                 <h2 className="text-base font-semibold text-slate-800 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-indigo-500" /> {t('ownerAppointments.upcoming', { count: upcoming.length })}
+                  <AlertCircle className="w-4 h-4 text-violet-500" /> {t('ownerAppointments.upcoming', { count: upcoming.length })}
                 </h2>
                 {upcoming.map(a => <ApptCard key={a._id} appt={a} />)}
               </section>

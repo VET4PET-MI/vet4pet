@@ -62,7 +62,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
   const greeting = title ?? t(isOwner ? 'nav.greetingOwner' : 'nav.greetingVet', { name: firstName })
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex h-screen bg-[#F3EEFB] overflow-hidden">
 
       {/* Mobile overlay */}
       {open && (
@@ -71,21 +71,21 @@ export default function AppLayout({ title, subtitle, actions, children }) {
 
       {/* ── Sidebar ────────────────────────────────────────────────────── */}
       <aside className={[
-        'fixed top-0 left-0 h-full w-64 bg-slate-900 z-30 flex flex-col transition-transform duration-300',
+        'fixed top-0 left-0 h-full w-64 bg-white border-e border-slate-200 z-30 flex flex-col transition-transform duration-300',
         open ? 'translate-x-0' : '-translate-x-full',
         'lg:static lg:translate-x-0',
       ].join(' ')}>
 
         {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-700 shrink-0 rtl:flex-row-reverse">
-          <div className="w-9 h-9 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg shrink-0">
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-100 shrink-0 rtl:flex-row-reverse">
+          <div className="w-9 h-9 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
             <PawPrint className="w-5 h-5 text-white" />
           </div>
           <div className="min-w-0 flex-1 rtl:text-right">
-            <p className="text-white font-bold text-sm tracking-wide">VET 4 PET</p>
+            <p className="text-slate-800 font-bold text-sm tracking-wide">VET4PET</p>
             <p className="text-slate-400 text-xs">{portalLabel}</p>
           </div>
-          <button onClick={() => setOpen(false)} className="ms-auto text-slate-400 hover:text-white lg:hidden">
+          <button onClick={() => setOpen(false)} className="ms-auto text-slate-400 hover:text-slate-600 lg:hidden">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -102,10 +102,10 @@ export default function AppLayout({ title, subtitle, actions, children }) {
                 key={path}
                 onClick={() => go(path)}
                 className={[
-                  'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-start rtl:flex-row-reverse',
+                  'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors text-start rtl:flex-row-reverse',
                   isActive(path)
-                    ? 'bg-indigo-600 text-white shadow'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white',
+                    ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white shadow-md'
+                    : 'text-slate-600 hover:bg-violet-50 hover:text-violet-700',
                 ].join(' ')}
               >
                 <Icon size={18} className="shrink-0" />
@@ -114,8 +114,10 @@ export default function AppLayout({ title, subtitle, actions, children }) {
                   <span className={[
                     'text-xs rounded-full font-bold shrink-0 leading-none',
                     path === '/consultations'
-                      ? 'text-red-400 animate-pulse'
-                      : 'bg-indigo-500 text-white px-1.5 py-0.5 min-w-[1.25rem] text-center',
+                      ? 'text-red-500 animate-pulse'
+                      : isActive(path)
+                        ? 'bg-white/25 text-white px-1.5 py-0.5 min-w-[1.25rem] text-center'
+                        : 'bg-violet-500 text-white px-1.5 py-0.5 min-w-[1.25rem] text-center',
                   ].join(' ')}>
                     {badge}
                   </span>
@@ -126,13 +128,13 @@ export default function AppLayout({ title, subtitle, actions, children }) {
         </nav>
 
         {/* User badge + logout */}
-        <div className="p-4 border-t border-slate-700 shrink-0 space-y-2">
+        <div className="p-4 border-t border-slate-100 shrink-0 space-y-2">
           <div className="flex items-center gap-3 rtl:flex-row-reverse">
-            <div className="w-9 h-9 bg-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0">
+            <div className="w-9 h-9 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-sm">
               {user?.name?.slice(0, 2).toUpperCase() ?? 'ME'}
             </div>
             <div className="min-w-0 flex-1 rtl:text-right">
-              <p className="text-white text-sm font-semibold truncate">{user?.name ?? t('nav.fallbackUser')}</p>
+              <p className="text-slate-800 text-sm font-semibold truncate">{user?.name ?? t('nav.fallbackUser')}</p>
               <p className="text-slate-400 text-xs">
                 {user?.role === 'vet' ? t('nav.roleVet')
                   : user?.role === 'owner' ? t('nav.roleOwner')
@@ -142,7 +144,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-colors text-start rtl:flex-row-reverse"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors text-start rtl:flex-row-reverse"
           >
             <LogOut size={16} /> {t('auth.signOut')}
           </button>

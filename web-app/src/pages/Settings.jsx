@@ -70,7 +70,7 @@ function VetClinicSection() {
   if (loading) {
     return (
       <div className="bg-white rounded-2xl border border-slate-200 p-6 flex justify-center">
-        <Loader2 className="w-5 h-5 animate-spin text-indigo-400" />
+        <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
       </div>
     )
   }
@@ -88,50 +88,50 @@ function VetClinicSection() {
           <label className="block text-xs font-medium text-slate-600 mb-1.5">{t('emergency.vetSettings.clinicName')}</label>
           <input value={form.clinicName} onChange={e => set('clinicName', e.target.value)}
             placeholder={t('emergency.vetSettings.clinicNamePh')}
-            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-slate-600 mb-1.5">{t('emergency.vetSettings.address')}</label>
           <input value={form.address} onChange={e => set('address', e.target.value)}
             placeholder={t('emergency.vetSettings.addressPh')}
-            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-slate-600 mb-1.5">{t('emergency.vetSettings.phone')}</label>
           <input type="tel" value={form.phone} onChange={e => set('phone', e.target.value)}
             placeholder={t('emergency.vetSettings.phonePh')}
-            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="block text-xs font-medium text-slate-600">{t('emergency.vetSettings.location')}</label>
             <button type="button" onClick={useCurrentLocation} disabled={locating}
-              className="flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-800 disabled:opacity-50">
+              className="flex items-center gap-1 text-xs font-medium text-violet-600 hover:text-violet-800 disabled:opacity-50">
               {locating ? <Loader2 className="w-3 h-3 animate-spin" /> : <MapPin className="w-3 h-3" />}
               {t('emergency.vetSettings.useCurrentLocation')}
             </button>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <input value={form.lat} onChange={e => set('lat', e.target.value)} placeholder={t('emergency.vetSettings.lat')} type="number" step="any"
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
             <input value={form.lng} onChange={e => set('lng', e.target.value)} placeholder={t('emergency.vetSettings.lng')} type="number" step="any"
-              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
           </div>
         </div>
 
         <label className="flex items-center gap-2 cursor-pointer select-none rtl:flex-row-reverse">
           <input type="checkbox" checked={form.isOnCall} onChange={e => set('isOnCall', e.target.checked)}
-            className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500" />
+            className="w-4 h-4 rounded text-violet-600 focus:ring-violet-500" />
           <span className="text-sm text-slate-700">{t('emergency.vetSettings.onCallToggle')}</span>
         </label>
 
         {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
 
         <button type="submit" disabled={saving}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+          className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
           {saving  ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('emergency.vetSettings.saving')}</>
            : saved ? <><Check className="w-4 h-4" /> {t('emergency.vetSettings.saved')}</>
            : <><Save className="w-4 h-4" /> {t('emergency.vetSettings.save')}</>}
@@ -151,7 +151,7 @@ export default function Settings() {
   const isHe = i18n.language?.startsWith('he')
   const roleLabel = user?.role === 'vet' ? t('auth.vetTab') : t('auth.ownerTab')
   const roleColor = user?.role === 'vet'
-    ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+    ? 'bg-violet-50 text-violet-700 border-violet-200'
     : 'bg-emerald-50 text-emerald-700 border-emerald-200'
 
   return (
@@ -161,7 +161,7 @@ export default function Settings() {
         {/* Profile card */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6">
           <div className="flex items-center gap-4 mb-6 rtl:flex-row-reverse rtl:text-right">
-            <div className="w-14 h-14 bg-indigo-500 rounded-2xl flex items-center justify-center text-white text-xl font-bold shadow-md">
+            <div className="w-14 h-14 bg-violet-500 rounded-2xl flex items-center justify-center text-white text-xl font-bold shadow-md">
               {user?.name?.slice(0, 2).toUpperCase() ?? 'ME'}
             </div>
             <div>
@@ -196,8 +196,8 @@ export default function Settings() {
             {t('settings.language')}
           </p>
           <div className="px-5 py-4 flex items-center gap-3 rtl:flex-row-reverse rtl:text-right">
-            <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-              <Languages className="w-5 h-5 text-indigo-600" />
+            <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center shrink-0">
+              <Languages className="w-5 h-5 text-violet-600" />
             </div>
             <div className="flex-1 min-w-0 rtl:text-right">
               <p className="text-sm font-semibold text-slate-800">{t('settings.languageDesc')}</p>
@@ -206,14 +206,14 @@ export default function Settings() {
               <button
                 type="button"
                 onClick={() => i18n.changeLanguage('he')}
-                className={`px-3 py-1.5 transition-colors ${isHe ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                className={`px-3 py-1.5 transition-colors ${isHe ? 'bg-violet-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 עברית
               </button>
               <button
                 type="button"
                 onClick={() => i18n.changeLanguage('en')}
-                className={`px-3 py-1.5 transition-colors ${!isHe ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                className={`px-3 py-1.5 transition-colors ${!isHe ? 'bg-violet-600 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 English
               </button>
@@ -234,8 +234,8 @@ export default function Settings() {
               onClick={() => navigate('/vet-schedule-settings')}
               className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-start rtl:flex-row-reverse"
             >
-              <div className="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-                <Calendar className="w-5 h-5 text-indigo-600" />
+              <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center shrink-0">
+                <Calendar className="w-5 h-5 text-violet-600" />
               </div>
               <div className="flex-1 min-w-0 rtl:text-right">
                 <p className="text-sm font-semibold text-slate-800">{t('settings.availability')}</p>

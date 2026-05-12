@@ -45,7 +45,7 @@ function FileAttachment({ fileUrl, originalFileName }) {
         </a>
         <div className="flex gap-4 mt-2">
           <a href={href} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
+            className="flex items-center gap-1.5 text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors">
             <ExternalLink className="w-3.5 h-3.5" /> {t('petProfile.viewFullSize')}
           </a>
           <a href={href} download={name}
@@ -64,7 +64,7 @@ function FileAttachment({ fileUrl, originalFileName }) {
       </div>
       <span className="flex-1 min-w-0 text-sm text-slate-700 font-medium truncate">{name}</span>
       <a href={href} target="_blank" rel="noopener noreferrer"
-        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs font-medium rounded-lg transition-colors">
+        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-violet-50 text-violet-600 hover:bg-violet-100 text-xs font-medium rounded-lg transition-colors">
         <ExternalLink className="w-3.5 h-3.5" /> {t('petProfile.view')}
       </a>
       <a href={href} download={name}
@@ -114,7 +114,7 @@ function RecordCard({ record }) {
               {isLong && (
                 <button
                   onClick={() => setExpanded(e => !e)}
-                  className="mt-1.5 flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
+                  className="mt-1.5 flex items-center gap-1 text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors"
                 >
                   {expanded
                     ? <><ChevronUp className="w-3.5 h-3.5" /> {t('petProfile.showLess')}</>
@@ -181,8 +181,8 @@ function DropZone({ file, onFile, onRemove }) {
       className={[
         'border-2 border-dashed rounded-xl p-6 text-center cursor-pointer select-none transition-colors',
         dragging
-          ? 'border-indigo-400 bg-indigo-50'
-          : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50',
+          ? 'border-violet-400 bg-violet-50'
+          : 'border-slate-200 hover:border-violet-300 hover:bg-slate-50',
       ].join(' ')}
     >
       <Upload className="w-6 h-6 text-slate-400 mx-auto mb-2" />
@@ -297,7 +297,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                   type="date"
                   value={form.date}
                   onChange={e => set('date', e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
                 />
               </div>
               <div>
@@ -307,7 +307,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                   value={form.vetName}
                   onChange={e => set('vetName', e.target.value)}
                   placeholder={t('petProfile.vetNamePh')}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
                 />
               </div>
             </div>
@@ -319,7 +319,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                 onChange={e => set('findings', e.target.value)}
                 placeholder={t('petProfile.findingsPh')}
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition resize-none"
               />
             </div>
 
@@ -339,7 +339,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                 </div>
                 <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-indigo-500 rounded-full transition-all duration-200"
+                    className="h-full bg-violet-500 rounded-full transition-all duration-200"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -364,7 +364,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
             >
               {submitting
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.saving')}</>
@@ -420,17 +420,17 @@ export default function PetProfile({ readOnly = false }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      <div className="min-h-screen bg-[#F3EEFB] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
       </div>
     )
   }
 
   if (error || !pet) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-3 p-4">
+      <div className="min-h-screen bg-[#F3EEFB] flex flex-col items-center justify-center gap-3 p-4">
         <p className="text-red-600 font-medium">{error ?? t('petProfile.petNotFound')}</p>
-        <button onClick={() => navigate('/')} className="text-sm text-indigo-600 hover:underline">
+        <button onClick={() => navigate('/')} className="text-sm text-violet-600 hover:underline">
           {t('petProfile.backDashboard')}
         </button>
       </div>
@@ -440,7 +440,7 @@ export default function PetProfile({ readOnly = false }) {
   const emoji = SPECIES_EMOJI[pet.species?.toLowerCase()] ?? '🐾'
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#F3EEFB]">
 
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
@@ -456,7 +456,7 @@ export default function PetProfile({ readOnly = false }) {
           {!readOnly && (
             <button
               onClick={() => setModal(true)}
-              className="ms-auto flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm shrink-0 rtl:flex-row-reverse"
+              className="ms-auto flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm shrink-0 rtl:flex-row-reverse"
             >
               <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
             </button>
@@ -467,7 +467,7 @@ export default function PetProfile({ readOnly = false }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
         <div className="bg-white rounded-3xl border border-slate-200 p-6 flex items-center gap-5 rtl:flex-row-reverse rtl:text-right">
-          <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center text-4xl shrink-0 shadow-sm">
+          <div className="w-20 h-20 bg-gradient-to-br from-violet-100 to-violet-50 rounded-2xl flex items-center justify-center text-4xl shrink-0 shadow-sm">
             {emoji}
           </div>
 
@@ -512,7 +512,7 @@ export default function PetProfile({ readOnly = false }) {
               {!readOnly && (
                 <button
                   onClick={() => setModal(true)}
-                  className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="px-5 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors"
                 >
                   {t('petProfile.addFirstRecord')}
                 </button>

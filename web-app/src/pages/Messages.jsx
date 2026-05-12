@@ -21,7 +21,7 @@ function useFormatTime() {
 function Avatar({ name, size = 'md' }) {
   const sz = size === 'sm' ? 'w-8 h-8 text-xs' : 'w-9 h-9 text-sm'
   return (
-    <div className={`${sz} bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold shrink-0`}>
+    <div className={`${sz} bg-violet-100 rounded-full flex items-center justify-center text-violet-700 font-bold shrink-0`}>
       {(name?.[0] ?? '?').toUpperCase()}
     </div>
   )
@@ -62,24 +62,24 @@ function ComposeModal({ onClose, onSent }) {
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.recipientId')}</label>
             <input value={toId} onChange={e => setToId(e.target.value)} placeholder={t('messages.recipientIdPh')} required
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.recipientName')} <span className="text-slate-400 font-normal">{t('common.optional')}</span></label>
             <input value={toName} onChange={e => setToName(e.target.value)} placeholder={t('messages.recipientNamePh')}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.message')}</label>
             <textarea value={content} onChange={e => setContent(e.target.value)} rows={3} required
               placeholder={t('messages.messagePh')}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500" />
           </div>
           {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending}
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {t('messages.send')}
             </button>
@@ -128,8 +128,8 @@ function MessageClinicModal({ onClose, onSent }) {
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
           <div className="flex items-center gap-3 rtl:flex-row-reverse">
-            <div className="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
-              <Stethoscope className="w-5 h-5 text-indigo-600" />
+            <div className="w-9 h-9 bg-violet-100 rounded-xl flex items-center justify-center shrink-0">
+              <Stethoscope className="w-5 h-5 text-violet-600" />
             </div>
             <h2 className="text-lg font-bold text-slate-800">{t('messages.messageClinic')}</h2>
           </div>
@@ -137,17 +137,17 @@ function MessageClinicModal({ onClose, onSent }) {
         </div>
         <form onSubmit={handleSend} className="px-6 py-5 space-y-4">
           {loading ? (
-            <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-indigo-400" /></div>
+            <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-violet-400" /></div>
           ) : vets.length > 1 ? (
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.vet')}</label>
               <select value={vetId} onChange={e => setVetId(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
                 {vets.map(v => <option key={v._id} value={v._id}>{v.name}</option>)}
               </select>
             </div>
           ) : vets.length === 1 ? (
-            <div className="flex items-center gap-3 p-3 bg-indigo-50 rounded-xl rtl:flex-row-reverse rtl:text-right">
+            <div className="flex items-center gap-3 p-3 bg-violet-50 rounded-xl rtl:flex-row-reverse rtl:text-right">
               <Avatar name={vets[0].name} size="sm" />
               <div>
                 <p className="text-sm font-semibold text-slate-800">{vets[0].name}</p>
@@ -161,13 +161,13 @@ function MessageClinicModal({ onClose, onSent }) {
             <textarea value={content} onChange={e => setContent(e.target.value)} rows={4} required
               autoFocus
               placeholder={t('messages.ownerMessagePh')}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500" />
           </div>
           {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending || loading || !vetId}
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {t('messages.sendMessage')}
             </button>
@@ -251,11 +251,11 @@ export default function Messages() {
 
   const emptyStateAction = isOwner
     ? <button onClick={() => setCompose(true)}
-        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
+        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
         <Stethoscope className="w-4 h-4" /> {t('messages.messageClinic')}
       </button>
     : <button onClick={() => setCompose(true)}
-        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
+        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
         <Plus className="w-4 h-4" /> {t('messages.compose')}
       </button>
 
@@ -265,11 +265,11 @@ export default function Messages() {
       actions={
         isOwner
           ? <button onClick={() => setCompose(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
               <Stethoscope className="w-4 h-4" /> {t('messages.messageClinic')}
             </button>
           : <button onClick={() => setCompose(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
               <Plus className="w-4 h-4" /> {t('messages.compose')}
             </button>
       }
@@ -301,7 +301,7 @@ export default function Messages() {
                       onClick={() => setActiveId(partner.id)}
                       className={[
                         'w-full text-start px-4 py-3.5 hover:bg-slate-50 transition-colors',
-                        activeId === partner.id ? 'bg-indigo-50 border-e-2 border-indigo-500' : '',
+                        activeId === partner.id ? 'bg-violet-50 border-e-2 border-violet-500' : '',
                       ].join(' ')}
                     >
                       <div className="flex items-center justify-between gap-2 rtl:flex-row-reverse">
@@ -315,7 +315,7 @@ export default function Messages() {
                         <div className="shrink-0 text-end">
                           <p className="text-xs text-slate-400">{formatTime(conv.lastMessage?.createdAt)}</p>
                           {conv.unread > 0 && (
-                            <span className="inline-block mt-1 min-w-[1.25rem] text-center text-xs font-bold bg-indigo-500 text-white rounded-full px-1.5 py-0.5">
+                            <span className="inline-block mt-1 min-w-[1.25rem] text-center text-xs font-bold bg-violet-500 text-white rounded-full px-1.5 py-0.5">
                               {conv.unread}
                             </span>
                           )}
@@ -333,8 +333,8 @@ export default function Messages() {
         <div className="flex-1 flex flex-col min-w-0 bg-slate-50">
           {!activeId ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-              <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4">
-                <MessageSquare className="w-8 h-8 text-indigo-300" />
+              <div className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center mb-4">
+                <MessageSquare className="w-8 h-8 text-violet-300" />
               </div>
               <p className="text-slate-600 font-semibold text-base">{t('messages.selectConvo')}</p>
               <p className="text-sm text-slate-400 mt-1">
@@ -362,7 +362,7 @@ export default function Messages() {
               <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
                 {loadingMsgs && messages.length === 0 && (
                   <div className="flex justify-center py-8">
-                    <Loader2 className="w-5 h-5 animate-spin text-indigo-400" />
+                    <Loader2 className="w-5 h-5 animate-spin text-violet-400" />
                   </div>
                 )}
                 {messages.length === 0 && !loadingMsgs && (
@@ -379,11 +379,11 @@ export default function Messages() {
                       <div className={[
                         'max-w-[68%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed',
                         isMe
-                          ? 'bg-indigo-600 text-white rounded-br-sm ms-2'
+                          ? 'bg-violet-600 text-white rounded-br-sm ms-2'
                           : 'bg-white text-slate-800 border border-slate-200 rounded-bl-sm ms-2',
                       ].join(' ')}>
                         <p>{msg.content}</p>
-                        <p className={`text-xs mt-1 ${isMe ? 'text-indigo-200' : 'text-slate-400'}`}>
+                        <p className={`text-xs mt-1 ${isMe ? 'text-violet-200' : 'text-slate-400'}`}>
                           {formatTime(msg.createdAt)}
                         </p>
                       </div>
@@ -401,10 +401,10 @@ export default function Messages() {
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(e) } }}
                   placeholder={t('messages.inputPh')}
                   rows={1}
-                  className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 max-h-24"
+                  className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500 max-h-24"
                 />
                 <button type="submit" disabled={sending || !draft.trim()}
-                  className="shrink-0 p-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl transition-colors">
+                  className="shrink-0 p-2.5 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white rounded-xl transition-colors">
                   {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </form>

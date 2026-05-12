@@ -126,7 +126,7 @@
     "language": "Language",
     "hebrew": "עברית",
     "english": "English",
-    "appName": "VET 4 PET",
+    "appName": "VET4PET",
     "add": "Add",
     "remove": "Remove",
     "search": "Search",
@@ -237,6 +237,9 @@
     "active": "Active",
     "viewRecord": "View Record →",
     "ownerSubGreeting": "What would you like to do today?",
+    "ownerHeroWithPets_one": "{{count}} pet in your care",
+    "ownerHeroWithPets_other": "{{count}} pets in your care",
+    "ownerHeroNoPets": "Welcome to VET4PET",
     "ownerActions": {
       "bookTitle": "Book an Appointment",
       "bookSub": "Schedule a visit with your vet",
@@ -434,7 +437,7 @@
     "logoutDesc": "You will be redirected to the login page",
     "language": "Interface language",
     "languageDesc": "Choose the language used across the site",
-    "footer": "VET 4 PET · Veterinary Portal"
+    "footer": "VET4PET · Veterinary Portal"
   },
   "ownerMyPets": {
     "title": "My Pets",

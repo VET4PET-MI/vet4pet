@@ -25,21 +25,21 @@ function PetCard({ pet }) {
   return (
     <div
       onClick={() => navigate(`/pet/${pet._id ?? pet.id}`)}
-      className="group bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-indigo-300 transition-all duration-200 cursor-pointer flex flex-col gap-3"
+      className="group bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-violet-300 transition-all duration-200 cursor-pointer flex flex-col gap-3"
     >
       <div className="flex items-start justify-between">
         <span className="text-3xl leading-none">{icon}</span>
         <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge}`}>{localizeSpecies(pet.species, t)}</span>
       </div>
       <div>
-        <h3 className="text-slate-800 font-semibold text-base group-hover:text-indigo-600 transition-colors leading-tight">{pet.name}</h3>
+        <h3 className="text-slate-800 font-semibold text-base group-hover:text-violet-600 transition-colors leading-tight">{pet.name}</h3>
         <p className="text-slate-400 text-sm mt-0.5">{localizeBreed(pet.breed, t) || '—'}</p>
       </div>
       <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />{t('dashboard.active')}
         </span>
-        <span className="text-xs text-indigo-600 font-medium group-hover:text-indigo-800 transition-colors">{t('dashboard.viewRecord')}</span>
+        <span className="text-xs text-violet-600 font-medium group-hover:text-violet-800 transition-colors">{t('dashboard.viewRecord')}</span>
       </div>
     </div>
   )
@@ -82,8 +82,8 @@ function VetDashboard() {
         {/* Hero search */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
           <div className="flex items-center gap-3 mb-6 rtl:flex-row-reverse rtl:text-right">
-            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
-              <Search className="w-5 h-5 text-indigo-600" />
+            <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center shrink-0">
+              <Search className="w-5 h-5 text-violet-600" />
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-lg font-bold text-slate-800">{t('dashboard.findPatient')}</h2>
@@ -98,7 +98,7 @@ function VetDashboard() {
                 <input
                   type="text" value={ownerId} onChange={e => setOwnerId(e.target.value)}
                   placeholder={t('dashboard.ownerIdPlaceholder')}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
                 />
               </div>
               <div>
@@ -106,14 +106,14 @@ function VetDashboard() {
                 <input
                   type="text" value={name} onChange={e => setName(e.target.value)}
                   placeholder={t('dashboard.petNamePlaceholder')}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
                 />
               </div>
             </div>
             <button
               type="submit"
               disabled={loading || (!ownerId.trim() && !name.trim())}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               {loading ? t('dashboard.searching') : t('dashboard.searchButton')}
@@ -157,7 +157,7 @@ function VetDashboard() {
           <div className="grid grid-cols-3 gap-4">
             {[
               { label: t('nav.schedule'),      icon: Calendar,       path: '/schedule',      color: 'bg-blue-50 text-blue-700 border-blue-200' },
-              { label: t('nav.messages'),      icon: MessageSquare,  path: '/messages',      color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+              { label: t('nav.messages'),      icon: MessageSquare,  path: '/messages',      color: 'bg-violet-50 text-violet-700 border-violet-200' },
               { label: t('nav.consultations'), icon: Video,          path: '/consultations', color: 'bg-purple-50 text-purple-700 border-purple-200' },
             ].map(({ label, icon: Icon, path, color }) => (
               <button
@@ -178,6 +178,7 @@ function VetDashboard() {
 
 function OwnerHome() {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [pets, setPets]       = useState([])
   const [loading, setLoading] = useState(true)
@@ -189,9 +190,26 @@ function OwnerHome() {
       .finally(() => setLoading(false))
   }, [])
 
+  const firstName = user?.name?.split(' ')[0] ?? ''
+
   return (
     <AppLayout subtitle={t('dashboard.ownerSubGreeting')}>
       <div className="max-w-2xl mx-auto px-6 py-8 space-y-6">
+
+        {/* Hero greeting card */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 p-8 shadow-sm border border-violet-100">
+          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-fuchsia-200/40 blur-3xl" />
+          <div className="absolute -bottom-12 -start-12 w-52 h-52 rounded-full bg-violet-300/30 blur-3xl" />
+          <div className="relative flex items-center justify-between gap-4 rtl:flex-row-reverse">
+            <div className="rtl:text-right">
+              <h1 className="text-[#2D1B69] text-3xl font-bold tracking-tight">
+                {t(user?.role === 'owner' ? 'nav.greetingOwner' : 'nav.greetingVet', { name: firstName })}
+              </h1>
+              <p className="text-violet-900/70 text-sm mt-2 font-medium">{t('dashboard.ownerSubGreeting')}</p>
+            </div>
+            <div className="hidden sm:block text-6xl shrink-0">🐾</div>
+          </div>
+        </div>
 
         {/* Service buttons */}
         <div className="space-y-3">
@@ -207,16 +225,16 @@ function OwnerHome() {
               className={[
                 'w-full flex items-center gap-4 px-6 py-5 rounded-2xl transition-all shadow-sm text-start rtl:flex-row-reverse',
                 primary
-                  ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
-                  : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 hover:border-indigo-200',
+                  ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white shadow-md hover:shadow-lg'
+                  : 'bg-white hover:bg-violet-50/50 text-slate-800 border border-slate-200 hover:border-violet-300',
               ].join(' ')}
             >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${primary ? 'bg-white/20' : 'bg-indigo-50'}`}>
-                <Icon className={`w-5 h-5 ${primary ? 'text-white' : 'text-indigo-600'}`} />
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${primary ? 'bg-white/20' : 'bg-violet-50'}`}>
+                <Icon className={`w-5 h-5 ${primary ? 'text-white' : 'text-violet-600'}`} />
               </div>
               <div className="flex-1 min-w-0 rtl:text-right">
                 <p className="font-semibold text-sm">{label}</p>
-                <p className={`text-xs mt-0.5 ${primary ? 'text-indigo-200' : 'text-slate-400'}`}>{sub}</p>
+                <p className={`text-xs mt-0.5 ${primary ? 'text-violet-200' : 'text-slate-400'}`}>{sub}</p>
               </div>
             </button>
           ))}
@@ -227,7 +245,7 @@ function OwnerHome() {
           <div>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-semibold text-slate-800">{t('dashboard.yourPets')}</h2>
-              <button onClick={() => navigate('/my-pets')} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">{t('dashboard.viewAllArrow')}</button>
+              <button onClick={() => navigate('/my-pets')} className="text-sm text-violet-600 hover:text-violet-800 font-medium">{t('dashboard.viewAllArrow')}</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {pets.slice(0, 3).map(pet => <PetCard key={pet._id} pet={pet} />)}

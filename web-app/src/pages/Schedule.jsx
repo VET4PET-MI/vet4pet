@@ -138,13 +138,13 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
                 <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.petName')}</label>
                 <input value={form.petName} onChange={e => set('petName', e.target.value)}
                   placeholder={t('schedule.petNamePh')} required
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.ownerName')}</label>
                 <input value={form.ownerName} onChange={e => set('ownerName', e.target.value)}
                   placeholder={t('schedule.ownerNamePh')}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
               </div>
             </div>
 
@@ -152,12 +152,12 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.date')}</label>
                 <input type="date" value={form.date} onChange={e => set('date', e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.time')}</label>
                 <input type="time" value={form.time} onChange={e => set('time', e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
               </div>
             </div>
 
@@ -166,7 +166,7 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
               <div className="flex gap-2">
                 {DURATIONS.map(d => (
                   <button key={d} type="button" onClick={() => set('duration', d)}
-                    className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${form.duration === d ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+                    className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${form.duration === d ? 'bg-violet-600 text-white border-violet-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
                   >{t('schedule.minutes', { n: d })}</button>
                 ))}
               </div>
@@ -191,7 +191,7 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
               <div>
                 <label className="block text-xs font-medium text-slate-600 mb-2">{t('schedule.status')}</label>
                 <select value={form.status} onChange={e => set('status', e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
                   {['booked','confirmed','completed','cancelled'].map(s => <option key={s} value={s}>{t(`schedule.statuses.${s}`)}</option>)}
                 </select>
               </div>
@@ -201,7 +201,7 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
               <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.notes')}</label>
               <textarea value={form.notes} onChange={e => set('notes', e.target.value)}
                 placeholder={t('schedule.notesPh')} rows={2}
-                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" />
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 resize-none" />
             </div>
 
             {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
@@ -218,7 +218,7 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
               {t('schedule.close')}
             </button>
             <button type="submit" disabled={submitting}
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
               {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('schedule.saving')}</> : (isEdit ? t('schedule.update') : t('schedule.book'))}
             </button>
           </div>
@@ -329,11 +329,11 @@ export default function Schedule() {
       actions={
         <div className="flex items-center gap-2">
           <button onClick={() => navigate('/vet-schedule-settings')}
-            className="flex items-center gap-2 px-4 py-2 border border-indigo-300 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 text-sm font-medium rounded-lg transition-colors rtl:flex-row-reverse">
+            className="flex items-center gap-2 px-4 py-2 border border-violet-300 text-violet-600 bg-violet-50 hover:bg-violet-100 text-sm font-medium rounded-lg transition-colors rtl:flex-row-reverse">
             <Settings className="w-4 h-4" /> {t('schedule.availability')}
           </button>
           <button onClick={() => openBook(null)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+            className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
             <Plus className="w-4 h-4" /> {t('schedule.bookAppointment')}
           </button>
         </div>
@@ -343,7 +343,7 @@ export default function Schedule() {
         {/* Week nav */}
         <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-3 shrink-0">
           <button onClick={prevWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronLeft className="w-4 h-4 rtl:rotate-180" /></button>
-          <button onClick={goToday} className="px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">{t('schedule.today')}</button>
+          <button onClick={goToday} className="px-3 py-1.5 text-xs font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 rounded-lg transition">{t('schedule.today')}</button>
           <button onClick={nextWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronRight className="w-4 h-4 rtl:rotate-180" /></button>
 
           {/* Day tabs */}
@@ -355,9 +355,9 @@ export default function Schedule() {
                 className={[
                   'shrink-0 flex flex-col items-center px-3 py-2 rounded-xl text-xs font-medium transition-colors min-w-[3.5rem]',
                   isSameDay(day, selectedDay)
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-violet-600 text-white'
                     : isToday(day)
-                    ? 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100'
+                    ? 'text-violet-600 bg-violet-50 hover:bg-violet-100'
                     : 'text-slate-500 hover:bg-slate-100',
                 ].join(' ')}
               >
@@ -393,7 +393,7 @@ export default function Schedule() {
             )}
 
             {loading ? (
-              <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-indigo-500" /></div>
+              <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-violet-500" /></div>
             ) : (
               <div className="divide-y divide-slate-100 bg-white rounded-2xl border border-slate-200 overflow-hidden">
                 {/* Legend */}

@@ -41,16 +41,16 @@ function Steps({ current }) {
             <div className="flex flex-col items-center">
               <div className={[
                 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all',
-                done   ? 'bg-indigo-600 text-white' :
-                active ? 'bg-indigo-600 text-white ring-4 ring-indigo-100' :
+                done   ? 'bg-violet-600 text-white' :
+                active ? 'bg-violet-600 text-white ring-4 ring-violet-100' :
                          'bg-slate-200 text-slate-500',
               ].join(' ')}>
                 {done ? <Check className="w-4 h-4" /> : i + 1}
               </div>
-              <span className={`text-xs mt-1 font-medium text-center max-w-[5rem] leading-tight ${active ? 'text-indigo-600' : 'text-slate-400'}`}>{label}</span>
+              <span className={`text-xs mt-1 font-medium text-center max-w-[5rem] leading-tight ${active ? 'text-violet-600' : 'text-slate-400'}`}>{label}</span>
             </div>
             {i < steps.length - 1 && (
-              <div className={`w-10 h-0.5 mb-4 mx-1 ${done ? 'bg-indigo-600' : 'bg-slate-200'}`} />
+              <div className={`w-10 h-0.5 mb-4 mx-1 ${done ? 'bg-violet-600' : 'bg-slate-200'}`} />
             )}
           </div>
         )
@@ -149,7 +149,7 @@ export default function BookAppointment() {
                 <div className="text-4xl mb-3">🐾</div>
                 <p className="font-medium text-slate-600">{t('bookAppointment.noPetsTitle')}</p>
                 <button onClick={() => navigate('/my-pets')}
-                  className="mt-4 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors">
+                  className="mt-4 px-5 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-xl transition-colors">
                   {t('bookAppointment.addPetFirst')}
                 </button>
               </div>
@@ -165,8 +165,8 @@ export default function BookAppointment() {
                       className={[
                         'w-full flex items-center gap-4 px-5 py-4 rounded-2xl border text-start transition-all rtl:flex-row-reverse',
                         isSelected
-                          ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200'
-                          : 'border-slate-200 bg-white hover:border-indigo-300',
+                          ? 'border-violet-500 bg-violet-50 ring-2 ring-violet-200'
+                          : 'border-slate-200 bg-white hover:border-violet-300',
                       ].join(' ')}
                     >
                       <span className="text-3xl shrink-0">{emoji}</span>
@@ -174,7 +174,7 @@ export default function BookAppointment() {
                         <p className="font-semibold text-slate-800">{pet.name}</p>
                         <p className="text-sm text-slate-400">{localizeSpecies(pet.species, t)}{pet.breed ? ` · ${localizeBreed(pet.breed, t)}` : ''}{pet.age ? ` · ${pet.age} ${t('bookAppointment.yearShort')}` : ''}</p>
                       </div>
-                      {isSelected && <Check className="w-5 h-5 text-indigo-600 shrink-0" />}
+                      {isSelected && <Check className="w-5 h-5 text-violet-600 shrink-0" />}
                     </button>
                   )
                 })}
@@ -183,7 +183,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(2)}
               disabled={!selectedPet}
-              className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full mt-4 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -216,12 +216,12 @@ export default function BookAppointment() {
                       className={[
                         'w-full flex items-center gap-4 px-5 py-4 rounded-2xl border text-start transition-all rtl:flex-row-reverse',
                         isSelected
-                          ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200'
-                          : 'border-slate-200 bg-white hover:border-indigo-300',
+                          ? 'border-violet-500 bg-violet-50 ring-2 ring-violet-200'
+                          : 'border-slate-200 bg-white hover:border-violet-300',
                       ].join(' ')}
                     >
-                      <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-                        <Stethoscope className="w-6 h-6 text-indigo-600" />
+                      <div className="w-12 h-12 bg-violet-50 rounded-xl flex items-center justify-center shrink-0">
+                        <Stethoscope className="w-6 h-6 text-violet-600" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-slate-800">{vet.clinicName || vet.name}</p>
@@ -234,7 +234,7 @@ export default function BookAppointment() {
                           </p>
                         )}
                       </div>
-                      {isSelected && <Check className="w-5 h-5 text-indigo-600 shrink-0" />}
+                      {isSelected && <Check className="w-5 h-5 text-violet-600 shrink-0" />}
                     </button>
                   )
                 })}
@@ -244,7 +244,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(3)}
               disabled={!selectedVet}
-              className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full mt-4 bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -265,7 +265,7 @@ export default function BookAppointment() {
                 value={date}
                 min={todayStr()}
                 onChange={e => { setDate(e.target.value); setSlot(null) }}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
               />
             </div>
 
@@ -274,7 +274,7 @@ export default function BookAppointment() {
               <div className="flex gap-2">
                 {DURATIONS.map(d => (
                   <button key={d} type="button" onClick={() => { setDuration(d); setSlot(null) }}
-                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition ${duration === d ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition ${duration === d ? 'bg-violet-600 text-white border-violet-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
                     {t('bookAppointment.minShort', { n: d })}
                   </button>
                 ))}
@@ -283,10 +283,10 @@ export default function BookAppointment() {
 
             <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
               <h2 className="text-base font-semibold text-slate-800 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-indigo-500" /> {t('bookAppointment.availableSlots')}
+                <Clock className="w-4 h-4 text-violet-500" /> {t('bookAppointment.availableSlots')}
               </h2>
               {slotsLoading ? (
-                <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-indigo-400" /></div>
+                <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-violet-400" /></div>
               ) : slots === null ? null
               : slots.length === 0 ? (
                 <div className="text-center py-6 text-slate-400">
@@ -303,8 +303,8 @@ export default function BookAppointment() {
                       className={[
                         'py-2.5 rounded-xl text-sm font-medium border transition-all',
                         selectedSlot === slot
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                          : 'border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-indigo-50',
+                          ? 'bg-violet-600 text-white border-violet-600 shadow-sm'
+                          : 'border-slate-200 text-slate-700 hover:border-violet-300 hover:bg-violet-50',
                       ].join(' ')}
                     >
                       {slot}
@@ -317,7 +317,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(4)}
               disabled={!selectedSlot}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -356,7 +356,7 @@ export default function BookAppointment() {
                   <button key={typ.value} type="button" onClick={() => setType(typ.value)}
                     className={[
                       'flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium transition-all text-start rtl:flex-row-reverse',
-                      apptType === typ.value ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50',
+                      apptType === typ.value ? 'bg-violet-600 text-white border-violet-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50',
                     ].join(' ')}>
                     <span>{typ.icon}</span> {typ.label}
                   </button>
@@ -368,7 +368,7 @@ export default function BookAppointment() {
               <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('bookAppointment.notesLabel')}</label>
               <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
                 placeholder={t('bookAppointment.notesPh')}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500 transition" />
             </div>
 
             {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
@@ -376,7 +376,7 @@ export default function BookAppointment() {
             <button
               onClick={handleBook}
               disabled={loading}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
+              className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
             >
               {loading
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('bookAppointment.booking')}</>
