@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Loader2, X, Calendar, MessageSquare, Video } from 'lucide-react'
 import { PawPrint } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import api from '../api'
 import { useAuth } from '../context/AuthContext'
 import AppLayout from '../components/AppLayout'
-
-// ─── Shared: Pet Card ─────────────────────────────────────────────────────────
+import { localizeSpecies, localizeBreed } from '../utils/petLocale'
 
 const SPECIES_META = {
   dog:    { icon: '🐕', badge: 'bg-amber-50 border-amber-200 text-amber-700' },
@@ -19,6 +19,7 @@ function speciesMeta(s = '') {
 }
 
 function PetCard({ pet }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { icon, badge } = speciesMeta(pet.species)
   return (
@@ -28,25 +29,24 @@ function PetCard({ pet }) {
     >
       <div className="flex items-start justify-between">
         <span className="text-3xl leading-none">{icon}</span>
-        <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge}`}>{pet.species}</span>
+        <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge}`}>{localizeSpecies(pet.species, t)}</span>
       </div>
       <div>
         <h3 className="text-slate-800 font-semibold text-base group-hover:text-indigo-600 transition-colors leading-tight">{pet.name}</h3>
-        <p className="text-slate-400 text-sm mt-0.5">{pet.breed || '—'}</p>
+        <p className="text-slate-400 text-sm mt-0.5">{localizeBreed(pet.breed, t) || '—'}</p>
       </div>
       <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
         <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />Active
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />{t('dashboard.active')}
         </span>
-        <span className="text-xs text-indigo-600 font-medium group-hover:text-indigo-800 transition-colors">View Record →</span>
+        <span className="text-xs text-indigo-600 font-medium group-hover:text-indigo-800 transition-colors">{t('dashboard.viewRecord')}</span>
       </div>
     </div>
   )
 }
 
-// ─── Vet: Search-First Dashboard ──────────────────────────────────────────────
-
 function VetDashboard() {
+  const { t, i18n }           = useTranslation()
   const navigate              = useNavigate()
   const [ownerId, setOwnerId] = useState('')
   const [name, setName]       = useState('')
@@ -54,7 +54,7 @@ function VetDashboard() {
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState(null)
 
-  const today = new Date().toLocaleDateString('en-US', {
+  const today = new Date().toLocaleDateString(i18n.language?.startsWith('he') ? 'he-IL' : 'en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
 
@@ -69,7 +69,7 @@ function VetDashboard() {
       const { data } = await api.get('/api/pets', { params })
       setResults(data)
     } catch {
-      setError('Search failed. Make sure the backend is running.')
+      setError(t('dashboard.searchFail'))
     } finally { setLoading(false) }
   }
 
@@ -81,31 +81,31 @@ function VetDashboard() {
 
         {/* Hero search */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <div className="flex items-center gap-3 mb-6 rtl:flex-row-reverse rtl:text-right">
+            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
               <Search className="w-5 h-5 text-indigo-600" />
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-slate-800">Find a Patient</h2>
-              <p className="text-sm text-slate-400">Search by owner ID or pet name</p>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg font-bold text-slate-800">{t('dashboard.findPatient')}</h2>
+              <p className="text-sm text-slate-400">{t('dashboard.findPatientSub')}</p>
             </div>
           </div>
 
           <form onSubmit={handleSearch} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Owner ID</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('dashboard.ownerId')}</label>
                 <input
                   type="text" value={ownerId} onChange={e => setOwnerId(e.target.value)}
-                  placeholder="e.g. user_1"
+                  placeholder={t('dashboard.ownerIdPlaceholder')}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Pet Name</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('dashboard.petName')}</label>
                 <input
                   type="text" value={name} onChange={e => setName(e.target.value)}
-                  placeholder="e.g. Buddy"
+                  placeholder={t('dashboard.petNamePlaceholder')}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </div>
@@ -116,7 +116,7 @@ function VetDashboard() {
               className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-              {loading ? 'Searching…' : 'Search Patients'}
+              {loading ? t('dashboard.searching') : t('dashboard.searchButton')}
             </button>
           </form>
         </div>
@@ -130,17 +130,19 @@ function VetDashboard() {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold text-slate-700">
-                {results.length === 0 ? 'No results' : `${results.length} result${results.length !== 1 ? 's' : ''} found`}
+                {results.length === 0
+                  ? t('dashboard.noResults')
+                  : t('dashboard.results', { count: results.length })}
               </h3>
               <button onClick={clearSearch} className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 transition-colors">
-                <X className="w-4 h-4" /> Clear
+                <X className="w-4 h-4" /> {t('dashboard.clear')}
               </button>
             </div>
             {results.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
                 <div className="text-4xl mb-3">🐾</div>
-                <p className="font-medium text-slate-600">No patients found</p>
-                <p className="text-sm text-slate-400 mt-1">Try a different owner ID or pet name.</p>
+                <p className="font-medium text-slate-600">{t('dashboard.noResultsTitle')}</p>
+                <p className="text-sm text-slate-400 mt-1">{t('dashboard.noResultsHint')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -154,9 +156,9 @@ function VetDashboard() {
         {results === null && (
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: 'Schedule',      icon: Calendar,       path: '/schedule',      color: 'bg-blue-50 text-blue-700 border-blue-200' },
-              { label: 'Messages',      icon: MessageSquare,  path: '/messages',      color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-              { label: 'Consultations', icon: Video,          path: '/consultations', color: 'bg-purple-50 text-purple-700 border-purple-200' },
+              { label: t('nav.schedule'),      icon: Calendar,       path: '/schedule',      color: 'bg-blue-50 text-blue-700 border-blue-200' },
+              { label: t('nav.messages'),      icon: MessageSquare,  path: '/messages',      color: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+              { label: t('nav.consultations'), icon: Video,          path: '/consultations', color: 'bg-purple-50 text-purple-700 border-purple-200' },
             ].map(({ label, icon: Icon, path, color }) => (
               <button
                 key={path}
@@ -174,11 +176,9 @@ function VetDashboard() {
   )
 }
 
-// ─── Owner: Home Dashboard ────────────────────────────────────────────────────
-
 function OwnerHome() {
-  const { user } = useAuth()
-  const navigate  = useNavigate()
+  const { t } = useTranslation()
+  const navigate = useNavigate()
   const [pets, setPets]       = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -189,25 +189,23 @@ function OwnerHome() {
       .finally(() => setLoading(false))
   }, [])
 
-  const firstName = user?.name?.split(' ')[0] ?? 'there'
-
   return (
-    <AppLayout title={`Hello, ${firstName} 👋`} subtitle="What would you like to do today?">
+    <AppLayout subtitle={t('dashboard.ownerSubGreeting')}>
       <div className="max-w-2xl mx-auto px-6 py-8 space-y-6">
 
         {/* Service buttons */}
         <div className="space-y-3">
           {[
-            { icon: Calendar,      label: 'Book an Appointment', sub: 'Schedule a visit with your vet',          path: '/book-appointment',  primary: true },
-            { icon: PawPrint,      label: 'My Pets',             sub: 'View and manage your pets',               path: '/my-pets',           primary: false },
-            { icon: Video,         label: 'Start Consultation',  sub: 'Request a live video consultation',       path: '/consultations',     primary: false },
-            { icon: MessageSquare, label: 'Message Your Vet',    sub: 'Send a message to your clinic',           path: '/messages',          primary: false },
+            { icon: Calendar,      label: t('dashboard.ownerActions.bookTitle'),    sub: t('dashboard.ownerActions.bookSub'),    path: '/book-appointment',  primary: true },
+            { icon: PawPrint,      label: t('dashboard.ownerActions.petsTitle'),    sub: t('dashboard.ownerActions.petsSub'),    path: '/my-pets',           primary: false },
+            { icon: Video,         label: t('dashboard.ownerActions.consultTitle'), sub: t('dashboard.ownerActions.consultSub'), path: '/consultations',     primary: false },
+            { icon: MessageSquare, label: t('dashboard.ownerActions.messageTitle'), sub: t('dashboard.ownerActions.messageSub'), path: '/messages',          primary: false },
           ].map(({ icon: Icon, label, sub, path, primary }) => (
             <button
               key={path}
               onClick={() => navigate(path)}
               className={[
-                'w-full flex items-center gap-4 px-6 py-5 rounded-2xl transition-all shadow-sm text-left',
+                'w-full flex items-center gap-4 px-6 py-5 rounded-2xl transition-all shadow-sm text-start rtl:flex-row-reverse',
                 primary
                   ? 'bg-indigo-600 hover:bg-indigo-700 text-white'
                   : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 hover:border-indigo-200',
@@ -216,7 +214,7 @@ function OwnerHome() {
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${primary ? 'bg-white/20' : 'bg-indigo-50'}`}>
                 <Icon className={`w-5 h-5 ${primary ? 'text-white' : 'text-indigo-600'}`} />
               </div>
-              <div>
+              <div className="flex-1 min-w-0 rtl:text-right">
                 <p className="font-semibold text-sm">{label}</p>
                 <p className={`text-xs mt-0.5 ${primary ? 'text-indigo-200' : 'text-slate-400'}`}>{sub}</p>
               </div>
@@ -228,8 +226,8 @@ function OwnerHome() {
         {!loading && pets.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-slate-800">My Pets</h2>
-              <button onClick={() => navigate('/my-pets')} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">View all →</button>
+              <h2 className="text-base font-semibold text-slate-800">{t('dashboard.yourPets')}</h2>
+              <button onClick={() => navigate('/my-pets')} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">{t('dashboard.viewAllArrow')}</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {pets.slice(0, 3).map(pet => <PetCard key={pet._id} pet={pet} />)}
@@ -240,8 +238,6 @@ function OwnerHome() {
     </AppLayout>
   )
 }
-
-// ─── Dashboard export: branches on role ───────────────────────────────────────
 
 export default function Dashboard() {
   const { user } = useAuth()

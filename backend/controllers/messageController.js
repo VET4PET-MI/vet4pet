@@ -1,4 +1,5 @@
-const Message = require('../models/Message');
+const Message       = require('../models/Message');
+const notifications = require('./notificationController');
 
 function makeConvId(a, b) {
   return [a, b].sort().join('::');
@@ -61,6 +62,14 @@ async function sendMessage(req, res) {
       receiverName:   receiverName || receiverId,
       content:        content.trim(),
     });
+
+    await notifications.create({
+      recipientId: receiverId,
+      type:        'message_received',
+      params:      { senderName: req.user.name || '' },
+      link:        '/messages',
+    });
+
     res.status(201).json(msg);
   } catch (err) {
     console.error('[Message] sendMessage error:', err.message);

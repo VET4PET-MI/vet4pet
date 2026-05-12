@@ -34,6 +34,7 @@ app.use('/api/messages',      requireAuth, require('./routes/messageRoutes'));
 app.use('/api/consultations', requireAuth, require('./routes/consultationRoutes'));
 app.use('/api/vet-schedule',  requireAuth, require('./routes/vetScheduleRoutes'));
 app.use('/api/time-blocks',   requireAuth, require('./routes/timeBlockRoutes'));
+app.use('/api/notifications', requireAuth, require('./routes/notificationRoutes'));
 
 // ── Global error handler ───────────────────────────────────────────────
 app.use((err, _req, res, _next) => {

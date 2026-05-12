@@ -2,28 +2,15 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
   PawPrint, LayoutDashboard, Calendar, MessageSquare,
-  Video, Settings, Menu, X, LogOut, Bell,
+  Video, Settings, Menu, X, LogOut,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
-
-const VET_NAV = [
-  { icon: LayoutDashboard, label: 'Dashboard',     path: '/' },
-  { icon: Calendar,        label: 'Schedule',      path: '/schedule' },
-  { icon: MessageSquare,   label: 'Messages',      path: '/messages' },
-  { icon: Video,           label: 'Consultations', path: '/consultations' },
-  { icon: Settings,        label: 'Settings',      path: '/settings' },
-]
-
-const OWNER_NAV = [
-  { icon: LayoutDashboard, label: 'Home',           path: '/' },
-  { icon: PawPrint,        label: 'My Pets',        path: '/my-pets' },
-  { icon: Calendar,        label: 'Appointments',   path: '/my-appointments' },
-  { icon: MessageSquare,   label: 'Messages',       path: '/messages' },
-  { icon: Video,           label: 'Consultations',  path: '/consultations' },
-]
+import NotificationBell from './NotificationBell'
 
 export default function AppLayout({ title, subtitle, actions, children }) {
+  const { t } = useTranslation()
   const { user, logout }    = useAuth()
   const navigate            = useNavigate()
   const { pathname }        = useLocation()
@@ -32,7 +19,24 @@ export default function AppLayout({ title, subtitle, actions, children }) {
   const [live, setLive]     = useState(0)
 
   const isOwner = user?.role === 'owner'
-  const NAV     = isOwner ? OWNER_NAV : VET_NAV
+
+  const VET_NAV = [
+    { icon: LayoutDashboard, label: t('nav.dashboard'),     path: '/' },
+    { icon: Calendar,        label: t('nav.schedule'),      path: '/schedule' },
+    { icon: MessageSquare,   label: t('nav.messages'),      path: '/messages' },
+    { icon: Video,           label: t('nav.consultations'), path: '/consultations' },
+    { icon: Settings,        label: t('nav.settings'),      path: '/settings' },
+  ]
+
+  const OWNER_NAV = [
+    { icon: LayoutDashboard, label: t('nav.home'),          path: '/' },
+    { icon: PawPrint,        label: t('nav.myPets'),        path: '/my-pets' },
+    { icon: Calendar,        label: t('nav.appointments'),  path: '/my-appointments' },
+    { icon: MessageSquare,   label: t('nav.messages'),      path: '/messages' },
+    { icon: Video,           label: t('nav.consultations'), path: '/consultations' },
+  ]
+
+  const NAV = isOwner ? OWNER_NAV : VET_NAV
 
   useEffect(() => {
     function poll() {
@@ -51,9 +55,10 @@ export default function AppLayout({ title, subtitle, actions, children }) {
   function go(path) { navigate(path); setOpen(false) }
   function handleLogout() { logout(); navigate('/login') }
 
-  const firstName = user?.name?.split(' ')[0] ?? (isOwner ? 'there' : 'Doctor')
-  const portalLabel = isOwner ? 'Pet Owner Portal' : 'Veterinary Portal'
-  const greeting = title ?? (isOwner ? `Hello, ${firstName} 👋` : `Hello, Dr. ${firstName} 👋`)
+  const firstName = user?.name?.split(' ')[0]
+    ?? (isOwner ? t('nav.fallbackOwnerName') : t('nav.fallbackVetName'))
+  const portalLabel = isOwner ? t('nav.ownerPortal') : t('nav.vetPortal')
+  const greeting = title ?? t(isOwner ? 'nav.greetingOwner' : 'nav.greetingVet', { name: firstName })
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
@@ -71,15 +76,15 @@ export default function AppLayout({ title, subtitle, actions, children }) {
       ].join(' ')}>
 
         {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-700 shrink-0">
-          <div className="w-9 h-9 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg">
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-700 shrink-0 rtl:flex-row-reverse">
+          <div className="w-9 h-9 bg-indigo-500 rounded-xl flex items-center justify-center shadow-lg shrink-0">
             <PawPrint className="w-5 h-5 text-white" />
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1 rtl:text-right">
             <p className="text-white font-bold text-sm tracking-wide">VET 4 PET</p>
             <p className="text-slate-400 text-xs">{portalLabel}</p>
           </div>
-          <button onClick={() => setOpen(false)} className="ml-auto text-slate-400 hover:text-white lg:hidden">
+          <button onClick={() => setOpen(false)} className="ms-auto text-slate-400 hover:text-white lg:hidden">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -96,7 +101,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
                 key={path}
                 onClick={() => go(path)}
                 className={[
-                  'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-left',
+                  'w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors text-start rtl:flex-row-reverse',
                   isActive(path)
                     ? 'bg-indigo-600 text-white shadow'
                     : 'text-slate-400 hover:bg-slate-800 hover:text-white',
@@ -121,20 +126,24 @@ export default function AppLayout({ title, subtitle, actions, children }) {
 
         {/* User badge + logout */}
         <div className="p-4 border-t border-slate-700 shrink-0 space-y-2">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 rtl:flex-row-reverse">
             <div className="w-9 h-9 bg-indigo-500 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0">
               {user?.name?.slice(0, 2).toUpperCase() ?? 'ME'}
             </div>
-            <div className="min-w-0">
-              <p className="text-white text-sm font-semibold truncate">{user?.name ?? 'User'}</p>
-              <p className="text-slate-400 text-xs capitalize">{user?.role ?? 'member'}</p>
+            <div className="min-w-0 flex-1 rtl:text-right">
+              <p className="text-white text-sm font-semibold truncate">{user?.name ?? t('nav.fallbackUser')}</p>
+              <p className="text-slate-400 text-xs">
+                {user?.role === 'vet' ? t('nav.roleVet')
+                  : user?.role === 'owner' ? t('nav.roleOwner')
+                  : t('nav.fallbackRole')}
+              </p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-colors"
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-colors text-start rtl:flex-row-reverse"
           >
-            <LogOut size={16} /> Sign out
+            <LogOut size={16} /> {t('auth.signOut')}
           </button>
         </div>
       </aside>
@@ -155,12 +164,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
 
           <div className="flex items-center gap-3 shrink-0">
             {actions}
-            <button className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition">
-              <Bell className="w-5 h-5" />
-              {(unread + live) > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full" />
-              )}
-            </button>
+            <NotificationBell />
           </div>
         </header>
 

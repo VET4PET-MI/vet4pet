@@ -2,6 +2,38 @@ const Appointment = require('../models/Appointment');
 const VetSchedule = require('../models/VetSchedule');
 const TimeBlock   = require('../models/TimeBlock');
 const Message     = require('../models/Message');
+const User        = require('../models/User');
+const notifications = require('./notificationController');
+
+async function notifyVets(appt, ownerName) {
+  if (appt.vetId) {
+    await notifications.create({
+      recipientId: appt.vetId,
+      type:        'appointment_booked_by_owner',
+      params: {
+        petName: appt.petName || '',
+        date:    new Date(appt.date).toISOString().slice(0, 10),
+        time:    appt.time || '',
+        ownerName,
+      },
+      link: '/schedule',
+    });
+    return;
+  }
+  // No vet assigned — broadcast to all vets so whoever is on duty sees it
+  const vets = await User.find({ role: 'vet' }).select('_id');
+  await Promise.all(vets.map(v => notifications.create({
+    recipientId: v._id,
+    type:        'appointment_booked_by_owner',
+    params: {
+      petName: appt.petName || '',
+      date:    new Date(appt.date).toISOString().slice(0, 10),
+      time:    appt.time || '',
+      ownerName,
+    },
+    link: '/schedule',
+  })));
+}
 
 function makeConvId(a, b) { return [a, b].sort().join('::'); }
 
@@ -66,6 +98,23 @@ async function createAppointment(req, res) {
     }
     const appt = await Appointment.create(payload);
     console.log('[Appointment] created:', appt._id);
+
+    // Notify the other party
+    if (req.user.role === 'vet' && appt.ownerId) {
+      await notifications.create({
+        recipientId: appt.ownerId,
+        type:        'appointment_booked_by_vet',
+        params: {
+          petName: appt.petName || '',
+          date:    new Date(appt.date).toISOString().slice(0, 10),
+          time:    appt.time || '',
+        },
+        link: '/my-appointments',
+      });
+    } else if (req.user.role === 'owner') {
+      await notifyVets(appt, appt.ownerName || req.user.name || '');
+    }
+
     res.status(201).json(appt);
   } catch (err) {
     console.error('[Appointment] createAppointment error:', err.message);
@@ -95,6 +144,31 @@ async function cancelAppointment(req, res) {
     }
     appt.status = 'cancelled';
     await appt.save();
+
+    // Notify the other party (in-app notification)
+    const cancelParams = {
+      petName: appt.petName || '',
+      date:    new Date(appt.date).toISOString().slice(0, 10),
+      time:    appt.time || '',
+    };
+    if (req.user.role === 'vet' && appt.ownerId) {
+      await notifications.create({
+        recipientId: appt.ownerId,
+        type:        'appointment_cancelled_by_vet',
+        params:      cancelParams,
+        link:        '/my-appointments',
+      });
+    } else if (req.user.role === 'owner') {
+      const targets = appt.vetId
+        ? [{ _id: appt.vetId }]
+        : await User.find({ role: 'vet' }).select('_id');
+      await Promise.all(targets.map(v => notifications.create({
+        recipientId: v._id,
+        type:        'appointment_cancelled_by_owner',
+        params:      { ...cancelParams, ownerName: appt.ownerName || req.user.name || '' },
+        link:        '/schedule',
+      })));
+    }
 
     // Auto-notify the owner when a vet cancels
     if (req.user.role === 'vet' && appt.ownerId) {

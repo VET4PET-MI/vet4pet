@@ -1,29 +1,24 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Plus, X, Loader2, Clock, Trash2, Settings, Lock, LockOpen } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import api from '../api'
 import { useAuth } from '../context/AuthContext'
 import AppLayout from '../components/AppLayout'
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
 const TIME_SLOTS = Array.from({ length: 20 }, (_, i) => {
   const mins = 8 * 60 + i * 30
   return `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`
-}) // '08:00' … '17:30'
+})
 
-const APPT_TYPES = [
-  { value: 'CHECKUP',      label: 'Check-up',    color: 'bg-blue-50 text-blue-700 border-blue-200',     dot: 'bg-blue-500' },
-  { value: 'VACCINATION',  label: 'Vaccination',  color: 'bg-green-50 text-green-700 border-green-200',  dot: 'bg-green-500' },
-  { value: 'FOLLOW_UP',    label: 'Follow-up',    color: 'bg-amber-50 text-amber-700 border-amber-200',  dot: 'bg-amber-500' },
-  { value: 'EMERGENCY',    label: 'Emergency',    color: 'bg-red-50 text-red-700 border-red-200',        dot: 'bg-red-500' },
-  { value: 'CONSULTATION', label: 'Consultation', color: 'bg-purple-50 text-purple-700 border-purple-200', dot: 'bg-purple-500' },
-  { value: 'OTHER',        label: 'Other',        color: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' },
+const APPT_TYPE_DEFS = [
+  { value: 'CHECKUP',      key: 'checkup',      color: 'bg-blue-50 text-blue-700 border-blue-200',     dot: 'bg-blue-500' },
+  { value: 'VACCINATION',  key: 'vaccination',  color: 'bg-green-50 text-green-700 border-green-200',  dot: 'bg-green-500' },
+  { value: 'FOLLOW_UP',    key: 'followUp',     color: 'bg-amber-50 text-amber-700 border-amber-200',  dot: 'bg-amber-500' },
+  { value: 'EMERGENCY',    key: 'emergency',    color: 'bg-red-50 text-red-700 border-red-200',        dot: 'bg-red-500' },
+  { value: 'CONSULTATION', key: 'consultation', color: 'bg-purple-50 text-purple-700 border-purple-200', dot: 'bg-purple-500' },
+  { value: 'OTHER',        key: 'other',        color: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' },
 ]
-
-function apptTypeMeta(v) { return APPT_TYPES.find(t => t.value === v) ?? APPT_TYPES[5] }
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getWeekStart(date) {
   const d = new Date(date)
@@ -58,10 +53,8 @@ function getOccupiedSlots(appointments) {
   return occupied
 }
 
-// ─── Appointment Card ─────────────────────────────────────────────────────────
-
-function ApptCard({ appt, onClick }) {
-  const meta = apptTypeMeta(appt.type)
+function ApptCard({ appt, onClick, apptTypes, t }) {
+  const meta = apptTypes.find(x => x.value === appt.type) ?? apptTypes[5]
   return (
     <div
       onClick={onClick}
@@ -69,11 +62,11 @@ function ApptCard({ appt, onClick }) {
     >
       <div className={`w-1.5 h-full min-h-[1.5rem] rounded-full shrink-0 ${meta.dot}`} />
       <div className="min-w-0">
-        <p className="text-xs font-semibold truncate">{appt.petName || 'Pet'}</p>
+        <p className="text-xs font-semibold truncate">{appt.petName || t('schedule.fallbackPet')}</p>
         <p className="text-xs opacity-70 truncate">{appt.ownerName || appt.ownerId || '—'}</p>
         {appt.duration > 30 && (
           <p className="text-xs opacity-60 flex items-center gap-1 mt-0.5">
-            <Clock className="w-3 h-3" />{appt.duration} min
+            <Clock className="w-3 h-3" />{t('schedule.minutes', { n: appt.duration })}
           </p>
         )}
       </div>
@@ -81,13 +74,14 @@ function ApptCard({ appt, onClick }) {
   )
 }
 
-// ─── Book / Edit Modal ────────────────────────────────────────────────────────
-
 const DURATIONS = [15, 30, 45, 60]
 
 function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCancelled }) {
+  const { t } = useTranslation()
   const { user } = useAuth()
   const isEdit   = !!initial
+
+  const apptTypes = APPT_TYPE_DEFS.map(x => ({ ...x, label: t(`schedule.types.${x.key}`) }))
 
   const [form, setForm] = useState({
     petName:   initial?.petName   ?? '',
@@ -117,23 +111,23 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
       }
       onSaved()
     } catch (err) {
-      setError(err.response?.data?.message ?? 'Failed to save appointment.')
+      setError(err.response?.data?.message ?? t('schedule.saveFail'))
     } finally { setSub(false) }
   }
 
   async function handleCancel() {
-    if (!window.confirm('Cancel this appointment?')) return
+    if (!window.confirm(t('schedule.cancelConfirm'))) return
     try {
       await api.patch(`/api/appointments/${initial._id}/cancel`)
       onCancelled()
-    } catch { setError('Failed to cancel.') }
+    } catch { setError(t('schedule.cancelFail')) }
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[92vh] flex flex-col">
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
-          <h2 className="text-lg font-bold text-slate-800">{isEdit ? 'Appointment Details' : 'Book Appointment'}</h2>
+          <h2 className="text-lg font-bold text-slate-800">{isEdit ? t('schedule.editTitle') : t('schedule.bookTitle')}</h2>
           <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition"><X className="w-5 h-5" /></button>
         </div>
 
@@ -141,53 +135,53 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
           <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Pet Name</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.petName')}</label>
                 <input value={form.petName} onChange={e => set('petName', e.target.value)}
-                  placeholder="Buddy" required
+                  placeholder={t('schedule.petNamePh')} required
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Owner Name</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.ownerName')}</label>
                 <input value={form.ownerName} onChange={e => set('ownerName', e.target.value)}
-                  placeholder="John Smith"
+                  placeholder={t('schedule.ownerNamePh')}
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Date</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.date')}</label>
                 <input type="date" value={form.date} onChange={e => set('date', e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Time</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.time')}</label>
                 <input type="time" value={form.time} onChange={e => set('time', e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-2">Duration</label>
+              <label className="block text-xs font-medium text-slate-600 mb-2">{t('schedule.duration')}</label>
               <div className="flex gap-2">
                 {DURATIONS.map(d => (
                   <button key={d} type="button" onClick={() => set('duration', d)}
                     className={`flex-1 py-2 rounded-xl text-sm font-medium border transition ${form.duration === d ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}
-                  >{d} min</button>
+                  >{t('schedule.minutes', { n: d })}</button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-2">Type</label>
+              <label className="block text-xs font-medium text-slate-600 mb-2">{t('schedule.type')}</label>
               <div className="grid grid-cols-2 gap-2">
-                {APPT_TYPES.map(t => (
-                  <button key={t.value} type="button" onClick={() => set('type', t.value)}
+                {apptTypes.map(typ => (
+                  <button key={typ.value} type="button" onClick={() => set('type', typ.value)}
                     className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition ${
-                      form.type === t.value ? `${t.color} ring-2 ring-offset-1 ring-current` : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                      form.type === typ.value ? `${typ.color} ring-2 ring-offset-1 ring-current` : 'border-slate-200 text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    <span className={`w-2 h-2 rounded-full ${t.dot}`} />{t.label}
+                    <span className={`w-2 h-2 rounded-full ${typ.dot}`} />{typ.label}
                   </button>
                 ))}
               </div>
@@ -195,18 +189,18 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
 
             {isEdit && (
               <div>
-                <label className="block text-xs font-medium text-slate-600 mb-2">Status</label>
+                <label className="block text-xs font-medium text-slate-600 mb-2">{t('schedule.status')}</label>
                 <select value={form.status} onChange={e => set('status', e.target.value)}
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                  {['booked','confirmed','completed','cancelled'].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+                  {['booked','confirmed','completed','cancelled'].map(s => <option key={s} value={s}>{t(`schedule.statuses.${s}`)}</option>)}
                 </select>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Notes</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">{t('schedule.notes')}</label>
               <textarea value={form.notes} onChange={e => set('notes', e.target.value)}
-                placeholder="Additional notes…" rows={2}
+                placeholder={t('schedule.notesPh')} rows={2}
                 className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none" />
             </div>
 
@@ -216,16 +210,16 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
           <div className="flex gap-3 px-6 py-4 border-t border-slate-100 shrink-0">
             {isEdit && (
               <button type="button" onClick={handleCancel}
-                className="px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-colors flex items-center gap-1.5">
-                <Trash2 className="w-4 h-4" /> Cancel Appt
+                className="px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-colors flex items-center gap-1.5 rtl:flex-row-reverse">
+                <Trash2 className="w-4 h-4" /> {t('schedule.cancelAppt')}
               </button>
             )}
             <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-              Close
+              {t('schedule.close')}
             </button>
             <button type="submit" disabled={submitting}
               className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
-              {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</> : (isEdit ? 'Update' : 'Book')}
+              {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('schedule.saving')}</> : (isEdit ? t('schedule.update') : t('schedule.book'))}
             </button>
           </div>
         </form>
@@ -234,9 +228,8 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
   )
 }
 
-// ─── Schedule Page ────────────────────────────────────────────────────────────
-
 export default function Schedule() {
+  const { t, i18n } = useTranslation()
   const navigate                      = useNavigate()
   const [weekStart, setWeekStart]     = useState(() => getWeekStart(new Date()))
   const [selectedDay, setSelectedDay] = useState(new Date())
@@ -246,12 +239,14 @@ export default function Schedule() {
   const [presetTime, setPresetTime]   = useState(null)
   const [editAppt, setEditAppt]       = useState(null)
   const [timeBlocks, setTimeBlocks]   = useState([])
-  const [blockingSlot, setBlockSlot]  = useState(null)   // slot currently being configured
+  const [blockingSlot, setBlockSlot]  = useState(null)
   const [blockReason, setBlockReason] = useState('')
   const [blockSaving, setBlockSaving] = useState(false)
   const [blockError, setBlockError]   = useState(null)
 
+  const locale   = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
   const weekDays = getWeekDays(weekStart)
+  const apptTypes = APPT_TYPE_DEFS.map(x => ({ ...x, label: t(`schedule.types.${x.key}`) }))
 
   useEffect(() => {
     fetchAppts()
@@ -294,8 +289,8 @@ export default function Schedule() {
       setBlockReason('')
     } catch (err) {
       const msg = err.response
-        ? (err.response.data?.message ?? `Server error ${err.response.status} — restart the backend.`)
-        : 'Cannot reach the server — make sure the backend is running on port 5000.'
+        ? (err.response.data?.message ?? t('schedule.serverError', { status: err.response.status }))
+        : t('schedule.serverUnreachable')
       setBlockError(msg)
     } finally { setBlockSaving(false) }
   }
@@ -306,8 +301,8 @@ export default function Schedule() {
       setTimeBlocks(prev => prev.filter(b => b._id !== blockId))
     } catch (err) {
       const msg = err.response
-        ? (err.response.data?.message ?? `Server error ${err.response.status} — restart the backend.`)
-        : 'Cannot reach the server — make sure the backend is running on port 5000.'
+        ? (err.response.data?.message ?? t('schedule.serverError', { status: err.response.status }))
+        : t('schedule.serverUnreachable')
       setBlockError(msg)
     }
   }
@@ -323,22 +318,23 @@ export default function Schedule() {
   function handleCancelled() { setModal(false); fetchAppts() }
 
   const occupied = getOccupiedSlots(appointments)
-  const dateLabel = selectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
-  const weekLabel = `${weekDays[0].toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${weekDays[6].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+  const activeAppts = appointments.filter(a => a.status !== 'cancelled')
+  const dateLabel = selectedDay.toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' })
+  const weekLabel = `${weekDays[0].toLocaleDateString(locale, { month: 'short', day: 'numeric' })} – ${weekDays[6].toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })}`
 
   return (
     <AppLayout
-      title="Clinic Schedule"
+      title={t('schedule.title')}
       subtitle={weekLabel}
       actions={
         <div className="flex items-center gap-2">
           <button onClick={() => navigate('/vet-schedule-settings')}
-            className="flex items-center gap-2 px-4 py-2 border border-indigo-300 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 text-sm font-medium rounded-lg transition-colors">
-            <Settings className="w-4 h-4" /> Availability
+            className="flex items-center gap-2 px-4 py-2 border border-indigo-300 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 text-sm font-medium rounded-lg transition-colors rtl:flex-row-reverse">
+            <Settings className="w-4 h-4" /> {t('schedule.availability')}
           </button>
           <button onClick={() => openBook(null)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
-            <Plus className="w-4 h-4" /> Book Appointment
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+            <Plus className="w-4 h-4" /> {t('schedule.bookAppointment')}
           </button>
         </div>
       }
@@ -346,12 +342,12 @@ export default function Schedule() {
       <div className="flex flex-col h-full">
         {/* Week nav */}
         <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-3 shrink-0">
-          <button onClick={prevWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronLeft className="w-4 h-4" /></button>
-          <button onClick={goToday} className="px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">Today</button>
-          <button onClick={nextWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronRight className="w-4 h-4" /></button>
+          <button onClick={prevWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronLeft className="w-4 h-4 rtl:rotate-180" /></button>
+          <button onClick={goToday} className="px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition">{t('schedule.today')}</button>
+          <button onClick={nextWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronRight className="w-4 h-4 rtl:rotate-180" /></button>
 
           {/* Day tabs */}
-          <div className="flex flex-1 overflow-x-auto gap-1 ml-2">
+          <div className="flex flex-1 overflow-x-auto gap-1 ms-2">
             {weekDays.map(day => (
               <button
                 key={toDateStr(day)}
@@ -365,7 +361,7 @@ export default function Schedule() {
                     : 'text-slate-500 hover:bg-slate-100',
                 ].join(' ')}
               >
-                <span className="text-xs opacity-75">{day.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                <span className="text-xs opacity-75">{day.toLocaleDateString(locale, { weekday: 'short' })}</span>
                 <span className="text-sm font-bold mt-0.5">{day.getDate()}</span>
               </button>
             ))}
@@ -378,10 +374,10 @@ export default function Schedule() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-slate-700">{dateLabel}</h3>
               <div className="flex items-center gap-3 text-xs text-slate-400">
-                <span>{appointments.filter(a => a.status !== 'cancelled').length} appointment{appointments.filter(a => a.status !== 'cancelled').length !== 1 ? 's' : ''}</span>
+                <span>{t('schedule.appointments', { count: activeAppts.length })}</span>
                 {timeBlocks.length > 0 && (
                   <span className="flex items-center gap-1 text-red-400">
-                    <Lock className="w-3 h-3" /> {timeBlocks.length} blocked
+                    <Lock className="w-3 h-3" /> {t('schedule.blockedCount', { count: timeBlocks.length })}
                   </span>
                 )}
               </div>
@@ -403,12 +399,12 @@ export default function Schedule() {
                 {/* Legend */}
                 <div className="flex items-center gap-4 px-4 py-2 bg-slate-50 border-b border-slate-100">
                   <span className="flex items-center gap-1.5 text-xs text-slate-400">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block" /> Blocked
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-400 inline-block" /> {t('schedule.legendBlocked')}
                   </span>
                   <span className="flex items-center gap-1.5 text-xs text-slate-400">
-                    <span className="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block" /> Appointment
+                    <span className="w-2.5 h-2.5 rounded-full bg-blue-400 inline-block" /> {t('schedule.legendAppt')}
                   </span>
-                  <span className="text-xs text-slate-400 ml-auto italic">Click a free slot to block · click 🔒 to unlock</span>
+                  <span className="text-xs text-slate-400 ms-auto italic">{t('schedule.legendHint')}</span>
                 </div>
 
                 {TIME_SLOTS.map(slot => {
@@ -422,9 +418,9 @@ export default function Schedule() {
                       key={slot}
                       className={[
                         'flex items-center gap-3 px-4 py-2 min-h-[3rem] transition-colors',
-                        block      ? 'bg-red-50 border-l-4 border-red-300'    :
-                        isBlocking ? 'bg-amber-50 border-l-4 border-amber-300' :
-                                     'hover:bg-slate-50/50 border-l-4 border-transparent',
+                        block      ? 'bg-red-50 border-s-4 border-red-300'    :
+                        isBlocking ? 'bg-amber-50 border-s-4 border-amber-300' :
+                                     'hover:bg-slate-50/50 border-s-4 border-transparent',
                       ].join(' ')}
                     >
                       {/* Time label */}
@@ -434,26 +430,24 @@ export default function Schedule() {
 
                       {/* Slot content */}
                       {appt ? (
-                        <ApptCard appt={appt} onClick={() => openEdit(appt)} />
+                        <ApptCard appt={appt} onClick={() => openEdit(appt)} apptTypes={apptTypes} t={t} />
 
                       ) : block ? (
-                        /* ── Blocked slot ── */
                         <div className="flex-1 flex items-center gap-3">
                           <Lock className="w-4 h-4 text-red-500 shrink-0" />
                           <span className="flex-1 text-sm text-red-600 font-medium truncate">
-                            {block.reason || 'Blocked'}
+                            {block.reason || t('schedule.fallbackBlocked')}
                           </span>
                           <button
                             onClick={() => handleUnblock(block._id)}
-                            title="Unlock this slot"
+                            title={t('schedule.unlockTitle')}
                             className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-red-100 text-red-600 text-xs font-medium rounded-lg border border-red-200 transition-colors"
                           >
-                            <LockOpen className="w-3.5 h-3.5" /> Unlock
+                            <LockOpen className="w-3.5 h-3.5" /> {t('schedule.unlock')}
                           </button>
                         </div>
 
                       ) : isBlocking ? (
-                        /* ── Inline block form ── */
                         <div className="flex-1 flex items-center gap-2">
                           <input
                             autoFocus
@@ -463,7 +457,7 @@ export default function Schedule() {
                               if (e.key === 'Enter') handleBlock(slot)
                               if (e.key === 'Escape') { setBlockSlot(null); setBlockReason('') }
                             }}
-                            placeholder="Reason: surgery, break… (optional)"
+                            placeholder={t('schedule.blockReasonPh')}
                             className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-amber-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 placeholder:text-slate-400"
                           />
                           <button
@@ -475,25 +469,24 @@ export default function Schedule() {
                               ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
                               : <Lock className="w-3.5 h-3.5" />
                             }
-                            Block
+                            {t('schedule.block')}
                           </button>
                           <button
                             onClick={() => { setBlockSlot(null); setBlockReason('') }}
                             className="shrink-0 px-3 py-1.5 text-slate-500 hover:bg-slate-200 text-xs font-medium rounded-lg transition-colors"
                           >
-                            Cancel
+                            {t('schedule.cancel')}
                           </button>
                         </div>
 
                       ) : (
-                        /* ── Available slot ── */
                         <button
                           onClick={() => { setBlockSlot(slot); setBlockReason('') }}
-                          className="flex-1 flex items-center gap-2 text-left text-xs text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl px-3 py-2 transition-colors group"
-                          title="Click to block this slot"
+                          className="flex-1 flex items-center gap-2 text-start text-xs text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl px-3 py-2 transition-colors group"
+                          title={t('schedule.unlockTitle')}
                         >
                           <Lock className="w-3.5 h-3.5 opacity-0 group-hover:opacity-60 transition-opacity" />
-                          <span className="group-hover:text-red-400 transition-colors">+ Available · click to block</span>
+                          <span className="group-hover:text-red-400 transition-colors">{t('schedule.available')}</span>
                         </button>
                       )}
                     </div>

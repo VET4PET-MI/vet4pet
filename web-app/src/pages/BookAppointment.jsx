@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Loader2, Calendar, Clock, Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import api from '../api'
-import { useAuth } from '../context/AuthContext'
 import AppLayout from '../components/AppLayout'
+import { localizeSpecies, localizeBreed } from '../utils/petLocale'
 
-const APPT_TYPES = [
-  { value: 'CHECKUP',      label: 'Check-up',    icon: '🩺' },
-  { value: 'VACCINATION',  label: 'Vaccination',  icon: '💉' },
-  { value: 'FOLLOW_UP',    label: 'Follow-up',    icon: '🔄' },
-  { value: 'CONSULTATION', label: 'Consultation', icon: '💬' },
-  { value: 'EMERGENCY',    label: 'Emergency',    icon: '🚨' },
-  { value: 'OTHER',        label: 'Other',        icon: '📋' },
+const APPT_TYPE_DEFS = [
+  { value: 'CHECKUP',      key: 'checkup',      icon: '🩺' },
+  { value: 'VACCINATION',  key: 'vaccination',  icon: '💉' },
+  { value: 'FOLLOW_UP',    key: 'followUp',     icon: '🔄' },
+  { value: 'CONSULTATION', key: 'consultation', icon: '💬' },
+  { value: 'EMERGENCY',    key: 'emergency',    icon: '🚨' },
+  { value: 'OTHER',        key: 'other',        icon: '📋' },
 ]
 
 const DURATIONS = [15, 30, 45, 60]
@@ -22,10 +23,9 @@ const SPECIES_META = {
 
 function todayStr() { return new Date().toISOString().slice(0, 10) }
 
-// ── Step indicator ────────────────────────────────────────────────────────────
-
 function Steps({ current }) {
-  const steps = ['Select Pet', 'Choose Time', 'Confirm']
+  const { t } = useTranslation()
+  const steps = [t('bookAppointment.step1'), t('bookAppointment.step2'), t('bookAppointment.step3')]
   return (
     <div className="flex items-center justify-center gap-0 mb-8">
       {steps.map((label, i) => {
@@ -54,11 +54,13 @@ function Steps({ current }) {
   )
 }
 
-// ── Main page ─────────────────────────────────────────────────────────────────
-
 export default function BookAppointment() {
-  const { user }   = useAuth()
+  const { t, i18n } = useTranslation()
   const navigate   = useNavigate()
+
+  const locale = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
+
+  const APPT_TYPES = APPT_TYPE_DEFS.map(x => ({ ...x, label: t(`bookAppointment.types.${x.key}`) }))
 
   const [step, setStep]         = useState(1)
   const [pets, setPets]         = useState([])
@@ -102,40 +104,40 @@ export default function BookAppointment() {
       setBooked(true)
       setTimeout(() => navigate('/my-appointments'), 2000)
     } catch (err) {
-      setError(err.response?.data?.message ?? 'Booking failed. Please try again.')
+      setError(err.response?.data?.message ?? t('bookAppointment.bookFail'))
     } finally { setLoading(false) }
   }
 
   if (booked) {
     return (
-      <AppLayout title="Appointment Booked">
+      <AppLayout title={t('bookAppointment.bookedHeader')}>
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
             <Check className="w-10 h-10 text-green-600" />
           </div>
-          <h2 className="text-xl font-bold text-slate-800">Booking Confirmed!</h2>
-          <p className="text-slate-400 text-sm">Redirecting to your appointments…</p>
+          <h2 className="text-xl font-bold text-slate-800">{t('bookAppointment.successTitle')}</h2>
+          <p className="text-slate-400 text-sm">{t('bookAppointment.successHint')}</p>
         </div>
       </AppLayout>
     )
   }
 
   return (
-    <AppLayout title="Book Appointment" subtitle="Schedule a visit with your vet">
+    <AppLayout title={t('bookAppointment.title')} subtitle={t('bookAppointment.subtitle')}>
       <div className="max-w-2xl mx-auto px-6 py-8">
         <Steps current={step} />
 
-        {/* ── Step 1: Select Pet ──────────────────────────────────────── */}
+        {/* Step 1: Select Pet */}
         {step === 1 && (
           <div className="space-y-4">
-            <h2 className="text-base font-semibold text-slate-800">Which pet is this for?</h2>
+            <h2 className="text-base font-semibold text-slate-800">{t('bookAppointment.whichPet')}</h2>
             {pets.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-slate-200">
                 <div className="text-4xl mb-3">🐾</div>
-                <p className="font-medium text-slate-600">No pets registered</p>
+                <p className="font-medium text-slate-600">{t('bookAppointment.noPetsTitle')}</p>
                 <button onClick={() => navigate('/my-pets')}
                   className="mt-4 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors">
-                  Add a Pet First
+                  {t('bookAppointment.addPetFirst')}
                 </button>
               </div>
             ) : (
@@ -148,7 +150,7 @@ export default function BookAppointment() {
                       key={pet._id}
                       onClick={() => setPet(pet)}
                       className={[
-                        'w-full flex items-center gap-4 px-5 py-4 rounded-2xl border text-left transition-all',
+                        'w-full flex items-center gap-4 px-5 py-4 rounded-2xl border text-start transition-all rtl:flex-row-reverse',
                         isSelected
                           ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200'
                           : 'border-slate-200 bg-white hover:border-indigo-300',
@@ -157,7 +159,7 @@ export default function BookAppointment() {
                       <span className="text-3xl shrink-0">{emoji}</span>
                       <div className="flex-1">
                         <p className="font-semibold text-slate-800">{pet.name}</p>
-                        <p className="text-sm text-slate-400">{pet.species}{pet.breed ? ` · ${pet.breed}` : ''}{pet.age ? ` · ${pet.age} yr` : ''}</p>
+                        <p className="text-sm text-slate-400">{localizeSpecies(pet.species, t)}{pet.breed ? ` · ${localizeBreed(pet.breed, t)}` : ''}{pet.age ? ` · ${pet.age} ${t('bookAppointment.yearShort')}` : ''}</p>
                       </div>
                       {isSelected && <Check className="w-5 h-5 text-indigo-600 shrink-0" />}
                     </button>
@@ -170,20 +172,20 @@ export default function BookAppointment() {
               disabled={!selectedPet}
               className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
-              Next <ChevronRight className="w-4 h-4" />
+              {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
           </div>
         )}
 
-        {/* ── Step 2: Choose Date + Time ──────────────────────────────── */}
+        {/* Step 2: Date + Time */}
         {step === 2 && (
           <div className="space-y-6">
             <button onClick={() => setStep(1)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors">
-              <ChevronLeft className="w-4 h-4" /> Back
+              <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> {t('bookAppointment.back')}
             </button>
 
             <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
-              <h2 className="text-base font-semibold text-slate-800">Select a Date</h2>
+              <h2 className="text-base font-semibold text-slate-800">{t('bookAppointment.selectDate')}</h2>
               <input
                 type="date"
                 value={date}
@@ -194,12 +196,12 @@ export default function BookAppointment() {
             </div>
 
             <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
-              <h2 className="text-base font-semibold text-slate-800">Duration</h2>
+              <h2 className="text-base font-semibold text-slate-800">{t('bookAppointment.duration')}</h2>
               <div className="flex gap-2">
                 {DURATIONS.map(d => (
                   <button key={d} type="button" onClick={() => { setDuration(d); setSlot(null) }}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition ${duration === d ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
-                    {d} min
+                    {t('bookAppointment.minShort', { n: d })}
                   </button>
                 ))}
               </div>
@@ -207,7 +209,7 @@ export default function BookAppointment() {
 
             <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
               <h2 className="text-base font-semibold text-slate-800 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-indigo-500" /> Available Time Slots
+                <Clock className="w-4 h-4 text-indigo-500" /> {t('bookAppointment.availableSlots')}
               </h2>
               {slotsLoading ? (
                 <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-indigo-400" /></div>
@@ -215,8 +217,8 @@ export default function BookAppointment() {
               : slots.length === 0 ? (
                 <div className="text-center py-6 text-slate-400">
                   <Calendar className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-                  <p className="text-sm">No slots available on this date.</p>
-                  <p className="text-xs mt-1">Try selecting a different date.</p>
+                  <p className="text-sm">{t('bookAppointment.noSlots')}</p>
+                  <p className="text-xs mt-1">{t('bookAppointment.tryDifferent')}</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-4 gap-2">
@@ -243,27 +245,26 @@ export default function BookAppointment() {
               disabled={!selectedSlot}
               className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
-              Next <ChevronRight className="w-4 h-4" />
+              {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
           </div>
         )}
 
-        {/* ── Step 3: Confirm ─────────────────────────────────────────── */}
+        {/* Step 3: Confirm */}
         {step === 3 && (
           <div className="space-y-6">
             <button onClick={() => setStep(2)} className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 transition-colors">
-              <ChevronLeft className="w-4 h-4" /> Back
+              <ChevronLeft className="w-4 h-4 rtl:rotate-180" /> {t('bookAppointment.back')}
             </button>
 
-            {/* Summary */}
             <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3">
-              <h2 className="text-base font-semibold text-slate-800">Booking Summary</h2>
+              <h2 className="text-base font-semibold text-slate-800">{t('bookAppointment.bookingSummary')}</h2>
               <div className="space-y-2 text-sm">
                 {[
-                  ['Pet',      selectedPet?.name],
-                  ['Date',     new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })],
-                  ['Time',     selectedSlot],
-                  ['Duration', `${duration} minutes`],
+                  [t('bookAppointment.summaryPet'),      selectedPet?.name],
+                  [t('bookAppointment.summaryDate'),     new Date(date + 'T12:00:00').toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })],
+                  [t('bookAppointment.summaryTime'),     selectedSlot],
+                  [t('bookAppointment.summaryDuration'), t('bookAppointment.minutes', { n: duration })],
                 ].map(([label, val]) => (
                   <div key={label} className="flex justify-between">
                     <span className="text-slate-500">{label}</span>
@@ -273,27 +274,25 @@ export default function BookAppointment() {
               </div>
             </div>
 
-            {/* Appointment type */}
             <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3">
-              <h2 className="text-base font-semibold text-slate-800">Appointment Type</h2>
+              <h2 className="text-base font-semibold text-slate-800">{t('bookAppointment.apptType')}</h2>
               <div className="grid grid-cols-2 gap-2">
-                {APPT_TYPES.map(t => (
-                  <button key={t.value} type="button" onClick={() => setType(t.value)}
+                {APPT_TYPES.map(typ => (
+                  <button key={typ.value} type="button" onClick={() => setType(typ.value)}
                     className={[
-                      'flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium transition-all text-left',
-                      apptType === t.value ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50',
+                      'flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium transition-all text-start rtl:flex-row-reverse',
+                      apptType === typ.value ? 'bg-indigo-600 text-white border-indigo-600' : 'border-slate-200 text-slate-600 hover:bg-slate-50',
                     ].join(' ')}>
-                    <span>{t.icon}</span> {t.label}
+                    <span>{typ.icon}</span> {typ.label}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Notes (optional)</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('bookAppointment.notesLabel')}</label>
               <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
-                placeholder="Describe the reason for your visit…"
+                placeholder={t('bookAppointment.notesPh')}
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" />
             </div>
 
@@ -304,7 +303,9 @@ export default function BookAppointment() {
               disabled={loading}
               className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
             >
-              {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Booking…</> : <><Check className="w-4 h-4" /> Confirm Booking</>}
+              {loading
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('bookAppointment.booking')}</>
+                : <><Check className="w-4 h-4" /> {t('bookAppointment.confirm')}</>}
             </button>
           </div>
         )}

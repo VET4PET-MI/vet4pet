@@ -1,4 +1,6 @@
-const Consultation = require('../models/Consultation');
+const Consultation  = require('../models/Consultation');
+const User          = require('../models/User');
+const notifications = require('./notificationController');
 
 async function getConsultations(req, res) {
   try {
@@ -37,6 +39,26 @@ async function createConsultation(req, res) {
     consultation.joinUrl = `https://meet.jit.si/Vet4Pet-${consultation._id}`;
     await consultation.save();
     console.log('[Consultation] created:', consultation._id, 'owner:', consultation.ownerId);
+
+    // Notify all vets that a consultation has been requested
+    try {
+      const vets = await User.find({ role: 'vet' }).select('_id');
+      const notifyParams = {
+        ownerName: consultation.ownerName || '',
+        petName:   consultation.petName || '',
+      };
+      await Promise.all(vets.map(v =>
+        notifications.create({
+          recipientId: v._id,
+          type:        'consultation_requested',
+          params:      notifyParams,
+          link:        '/consultations',
+        })
+      ));
+    } catch (notifyErr) {
+      console.error('[Consultation] notify vets failed:', notifyErr.message);
+    }
+
     res.status(201).json(consultation);
   } catch (err) {
     console.error('[Consultation] createConsultation error:', err.message);
@@ -58,6 +80,17 @@ async function updateStatus(req, res) {
     );
     if (!consultation) return res.status(404).json({ message: 'Consultation not found.' });
     console.log('[Consultation] status updated:', consultation._id, '->', status);
+
+    // When a vet activates a consultation, notify the owner so they can join
+    if (status === 'active' && consultation.ownerId) {
+      await notifications.create({
+        recipientId: consultation.ownerId,
+        type:        'consultation_active',
+        params:      { petName: consultation.petName || '' },
+        link:        '/consultations',
+      });
+    }
+
     res.json(consultation);
   } catch (err) {
     console.error('[Consultation] updateStatus error:', err.message);

@@ -4,34 +4,22 @@ import {
   ArrowLeft, Plus, X, Upload, Download, ExternalLink,
   FileText, Loader2, Trash2, ChevronDown, ChevronUp,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import api, { API_BASE } from '../api'
 import { useAuth } from '../context/AuthContext'
+import { localizeSpecies, localizeBreed, localizeGender } from '../utils/petLocale'
 
-// ─── Record type metadata ─────────────────────────────────────────────────────
-
-const RECORD_TYPES = [
-  { value: 'VISIT_SUMMARY', label: 'Visit Summary', icon: '🩺', color: 'bg-blue-50 text-blue-700 border-blue-200',   dot: 'bg-blue-500' },
-  { value: 'VACCINATION',   label: 'Vaccination',   icon: '💉', color: 'bg-green-50 text-green-700 border-green-200', dot: 'bg-green-500' },
-  { value: 'LAB_RESULT',    label: 'Lab Result',    icon: '🧪', color: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500' },
-  { value: 'XRAY',          label: 'X-Ray',         icon: '🔬', color: 'bg-purple-50 text-purple-700 border-purple-200', dot: 'bg-purple-500' },
-  { value: 'BLOOD_TEST',    label: 'Blood Test',    icon: '🩸', color: 'bg-red-50 text-red-700 border-red-200',     dot: 'bg-red-500' },
-  { value: 'OTHER',         label: 'Other',         icon: '📋', color: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' },
+const RECORD_TYPE_DEFS = [
+  { value: 'VISIT_SUMMARY', key: 'visitSummary', icon: '🩺', color: 'bg-blue-50 text-blue-700 border-blue-200',   dot: 'bg-blue-500' },
+  { value: 'VACCINATION',   key: 'vaccination',  icon: '💉', color: 'bg-green-50 text-green-700 border-green-200', dot: 'bg-green-500' },
+  { value: 'LAB_RESULT',    key: 'labResult',    icon: '🧪', color: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500' },
+  { value: 'XRAY',          key: 'xray',         icon: '🔬', color: 'bg-purple-50 text-purple-700 border-purple-200', dot: 'bg-purple-500' },
+  { value: 'BLOOD_TEST',    key: 'bloodTest',    icon: '🩸', color: 'bg-red-50 text-red-700 border-red-200',     dot: 'bg-red-500' },
+  { value: 'OTHER',         key: 'other',        icon: '📋', color: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' },
 ]
-
-function typeMeta(value) {
-  return RECORD_TYPES.find(t => t.value === value) ?? RECORD_TYPES[5]
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function isImage(url = '') {
   return /\.(jpg|jpeg|png|gif|webp)$/i.test(url)
-}
-
-function formatDate(ds) {
-  return new Date(ds).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric',
-  })
 }
 
 function formatBytes(b) {
@@ -40,9 +28,8 @@ function formatBytes(b) {
   return `${(b / 1024 / 1024).toFixed(1)} MB`
 }
 
-// ─── FileAttachment ───────────────────────────────────────────────────────────
-
 function FileAttachment({ fileUrl, originalFileName }) {
+  const { t } = useTranslation()
   const href = /^https?:\/\//i.test(fileUrl) ? fileUrl : `${API_BASE}${fileUrl}`
   const name = originalFileName || fileUrl.split('/').pop()
 
@@ -59,11 +46,11 @@ function FileAttachment({ fileUrl, originalFileName }) {
         <div className="flex gap-4 mt-2">
           <a href={href} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
-            <ExternalLink className="w-3.5 h-3.5" /> View full size
+            <ExternalLink className="w-3.5 h-3.5" /> {t('petProfile.viewFullSize')}
           </a>
           <a href={href} download={name}
             className="flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors">
-            <Download className="w-3.5 h-3.5" /> Download
+            <Download className="w-3.5 h-3.5" /> {t('petProfile.download')}
           </a>
         </div>
       </div>
@@ -71,58 +58,54 @@ function FileAttachment({ fileUrl, originalFileName }) {
   }
 
   return (
-    <div className="mt-4 flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+    <div className="mt-4 flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 rtl:flex-row-reverse">
       <div className="w-9 h-9 bg-red-50 rounded-lg flex items-center justify-center shrink-0">
         <FileText className="w-4.5 h-4.5 text-red-500" size={18} />
       </div>
       <span className="flex-1 min-w-0 text-sm text-slate-700 font-medium truncate">{name}</span>
       <a href={href} target="_blank" rel="noopener noreferrer"
         className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs font-medium rounded-lg transition-colors">
-        <ExternalLink className="w-3.5 h-3.5" /> View
+        <ExternalLink className="w-3.5 h-3.5" /> {t('petProfile.view')}
       </a>
       <a href={href} download={name}
         className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-medium rounded-lg transition-colors">
-        <Download className="w-3.5 h-3.5" /> Download
+        <Download className="w-3.5 h-3.5" /> {t('petProfile.download')}
       </a>
     </div>
   )
 }
 
-// ─── RecordCard ───────────────────────────────────────────────────────────────
-
 function RecordCard({ record }) {
+  const { t, i18n } = useTranslation()
   const [expanded, setExpanded] = useState(false)
-  const meta       = typeMeta(record.type)
+  const meta       = RECORD_TYPE_DEFS.find(x => x.value === record.type) ?? RECORD_TYPE_DEFS[5]
+  const label      = t(`petProfile.types.${meta.key}`)
   const isLong     = (record.findings?.length ?? 0) > 220
+  const locale     = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
+  const dateStr    = new Date(record.date).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })
 
   return (
-    <div className="flex gap-4">
-      {/* Timeline spine */}
+    <div className="flex gap-4 rtl:flex-row-reverse">
       <div className="flex flex-col items-center pt-1.5 shrink-0">
         <div className={`w-3 h-3 rounded-full ${meta.dot}`} />
         <div className="w-px flex-1 bg-slate-200 mt-1" />
       </div>
 
-      {/* Content card */}
       <div className="flex-1 pb-6 min-w-0">
         <div className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
-
-          {/* Header row */}
           <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${meta.color}`}>
-              <span>{meta.icon}</span>{meta.label}
+              <span>{meta.icon}</span>{label}
             </span>
-            <span className="text-xs text-slate-400 font-medium">{formatDate(record.date)}</span>
+            <span className="text-xs text-slate-400 font-medium">{dateStr}</span>
           </div>
 
-          {/* Vet */}
           {record.vetName && (
             <p className="text-xs text-slate-400 mb-3">
-              Recorded by <span className="text-slate-600 font-medium">{record.vetName}</span>
+              {t('petProfile.recordedBy')} <span className="text-slate-600 font-medium">{record.vetName}</span>
             </p>
           )}
 
-          {/* Findings */}
           {record.findings && (
             <div>
               <p className={`text-sm text-slate-700 leading-relaxed whitespace-pre-wrap ${!expanded && isLong ? 'line-clamp-3' : ''}`}>
@@ -134,14 +117,13 @@ function RecordCard({ record }) {
                   className="mt-1.5 flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition-colors"
                 >
                   {expanded
-                    ? <><ChevronUp className="w-3.5 h-3.5" /> Show less</>
-                    : <><ChevronDown className="w-3.5 h-3.5" /> Show more</>}
+                    ? <><ChevronUp className="w-3.5 h-3.5" /> {t('petProfile.showLess')}</>
+                    : <><ChevronDown className="w-3.5 h-3.5" /> {t('petProfile.showMore')}</>}
                 </button>
               )}
             </div>
           )}
 
-          {/* Attachment */}
           {record.fileUrl && (
             <FileAttachment fileUrl={record.fileUrl} originalFileName={record.originalFileName} />
           )}
@@ -151,9 +133,8 @@ function RecordCard({ record }) {
   )
 }
 
-// ─── DropZone ─────────────────────────────────────────────────────────────────
-
 function DropZone({ file, onFile, onRemove }) {
+  const { t } = useTranslation()
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef(null)
 
@@ -168,7 +149,7 @@ function DropZone({ file, onFile, onRemove }) {
 
   if (file) {
     return (
-      <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-xl">
+      <div className="flex items-center gap-3 p-3 border border-slate-200 rounded-xl rtl:flex-row-reverse">
         {previewUrl ? (
           <img src={previewUrl} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
         ) : (
@@ -205,8 +186,8 @@ function DropZone({ file, onFile, onRemove }) {
       ].join(' ')}
     >
       <Upload className="w-6 h-6 text-slate-400 mx-auto mb-2" />
-      <p className="text-sm font-medium text-slate-600">Drop a file or click to browse</p>
-      <p className="text-xs text-slate-400 mt-1">PDF · JPG · PNG · up to 10 MB</p>
+      <p className="text-sm font-medium text-slate-600">{t('petProfile.dropFile')}</p>
+      <p className="text-xs text-slate-400 mt-1">{t('petProfile.dropFileHint')}</p>
       <input
         ref={inputRef}
         type="file"
@@ -218,15 +199,16 @@ function DropZone({ file, onFile, onRemove }) {
   )
 }
 
-// ─── AddRecordModal ───────────────────────────────────────────────────────────
-
 function AddRecordModal({ petId, user, onClose, onSaved }) {
+  const { t } = useTranslation()
   const today = new Date().toISOString().slice(0, 10)
   const [form, setForm]         = useState({ type: 'VISIT_SUMMARY', date: today, vetName: user?.name ?? '', findings: '' })
   const [file, setFile]         = useState(null)
   const [submitting, setSub]    = useState(false)
   const [progress, setProgress] = useState(0)
   const [error, setError]       = useState(null)
+
+  const RECORD_TYPES = RECORD_TYPE_DEFS.map(x => ({ ...x, label: t(`petProfile.types.${x.key}`) }))
 
   function set(field, value) { setForm(f => ({ ...f, [field]: value })) }
 
@@ -261,7 +243,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
 
       onSaved()
     } catch (err) {
-      setError(err.response?.data?.message ?? 'Failed to save record. Please try again.')
+      setError(err.response?.data?.message ?? t('petProfile.saveFail'))
     } finally {
       setSub(false)
       setProgress(0)
@@ -272,11 +254,10 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col">
 
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">Add Medical Record</h2>
-            <p className="text-sm text-slate-400 mt-0.5">Document a visit, test, vaccination, or file</p>
+            <h2 className="text-lg font-bold text-slate-800">{t('petProfile.addModalTitle')}</h2>
+            <p className="text-sm text-slate-400 mt-0.5">{t('petProfile.addModalSub')}</p>
           </div>
           <button type="button" onClick={onClose}
             className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition">
@@ -284,37 +265,34 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
           </button>
         </div>
 
-        {/* Scrollable form body + sticky footer — all inside one <form> */}
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
           <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
 
-            {/* Type picker */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Record Type</label>
+              <label className="block text-sm font-medium text-slate-700 mb-2">{t('petProfile.recordType')}</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {RECORD_TYPES.map(t => (
+                {RECORD_TYPES.map(typ => (
                   <button
-                    key={t.value}
+                    key={typ.value}
                     type="button"
-                    onClick={() => set('type', t.value)}
+                    onClick={() => set('type', typ.value)}
                     className={[
-                      'flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium transition-all text-left',
-                      form.type === t.value
-                        ? `${t.color} ring-2 ring-offset-1 ring-current`
+                      'flex items-center gap-2 px-3 py-2.5 rounded-xl border text-sm font-medium transition-all text-start rtl:flex-row-reverse',
+                      form.type === typ.value
+                        ? `${typ.color} ring-2 ring-offset-1 ring-current`
                         : 'border-slate-200 text-slate-600 hover:bg-slate-50',
                     ].join(' ')}
                   >
-                    <span className="text-base leading-none">{t.icon}</span>
-                    <span className="truncate text-xs leading-tight">{t.label}</span>
+                    <span className="text-base leading-none">{typ.icon}</span>
+                    <span className="truncate text-xs leading-tight">{typ.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Date + Vet */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Date</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('petProfile.date')}</label>
                 <input
                   type="date"
                   value={form.date}
@@ -323,43 +301,40 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Vet Name</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('petProfile.vetName')}</label>
                 <input
                   type="text"
                   value={form.vetName}
                   onChange={e => set('vetName', e.target.value)}
-                  placeholder="Dr. Smith"
+                  placeholder={t('petProfile.vetNamePh')}
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                 />
               </div>
             </div>
 
-            {/* Findings */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Clinical Findings</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('petProfile.findings')}</label>
               <textarea
                 value={form.findings}
                 onChange={e => set('findings', e.target.value)}
-                placeholder="Describe observations, diagnosis, treatment plan…"
+                placeholder={t('petProfile.findingsPh')}
                 rows={4}
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none"
               />
             </div>
 
-            {/* File upload */}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Attach Document
-                <span className="text-slate-400 font-normal ml-1">(optional)</span>
+                {t('petProfile.attachDocument')}
+                <span className="text-slate-400 font-normal ms-1">{t('common.optional')}</span>
               </label>
               <DropZone file={file} onFile={setFile} onRemove={() => setFile(null)} />
             </div>
 
-            {/* Upload progress */}
             {submitting && file && (
               <div>
                 <div className="flex justify-between text-xs text-slate-500 mb-1">
-                  <span>Uploading…</span>
+                  <span>{t('petProfile.uploading')}</span>
                   <span>{progress}%</span>
                 </div>
                 <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
@@ -371,7 +346,6 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
               </div>
             )}
 
-            {/* Error */}
             {error && (
               <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">
                 {error}
@@ -379,21 +353,22 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
             )}
           </div>
 
-          {/* Sticky footer */}
           <div className="flex gap-3 px-6 py-4 border-t border-slate-100 shrink-0">
             <button
               type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
             >
-              Cancel
+              {t('petProfile.cancel')}
             </button>
             <button
               type="submit"
               disabled={submitting}
               className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
             >
-              {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</> : 'Save Record'}
+              {submitting
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.saving')}</>
+                : t('petProfile.saveRecord')}
             </button>
           </div>
         </form>
@@ -402,16 +377,15 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
   )
 }
 
-// ─── PetProfile Page ──────────────────────────────────────────────────────────
-
 const SPECIES_EMOJI = { dog: '🐕', cat: '🐈', bird: '🦜', rabbit: '🐇' }
 
 export default function PetProfile({ readOnly = false }) {
-  const { id }        = useParams()
-  const navigate      = useNavigate()
-  const { user }      = useAuth()
+  const { t }     = useTranslation()
+  const { id }    = useParams()
+  const navigate  = useNavigate()
+  const { user }  = useAuth()
   const backPath  = readOnly ? '/my-pets' : '/'
-  const backLabel = readOnly ? 'My Pets'  : 'All Patients'
+  const backLabel = readOnly ? t('petProfile.backOwner') : t('petProfile.backVet')
 
   const [pet, setPet]         = useState(null)
   const [records, setRecords] = useState([])
@@ -432,7 +406,7 @@ export default function PetProfile({ readOnly = false }) {
       setPet(petRes.data)
       setRecords(recRes.data)
     } catch {
-      setError('Could not load pet data.')
+      setError(t('petProfile.notFound'))
     } finally {
       setLoading(false)
     }
@@ -455,9 +429,9 @@ export default function PetProfile({ readOnly = false }) {
   if (error || !pet) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-3 p-4">
-        <p className="text-red-600 font-medium">{error ?? 'Pet not found.'}</p>
+        <p className="text-red-600 font-medium">{error ?? t('petProfile.petNotFound')}</p>
         <button onClick={() => navigate('/')} className="text-sm text-indigo-600 hover:underline">
-          ← Back to Dashboard
+          {t('petProfile.backDashboard')}
         </button>
       </div>
     )
@@ -468,14 +442,13 @@ export default function PetProfile({ readOnly = false }) {
   return (
     <div className="min-h-screen bg-slate-50">
 
-      {/* Sticky top nav */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <button
             onClick={() => navigate(backPath)}
-            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium transition-colors shrink-0 rtl:flex-row-reverse"
           >
-            <ArrowLeft className="w-4 h-4" /> {backLabel}
+            <ArrowLeft className="w-4 h-4 rtl:rotate-180" /> {backLabel}
           </button>
           <span className="text-slate-300 select-none">/</span>
           <span className="text-slate-800 font-semibold text-sm truncate">{pet.name}</span>
@@ -483,9 +456,9 @@ export default function PetProfile({ readOnly = false }) {
           {!readOnly && (
             <button
               onClick={() => setModal(true)}
-              className="ml-auto flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm shrink-0"
+              className="ms-auto flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm shrink-0 rtl:flex-row-reverse"
             >
-              <Plus className="w-4 h-4" /> Add Record
+              <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
             </button>
           )}
         </div>
@@ -493,8 +466,7 @@ export default function PetProfile({ readOnly = false }) {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-        {/* Pet Hero */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 flex items-center gap-5">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 flex items-center gap-5 rtl:flex-row-reverse rtl:text-right">
           <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-2xl flex items-center justify-center text-4xl shrink-0 shadow-sm">
             {emoji}
           </div>
@@ -503,11 +475,11 @@ export default function PetProfile({ readOnly = false }) {
             <h1 className="text-2xl font-bold text-slate-800">{pet.name}</h1>
             <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2">
               {[
-                ['Species', pet.species],
-                ['Breed',   pet.breed],
-                ['Age',     pet.age != null ? `${pet.age} yr` : null],
-                ['Gender',  pet.gender],
-                ['Owner',   pet.ownerId],
+                [t('petProfile.speciesLabel'), localizeSpecies(pet.species, t)],
+                [t('petProfile.breedLabel'),   localizeBreed(pet.breed, t)],
+                [t('petProfile.ageLabel'),     pet.age != null ? t('petProfile.ageValue', { n: pet.age }) : null],
+                [t('petProfile.genderLabel'),  localizeGender(pet.gender, t)],
+                [t('petProfile.ownerLabel'),   pet.ownerId],
               ].map(([label, val]) => val ? (
                 <span key={label} className="text-sm text-slate-500">
                   <span className="font-medium text-slate-700">{label}:</span> {val}
@@ -519,31 +491,30 @@ export default function PetProfile({ readOnly = false }) {
           <div className="hidden sm:flex flex-col items-end gap-2 shrink-0">
             <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-              Active Patient
+              {t('petProfile.activePatient')}
             </span>
             <span className="text-xs text-slate-400">
-              {records.length} record{records.length !== 1 ? 's' : ''}
+              {t('petProfile.recordsCount', { count: records.length })}
             </span>
           </div>
         </div>
 
-        {/* Timeline */}
         <section>
-          <h2 className="text-lg font-semibold text-slate-800 mb-6">Medical History</h2>
+          <h2 className="text-lg font-semibold text-slate-800 mb-6">{t('petProfile.medicalHistory')}</h2>
 
           {records.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-slate-200">
               <div className="text-5xl mb-4">📋</div>
-              <p className="font-semibold text-slate-600">No records yet</p>
+              <p className="font-semibold text-slate-600">{t('petProfile.noRecordsTitle')}</p>
               <p className="text-sm text-slate-400 mt-1 mb-5">
-                Document the first visit, test, or vaccination.
+                {t('petProfile.noRecordsHint')}
               </p>
               {!readOnly && (
                 <button
                   onClick={() => setModal(true)}
                   className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
                 >
-                  Add First Record
+                  {t('petProfile.addFirstRecord')}
                 </button>
               )}
             </div>
@@ -552,12 +523,11 @@ export default function PetProfile({ readOnly = false }) {
               {records.map(record => (
                 <RecordCard key={record._id} record={record} />
               ))}
-              {/* End dot */}
-              <div className="flex gap-4">
+              <div className="flex gap-4 rtl:flex-row-reverse">
                 <div className="flex flex-col items-center shrink-0">
                   <div className="w-3 h-3 rounded-full bg-slate-200" />
                 </div>
-                <p className="text-xs text-slate-400 pb-2">Beginning of records</p>
+                <p className="text-xs text-slate-400 pb-2">{t('petProfile.beginningOfRecords')}</p>
               </div>
             </div>
           )}

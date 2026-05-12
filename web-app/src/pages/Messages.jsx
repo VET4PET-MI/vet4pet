@@ -1,18 +1,21 @@
 import { useState, useEffect, useRef } from 'react'
 import { Send, Loader2, MessageSquare, Plus, X, Stethoscope } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import api from '../api'
 import { useAuth } from '../context/AuthContext'
 import AppLayout from '../components/AppLayout'
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function formatTime(ds) {
-  const d = new Date(ds)
-  const now = new Date()
-  const diffDays = Math.floor((now - d) / 86400000)
-  if (diffDays === 0) return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-  if (diffDays === 1) return 'Yesterday'
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+function useFormatTime() {
+  const { t, i18n } = useTranslation()
+  const locale = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
+  return function formatTime(ds) {
+    const d = new Date(ds)
+    const now = new Date()
+    const diffDays = Math.floor((now - d) / 86400000)
+    if (diffDays === 0) return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
+    if (diffDays === 1) return t('messages.yesterday')
+    return d.toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+  }
 }
 
 function Avatar({ name, size = 'md' }) {
@@ -24,9 +27,8 @@ function Avatar({ name, size = 'md' }) {
   )
 }
 
-// ─── Vet: Compose Modal ───────────────────────────────────────────────────────
-
 function ComposeModal({ onClose, onSent }) {
+  const { t } = useTranslation()
   const [toId, setToId]       = useState('')
   const [toName, setToName]   = useState('')
   const [content, setContent] = useState('')
@@ -45,7 +47,7 @@ function ComposeModal({ onClose, onSent }) {
       })
       onSent(toId.trim())
     } catch (err) {
-      setError(err.response?.data?.message ?? 'Failed to send.')
+      setError(err.response?.data?.message ?? t('messages.sendFail'))
     } finally { setSending(false) }
   }
 
@@ -53,33 +55,33 @@ function ComposeModal({ onClose, onSent }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-800">New Message</h2>
+          <h2 className="text-lg font-bold text-slate-800">{t('messages.newMessage')}</h2>
           <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSend} className="px-6 py-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Recipient ID</label>
-            <input value={toId} onChange={e => setToId(e.target.value)} placeholder="Owner's user ID" required
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.recipientId')}</label>
+            <input value={toId} onChange={e => setToId(e.target.value)} placeholder={t('messages.recipientIdPh')} required
               className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Recipient Name <span className="text-slate-400 font-normal">(optional)</span></label>
-            <input value={toName} onChange={e => setToName(e.target.value)} placeholder="e.g. John Smith"
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.recipientName')} <span className="text-slate-400 font-normal">{t('common.optional')}</span></label>
+            <input value={toName} onChange={e => setToName(e.target.value)} placeholder={t('messages.recipientNamePh')}
               className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Message</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.message')}</label>
             <textarea value={content} onChange={e => setContent(e.target.value)} rows={3} required
-              placeholder="Type your message…"
+              placeholder={t('messages.messagePh')}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
           <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending}
               className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              Send
+              {t('messages.send')}
             </button>
           </div>
         </form>
@@ -88,9 +90,8 @@ function ComposeModal({ onClose, onSent }) {
   )
 }
 
-// ─── Owner: Message Clinic Modal ──────────────────────────────────────────────
-
 function MessageClinicModal({ onClose, onSent }) {
+  const { t } = useTranslation()
   const [vets, setVets]       = useState([])
   const [vetId, setVetId]     = useState('')
   const [content, setContent] = useState('')
@@ -101,9 +102,9 @@ function MessageClinicModal({ onClose, onSent }) {
   useEffect(() => {
     api.get('/api/users/vets')
       .then(r => { setVets(r.data); if (r.data.length > 0) setVetId(r.data[0]._id) })
-      .catch(() => setError('Could not load clinic contacts.'))
+      .catch(() => setError(t('messages.couldNotLoad')))
       .finally(() => setLoading(false))
-  }, [])
+  }, [t])
 
   async function handleSend(e) {
     e.preventDefault()
@@ -118,7 +119,7 @@ function MessageClinicModal({ onClose, onSent }) {
       })
       onSent(vetId)
     } catch (err) {
-      setError(err.response?.data?.message ?? 'Failed to send.')
+      setError(err.response?.data?.message ?? t('messages.sendFail'))
     } finally { setSending(false) }
   }
 
@@ -126,11 +127,11 @@ function MessageClinicModal({ onClose, onSent }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <div className="flex items-center gap-3 rtl:flex-row-reverse">
+            <div className="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0">
               <Stethoscope className="w-5 h-5 text-indigo-600" />
             </div>
-            <h2 className="text-lg font-bold text-slate-800">Message the Clinic</h2>
+            <h2 className="text-lg font-bold text-slate-800">{t('messages.messageClinic')}</h2>
           </div>
           <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl"><X className="w-5 h-5" /></button>
         </div>
@@ -139,36 +140,36 @@ function MessageClinicModal({ onClose, onSent }) {
             <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-indigo-400" /></div>
           ) : vets.length > 1 ? (
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Vet</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.vet')}</label>
               <select value={vetId} onChange={e => setVetId(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 {vets.map(v => <option key={v._id} value={v._id}>{v.name}</option>)}
               </select>
             </div>
           ) : vets.length === 1 ? (
-            <div className="flex items-center gap-3 p-3 bg-indigo-50 rounded-xl">
+            <div className="flex items-center gap-3 p-3 bg-indigo-50 rounded-xl rtl:flex-row-reverse rtl:text-right">
               <Avatar name={vets[0].name} size="sm" />
               <div>
                 <p className="text-sm font-semibold text-slate-800">{vets[0].name}</p>
-                <p className="text-xs text-slate-500">Your Veterinarian</p>
+                <p className="text-xs text-slate-500">{t('messages.yourVet')}</p>
               </div>
             </div>
           ) : null}
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Your message</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('messages.yourMessage')}</label>
             <textarea value={content} onChange={e => setContent(e.target.value)} rows={4} required
               autoFocus
-              placeholder="Hi, I have a question about my pet…"
+              placeholder={t('messages.ownerMessagePh')}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           </div>
           {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
           <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">Cancel</button>
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending || loading || !vetId}
               className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              Send Message
+              {t('messages.sendMessage')}
             </button>
           </div>
         </form>
@@ -177,9 +178,9 @@ function MessageClinicModal({ onClose, onSent }) {
   )
 }
 
-// ─── Messages Page ────────────────────────────────────────────────────────────
-
 export default function Messages() {
+  const { t }                       = useTranslation()
+  const formatTime                  = useFormatTime()
   const { user }                    = useAuth()
   const isOwner                     = user?.role === 'owner'
   const bottomRef                   = useRef(null)
@@ -236,7 +237,7 @@ export default function Messages() {
     const partnerId = ids.find(id => id !== user?.id) ?? ids[0]
     const msg = conv.lastMessage
     const name = msg.senderId === partnerId ? msg.senderName : msg.receiverName
-    return { id: partnerId, name: name || (isOwner ? 'Your Vet' : 'Client') }
+    return { id: partnerId, name: name || (isOwner ? t('messages.yourVet') : t('messages.client')) }
   }
 
   function handleComposeSent(toId) {
@@ -250,43 +251,43 @@ export default function Messages() {
 
   const emptyStateAction = isOwner
     ? <button onClick={() => setCompose(true)}
-        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors">
-        <Stethoscope className="w-4 h-4" /> Message the Clinic
+        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
+        <Stethoscope className="w-4 h-4" /> {t('messages.messageClinic')}
       </button>
     : <button onClick={() => setCompose(true)}
-        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors">
-        <Plus className="w-4 h-4" /> Compose
+        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
+        <Plus className="w-4 h-4" /> {t('messages.compose')}
       </button>
 
   return (
     <AppLayout
-      title={isOwner ? 'Clinic Chat' : 'Client Messages'}
+      title={isOwner ? t('messages.titleOwner') : t('messages.titleVet')}
       actions={
         isOwner
           ? <button onClick={() => setCompose(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
-              <Stethoscope className="w-4 h-4" /> Message Clinic
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              <Stethoscope className="w-4 h-4" /> {t('messages.messageClinic')}
             </button>
           : <button onClick={() => setCompose(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
-              <Plus className="w-4 h-4" /> Compose
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              <Plus className="w-4 h-4" /> {t('messages.compose')}
             </button>
       }
     >
       <div className="flex h-full overflow-hidden">
 
         {/* ── Conversation list ────────────────────────────────────────── */}
-        <div className="w-72 shrink-0 border-r border-slate-200 bg-white overflow-y-auto flex flex-col">
+        <div className="w-72 shrink-0 border-e border-slate-200 bg-white overflow-y-auto flex flex-col">
           <div className="px-4 py-3 border-b border-slate-100">
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Conversations</p>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('messages.conversations')}</p>
           </div>
 
           {convos.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
               <MessageSquare className="w-8 h-8 text-slate-300 mb-3" />
-              <p className="text-sm font-medium text-slate-500">No messages yet</p>
+              <p className="text-sm font-medium text-slate-500">{t('messages.noMessagesYet')}</p>
               <p className="text-xs text-slate-400 mt-1">
-                {isOwner ? 'Send a message to your vet to get started.' : 'Start a conversation with a client.'}
+                {isOwner ? t('messages.ownerEmptyHint') : t('messages.vetEmptyHint')}
               </p>
               {emptyStateAction}
             </div>
@@ -299,19 +300,19 @@ export default function Messages() {
                     <button
                       onClick={() => setActiveId(partner.id)}
                       className={[
-                        'w-full text-left px-4 py-3.5 hover:bg-slate-50 transition-colors',
-                        activeId === partner.id ? 'bg-indigo-50 border-r-2 border-indigo-500' : '',
+                        'w-full text-start px-4 py-3.5 hover:bg-slate-50 transition-colors',
+                        activeId === partner.id ? 'bg-indigo-50 border-e-2 border-indigo-500' : '',
                       ].join(' ')}
                     >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex items-center justify-between gap-2 rtl:flex-row-reverse">
+                        <div className="flex items-center gap-2.5 min-w-0 rtl:flex-row-reverse">
                           <Avatar name={partner.name} size="sm" />
-                          <div className="min-w-0">
+                          <div className="min-w-0 rtl:text-right">
                             <p className="text-sm font-semibold text-slate-800 truncate">{partner.name}</p>
                             <p className="text-xs text-slate-400 truncate">{conv.lastMessage?.content}</p>
                           </div>
                         </div>
-                        <div className="shrink-0 text-right">
+                        <div className="shrink-0 text-end">
                           <p className="text-xs text-slate-400">{formatTime(conv.lastMessage?.createdAt)}</p>
                           {conv.unread > 0 && (
                             <span className="inline-block mt-1 min-w-[1.25rem] text-center text-xs font-bold bg-indigo-500 text-white rounded-full px-1.5 py-0.5">
@@ -335,23 +336,23 @@ export default function Messages() {
               <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mb-4">
                 <MessageSquare className="w-8 h-8 text-indigo-300" />
               </div>
-              <p className="text-slate-600 font-semibold text-base">Select a conversation</p>
+              <p className="text-slate-600 font-semibold text-base">{t('messages.selectConvo')}</p>
               <p className="text-sm text-slate-400 mt-1">
-                {isOwner ? 'Or tap "Message Clinic" to contact your vet.' : 'Or compose a new message to get started.'}
+                {isOwner ? t('messages.ownerSelectHint') : t('messages.vetSelectHint')}
               </p>
             </div>
           ) : (
             <>
               {/* Thread header */}
               <div className="bg-white border-b border-slate-200 px-6 py-4 shrink-0">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 rtl:flex-row-reverse rtl:text-right">
                   <Avatar name={activePartner?.name} />
                   <div>
                     <p className="text-sm font-semibold text-slate-800">
-                      {activePartner?.name ?? (isOwner ? 'Your Vet' : 'Client')}
+                      {activePartner?.name ?? (isOwner ? t('messages.yourVet') : t('messages.client'))}
                     </p>
                     <p className="text-xs text-slate-400">
-                      {isOwner ? 'Veterinary Clinic' : 'Pet Owner'}
+                      {isOwner ? t('messages.vetClinic') : t('messages.petOwner')}
                     </p>
                   </div>
                 </div>
@@ -366,8 +367,8 @@ export default function Messages() {
                 )}
                 {messages.length === 0 && !loadingMsgs && (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <p className="text-sm text-slate-400">No messages in this conversation yet.</p>
-                    <p className="text-xs text-slate-300 mt-1">Send the first message below.</p>
+                    <p className="text-sm text-slate-400">{t('messages.convoEmpty')}</p>
+                    <p className="text-xs text-slate-300 mt-1">{t('messages.convoFirst')}</p>
                   </div>
                 )}
                 {messages.map(msg => {
@@ -378,8 +379,8 @@ export default function Messages() {
                       <div className={[
                         'max-w-[68%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed',
                         isMe
-                          ? 'bg-indigo-600 text-white rounded-br-sm ml-2'
-                          : 'bg-white text-slate-800 border border-slate-200 rounded-bl-sm ml-2',
+                          ? 'bg-indigo-600 text-white rounded-br-sm ms-2'
+                          : 'bg-white text-slate-800 border border-slate-200 rounded-bl-sm ms-2',
                       ].join(' ')}>
                         <p>{msg.content}</p>
                         <p className={`text-xs mt-1 ${isMe ? 'text-indigo-200' : 'text-slate-400'}`}>
@@ -398,7 +399,7 @@ export default function Messages() {
                   value={draft}
                   onChange={e => setDraft(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(e) } }}
-                  placeholder="Type a message… (Enter to send)"
+                  placeholder={t('messages.inputPh')}
                   rows={1}
                   className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 max-h-24"
                 />
