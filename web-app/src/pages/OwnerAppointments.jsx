@@ -104,21 +104,23 @@ export default function OwnerAppointments() {
       subtitle={t('ownerAppointments.subtitle')}
       actions={
         <button onClick={() => navigate('/book-appointment')}
-          className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
           <Plus className="w-4 h-4" /> {t('ownerAppointments.bookAppointment')}
         </button>
       }
     >
-      <div className="max-w-3xl mx-auto px-6 py-6 space-y-8">
+      <div className="max-w-3xl mx-auto px-6 py-6 space-y-6">
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
         ) : appts.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-            <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-4" />
-            <p className="font-semibold text-slate-600">{t('ownerAppointments.noTitle')}</p>
+          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-violet-200">
+            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-3xl flex items-center justify-center">
+              <Calendar className="w-10 h-10 text-violet-500" />
+            </div>
+            <p className="font-semibold text-slate-700">{t('ownerAppointments.noTitle')}</p>
             <p className="text-sm text-slate-400 mt-1 mb-6">{t('ownerAppointments.noHint')}</p>
             <button onClick={() => navigate('/book-appointment')}
-              className="px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-xl transition-colors">
+              className="px-5 py-2.5 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
               {t('ownerAppointments.bookNow')}
             </button>
           </div>
@@ -126,15 +128,21 @@ export default function OwnerAppointments() {
           <>
             {upcoming.length > 0 && (
               <section className="space-y-3">
-                <h2 className="text-base font-semibold text-slate-800 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-violet-500" /> {t('ownerAppointments.upcoming', { count: upcoming.length })}
-                </h2>
+                <div className="flex items-center gap-3 mb-3 rtl:flex-row-reverse">
+                  <div className="w-1.5 h-7 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
+                  <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 rtl:flex-row-reverse">
+                    <AlertCircle className="w-4 h-4 text-violet-500" /> {t('ownerAppointments.upcoming', { count: upcoming.length })}
+                  </h2>
+                </div>
                 {upcoming.map(a => <ApptCard key={a._id} appt={a} />)}
               </section>
             )}
             {past.length > 0 && (
               <section className="space-y-3">
-                <h2 className="text-base font-semibold text-slate-500">{t('ownerAppointments.pastAndCancelled')}</h2>
+                <div className="flex items-center gap-3 mb-3 rtl:flex-row-reverse">
+                  <div className="w-1.5 h-7 bg-slate-300 rounded-full" />
+                  <h2 className="text-base font-bold text-slate-500">{t('ownerAppointments.pastAndCancelled')}</h2>
+                </div>
                 {past.map(a => <ApptCard key={a._id} appt={a} />)}
               </section>
             )}

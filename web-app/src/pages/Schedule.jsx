@@ -329,11 +329,11 @@ export default function Schedule() {
       actions={
         <div className="flex items-center gap-2">
           <button onClick={() => navigate('/vet-schedule-settings')}
-            className="flex items-center gap-2 px-4 py-2 border border-violet-300 text-violet-600 bg-violet-50 hover:bg-violet-100 text-sm font-medium rounded-lg transition-colors rtl:flex-row-reverse">
+            className="flex items-center gap-2 px-4 py-2 border border-violet-200 text-violet-700 bg-white hover:bg-violet-50 text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
             <Settings className="w-4 h-4" /> {t('schedule.availability')}
           </button>
           <button onClick={() => openBook(null)}
-            className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
             <Plus className="w-4 h-4" /> {t('schedule.bookAppointment')}
           </button>
         </div>
@@ -341,24 +341,24 @@ export default function Schedule() {
     >
       <div className="flex flex-col h-full">
         {/* Week nav */}
-        <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-3 shrink-0">
-          <button onClick={prevWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronLeft className="w-4 h-4 rtl:rotate-180" /></button>
-          <button onClick={goToday} className="px-3 py-1.5 text-xs font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 rounded-lg transition">{t('schedule.today')}</button>
-          <button onClick={nextWeek} className="p-1.5 text-slate-500 hover:bg-slate-100 rounded-lg transition"><ChevronRight className="w-4 h-4 rtl:rotate-180" /></button>
+        <div className="bg-white/80 backdrop-blur-md border-b border-violet-100 px-6 py-3 flex items-center gap-3 shrink-0">
+          <button onClick={prevWeek} className="p-2 text-slate-500 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition"><ChevronLeft className="w-4 h-4 rtl:rotate-180" /></button>
+          <button onClick={goToday} className="px-3 py-2 text-xs font-semibold text-violet-700 bg-gradient-to-br from-violet-100 to-fuchsia-100 hover:from-violet-200 hover:to-fuchsia-200 rounded-xl transition">{t('schedule.today')}</button>
+          <button onClick={nextWeek} className="p-2 text-slate-500 hover:bg-violet-50 hover:text-violet-700 rounded-xl transition"><ChevronRight className="w-4 h-4 rtl:rotate-180" /></button>
 
           {/* Day tabs */}
-          <div className="flex flex-1 overflow-x-auto gap-1 ms-2">
+          <div className="flex flex-1 overflow-x-auto gap-1.5 ms-2">
             {weekDays.map(day => (
               <button
                 key={toDateStr(day)}
                 onClick={() => setSelectedDay(day)}
                 className={[
-                  'shrink-0 flex flex-col items-center px-3 py-2 rounded-xl text-xs font-medium transition-colors min-w-[3.5rem]',
+                  'shrink-0 flex flex-col items-center px-3.5 py-2 rounded-xl text-xs font-medium transition-all min-w-[3.5rem]',
                   isSameDay(day, selectedDay)
-                    ? 'bg-violet-600 text-white'
+                    ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white shadow-md'
                     : isToday(day)
-                    ? 'text-violet-600 bg-violet-50 hover:bg-violet-100'
-                    : 'text-slate-500 hover:bg-slate-100',
+                    ? 'text-violet-700 bg-violet-50 hover:bg-violet-100 ring-2 ring-violet-300'
+                    : 'text-slate-500 hover:bg-violet-50 hover:text-violet-700',
                 ].join(' ')}
               >
                 <span className="text-xs opacity-75">{day.toLocaleDateString(locale, { weekday: 'short' })}</span>
@@ -371,12 +371,17 @@ export default function Schedule() {
         {/* Time grid */}
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-3xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-slate-700">{dateLabel}</h3>
-              <div className="flex items-center gap-3 text-xs text-slate-400">
-                <span>{t('schedule.appointments', { count: activeAppts.length })}</span>
+            <div className="flex items-center justify-between mb-4 rtl:flex-row-reverse">
+              <div className="flex items-center gap-3 rtl:flex-row-reverse">
+                <div className="w-1.5 h-7 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
+                <h3 className="text-base font-bold text-slate-800">{dateLabel}</h3>
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="px-3 py-1 bg-violet-50 text-violet-700 font-medium rounded-full border border-violet-100">
+                  {t('schedule.appointments', { count: activeAppts.length })}
+                </span>
                 {timeBlocks.length > 0 && (
-                  <span className="flex items-center gap-1 text-red-400">
+                  <span className="flex items-center gap-1 px-3 py-1 bg-red-50 text-red-600 font-medium rounded-full border border-red-100">
                     <Lock className="w-3 h-3" /> {t('schedule.blockedCount', { count: timeBlocks.length })}
                   </span>
                 )}
@@ -395,7 +400,7 @@ export default function Schedule() {
             {loading ? (
               <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-violet-500" /></div>
             ) : (
-              <div className="divide-y divide-slate-100 bg-white rounded-2xl border border-slate-200 overflow-hidden">
+              <div className="divide-y divide-violet-50 bg-white rounded-2xl border border-violet-100 overflow-hidden shadow-sm">
                 {/* Legend */}
                 <div className="flex items-center gap-4 px-4 py-2 bg-slate-50 border-b border-slate-100">
                   <span className="flex items-center gap-1.5 text-xs text-slate-400">

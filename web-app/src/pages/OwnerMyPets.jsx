@@ -123,7 +123,7 @@ export default function OwnerMyPets() {
       subtitle={t('ownerMyPets.subtitle')}
       actions={
         <button onClick={() => setAdd(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
           <Plus className="w-4 h-4" /> {t('ownerMyPets.addPet')}
         </button>
       }
@@ -132,12 +132,14 @@ export default function OwnerMyPets() {
         {loading ? (
           <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
         ) : pets.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-            <div className="text-5xl mb-4">🐾</div>
-            <p className="font-semibold text-slate-600">{t('ownerMyPets.noPetsTitle')}</p>
+          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-violet-200">
+            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-3xl flex items-center justify-center text-5xl">
+              🐾
+            </div>
+            <p className="font-semibold text-slate-700">{t('ownerMyPets.noPetsTitle')}</p>
             <p className="text-sm text-slate-400 mt-1 mb-6">{t('ownerMyPets.noPetsHint')}</p>
             <button onClick={() => setAdd(true)}
-              className="px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-xl transition-colors">
+              className="px-5 py-2.5 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
               {t('ownerMyPets.addFirstBtn')}
             </button>
           </div>
@@ -149,21 +151,23 @@ export default function OwnerMyPets() {
                 <div
                   key={pet._id}
                   onClick={() => navigate(`/pet/${pet._id}`)}
-                  className="group bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-violet-300 transition-all cursor-pointer flex flex-col gap-3"
+                  className="group bg-white rounded-2xl border border-violet-100 p-5 hover:shadow-lg hover:border-violet-300 hover:-translate-y-0.5 transition-all cursor-pointer flex flex-col gap-3"
                 >
                   <div className="flex items-start justify-between">
-                    <span className="text-3xl leading-none">{icon}</span>
+                    <div className="w-14 h-14 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-2xl flex items-center justify-center text-3xl leading-none shadow-sm">
+                      {icon}
+                    </div>
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge}`}>{localizeSpecies(pet.species, t) || '—'}</span>
                   </div>
                   <div>
                     <h3 className="font-semibold text-slate-800 group-hover:text-violet-600 transition-colors">{pet.name}</h3>
                     <p className="text-slate-400 text-sm mt-0.5">{localizeBreed(pet.breed, t) || '—'}{pet.age ? ` · ${pet.age} ${t('ownerMyPets.yearShort')}` : ''}</p>
                   </div>
-                  <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <div className="mt-auto pt-3 border-t border-violet-50 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
                       <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block" />{t('ownerMyPets.active')}
                     </span>
-                    <span className="text-xs text-violet-600 font-medium">{t('ownerMyPets.viewRecords')}</span>
+                    <span className="text-xs text-violet-600 font-semibold group-hover:text-fuchsia-600 transition-colors">{t('ownerMyPets.viewRecords')}</span>
                   </div>
                 </div>
               )

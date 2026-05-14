@@ -129,9 +129,11 @@ export default function EmergencyVets() {
         {loading ? (
           <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
         ) : vets.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-            <Stethoscope className="w-10 h-10 text-slate-300 mx-auto mb-4" />
-            <p className="font-semibold text-slate-600">{t('emergency.noResults')}</p>
+          <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-violet-200">
+            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-3xl flex items-center justify-center">
+              <Stethoscope className="w-10 h-10 text-violet-500" />
+            </div>
+            <p className="font-semibold text-slate-700">{t('emergency.noResults')}</p>
             <p className="text-sm text-slate-400 mt-1">{t('emergency.noResultsHint')}</p>
           </div>
         ) : (
@@ -139,11 +141,15 @@ export default function EmergencyVets() {
             {vets.map(v => (
               <div
                 key={v._id}
-                className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md transition-shadow"
+                className="bg-white rounded-2xl border border-violet-100 p-5 hover:shadow-lg hover:border-violet-300 hover:-translate-y-0.5 transition-all"
               >
                 <div className="flex items-start gap-4 rtl:flex-row-reverse rtl:text-right">
-                  <div className="w-12 h-12 bg-violet-50 rounded-xl flex items-center justify-center shrink-0">
-                    <Stethoscope className="w-6 h-6 text-violet-600" />
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                    v.isOnCall
+                      ? 'bg-gradient-to-br from-green-500 to-emerald-500 shadow-md'
+                      : 'bg-gradient-to-br from-violet-100 to-fuchsia-100'
+                  }`}>
+                    <Stethoscope className={`w-6 h-6 ${v.isOnCall ? 'text-white' : 'text-violet-600'}`} />
                   </div>
 
                   <div className="flex-1 min-w-0">

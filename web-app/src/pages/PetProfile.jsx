@@ -387,9 +387,13 @@ export default function PetProfile({ readOnly = false }) {
   const backPath  = readOnly ? '/my-pets' : '/'
   const backLabel = readOnly ? t('petProfile.backOwner') : t('petProfile.backVet')
 
+  const PAGE_SIZE = 10
   const [pet, setPet]         = useState(null)
   const [records, setRecords] = useState([])
+  const [total, setTotal]     = useState(0)
+  const [hasMore, setHasMore] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError]     = useState(null)
   const [showModal, setModal] = useState(false)
 
@@ -401,10 +405,12 @@ export default function PetProfile({ readOnly = false }) {
     try {
       const [petRes, recRes] = await Promise.all([
         api.get(`/api/pets/${id}`),
-        api.get(`/api/records/pet/${id}`),
+        api.get(`/api/records/pet/${id}`, { params: { limit: PAGE_SIZE, skip: 0 } }),
       ])
       setPet(petRes.data)
-      setRecords(recRes.data)
+      setRecords(recRes.data.items)
+      setTotal(recRes.data.total)
+      setHasMore(recRes.data.hasMore)
     } catch {
       setError(t('petProfile.notFound'))
     } finally {
@@ -412,10 +418,26 @@ export default function PetProfile({ readOnly = false }) {
     }
   }
 
+  async function loadMore() {
+    if (loadingMore || !hasMore) return
+    setLoadingMore(true)
+    try {
+      const { data } = await api.get(`/api/records/pet/${id}`, {
+        params: { limit: PAGE_SIZE, skip: records.length },
+      })
+      setRecords(prev => [...prev, ...data.items])
+      setHasMore(data.hasMore)
+    } catch {}
+    finally { setLoadingMore(false) }
+  }
+
   async function handleSaved() {
     setModal(false)
-    const { data } = await api.get(`/api/records/pet/${id}`)
-    setRecords(data)
+    // After adding a record, reload the first page (the newest record will be on top)
+    const { data } = await api.get(`/api/records/pet/${id}`, { params: { limit: PAGE_SIZE, skip: 0 } })
+    setRecords(data.items)
+    setTotal(data.total)
+    setHasMore(data.hasMore)
   }
 
   if (loading) {
@@ -442,21 +464,21 @@ export default function PetProfile({ readOnly = false }) {
   return (
     <div className="min-h-screen bg-[#F3EEFB]">
 
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+      <div className="bg-white/80 backdrop-blur-md border-b border-violet-100 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <button
             onClick={() => navigate(backPath)}
-            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium transition-colors shrink-0 rtl:flex-row-reverse"
+            className="flex items-center gap-1.5 text-slate-500 hover:text-violet-700 text-sm font-medium transition-colors shrink-0 rtl:flex-row-reverse"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180" /> {backLabel}
           </button>
-          <span className="text-slate-300 select-none">/</span>
+          <span className="text-violet-300 select-none">/</span>
           <span className="text-slate-800 font-semibold text-sm truncate">{pet.name}</span>
 
           {!readOnly && (
             <button
               onClick={() => setModal(true)}
-              className="ms-auto flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm shrink-0 rtl:flex-row-reverse"
+              className="ms-auto flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 rtl:flex-row-reverse"
             >
               <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
             </button>
@@ -466,53 +488,63 @@ export default function PetProfile({ readOnly = false }) {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 flex items-center gap-5 rtl:flex-row-reverse rtl:text-right">
-          <div className="w-20 h-20 bg-gradient-to-br from-violet-100 to-violet-50 rounded-2xl flex items-center justify-center text-4xl shrink-0 shadow-sm">
-            {emoji}
-          </div>
+        {/* Hero card */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 p-7 shadow-sm border border-violet-100">
+          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-fuchsia-200/40 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-12 -start-12 w-52 h-52 rounded-full bg-violet-300/30 blur-3xl pointer-events-none" />
 
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-slate-800">{pet.name}</h1>
-            <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2">
-              {[
-                [t('petProfile.speciesLabel'), localizeSpecies(pet.species, t)],
-                [t('petProfile.breedLabel'),   localizeBreed(pet.breed, t)],
-                [t('petProfile.ageLabel'),     pet.age != null ? t('petProfile.ageValue', { n: pet.age }) : null],
-                [t('petProfile.genderLabel'),  localizeGender(pet.gender, t)],
-                [t('petProfile.ownerLabel'),   pet.ownerId],
-              ].map(([label, val]) => val ? (
-                <span key={label} className="text-sm text-slate-500">
-                  <span className="font-medium text-slate-700">{label}:</span> {val}
-                </span>
-              ) : null)}
+          <div className="relative flex items-center gap-6 rtl:flex-row-reverse rtl:text-right">
+            <div className="w-24 h-24 bg-white/60 backdrop-blur-sm rounded-3xl flex items-center justify-center text-5xl shrink-0 shadow-md border border-white/40">
+              {emoji}
             </div>
-          </div>
 
-          <div className="hidden sm:flex flex-col items-end gap-2 shrink-0">
-            <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
-              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-              {t('petProfile.activePatient')}
-            </span>
-            <span className="text-xs text-slate-400">
-              {t('petProfile.recordsCount', { count: records.length })}
-            </span>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-[#2D1B69] text-3xl font-bold tracking-tight">{pet.name}</h1>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {[
+                  [t('petProfile.speciesLabel'), localizeSpecies(pet.species, t)],
+                  [t('petProfile.breedLabel'),   localizeBreed(pet.breed, t)],
+                  [t('petProfile.ageLabel'),     pet.age != null ? t('petProfile.ageValue', { n: pet.age }) : null],
+                  [t('petProfile.genderLabel'),  localizeGender(pet.gender, t)],
+                ].map(([label, val]) => val ? (
+                  <span key={label} className="inline-flex items-center gap-1.5 text-xs font-medium text-violet-900/80 bg-white/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/40">
+                    <span className="text-violet-700 font-semibold">{label}:</span> {val}
+                  </span>
+                ) : null)}
+              </div>
+            </div>
+
+            <div className="hidden sm:flex flex-col items-end gap-2 shrink-0">
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-100/80 backdrop-blur-sm px-3 py-1.5 rounded-full border border-emerald-200">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                {t('petProfile.activePatient')}
+              </span>
+              <span className="text-xs text-violet-900/60 font-medium">
+                {t('petProfile.recordsCount', { count: total })}
+              </span>
+            </div>
           </div>
         </div>
 
         <section>
-          <h2 className="text-lg font-semibold text-slate-800 mb-6">{t('petProfile.medicalHistory')}</h2>
+          <div className="flex items-center gap-3 mb-6 rtl:flex-row-reverse">
+            <div className="w-1.5 h-7 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
+            <h2 className="text-lg font-bold text-slate-800">{t('petProfile.medicalHistory')}</h2>
+          </div>
 
           {records.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-              <div className="text-5xl mb-4">📋</div>
-              <p className="font-semibold text-slate-600">{t('petProfile.noRecordsTitle')}</p>
+            <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-violet-200">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-3xl flex items-center justify-center text-5xl">
+                📋
+              </div>
+              <p className="font-semibold text-slate-700">{t('petProfile.noRecordsTitle')}</p>
               <p className="text-sm text-slate-400 mt-1 mb-5">
                 {t('petProfile.noRecordsHint')}
               </p>
               {!readOnly && (
                 <button
                   onClick={() => setModal(true)}
-                  className="px-5 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors"
+                  className="px-5 py-2.5 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
                 >
                   {t('petProfile.addFirstRecord')}
                 </button>
@@ -523,12 +555,29 @@ export default function PetProfile({ readOnly = false }) {
               {records.map(record => (
                 <RecordCard key={record._id} record={record} />
               ))}
-              <div className="flex gap-4 rtl:flex-row-reverse">
-                <div className="flex flex-col items-center shrink-0">
-                  <div className="w-3 h-3 rounded-full bg-slate-200" />
+
+              {hasMore && (
+                <div className="flex justify-center my-4">
+                  <button
+                    onClick={loadMore}
+                    disabled={loadingMore}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-violet-200 hover:bg-violet-50 hover:border-violet-300 text-violet-700 text-sm font-medium rounded-xl transition-colors disabled:opacity-60"
+                  >
+                    {loadingMore
+                      ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.loadingMore')}</>
+                      : t('petProfile.loadMore', { remaining: total - records.length })}
+                  </button>
                 </div>
-                <p className="text-xs text-slate-400 pb-2">{t('petProfile.beginningOfRecords')}</p>
-              </div>
+              )}
+
+              {!hasMore && (
+                <div className="flex gap-4 rtl:flex-row-reverse">
+                  <div className="flex flex-col items-center shrink-0">
+                    <div className="w-3 h-3 rounded-full bg-slate-200" />
+                  </div>
+                  <p className="text-xs text-slate-400 pb-2">{t('petProfile.beginningOfRecords')}</p>
+                </div>
+              )}
             </div>
           )}
         </section>

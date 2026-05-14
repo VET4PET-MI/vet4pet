@@ -2,8 +2,16 @@ const MedicalRecord = require('../models/MedicalRecord');
 
 async function getRecordsByPet(req, res) {
   try {
-    const records = await MedicalRecord.find({ petId: req.params.petId }).sort({ date: -1 });
-    res.json(records);
+    const limit = Math.min(parseInt(req.query.limit, 10) || 10, 50);
+    const skip  = Math.max(parseInt(req.query.skip,  10) || 0, 0);
+    const filter = { petId: req.params.petId };
+
+    const [items, total] = await Promise.all([
+      MedicalRecord.find(filter).sort({ date: -1 }).skip(skip).limit(limit),
+      MedicalRecord.countDocuments(filter),
+    ]);
+
+    res.json({ items, total, hasMore: skip + items.length < total });
   } catch (err) {
     console.error('[MedicalRecord] getRecordsByPet error:', err.message);
     res.status(500).json({ message: err.message });

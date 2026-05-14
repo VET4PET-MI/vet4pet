@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Loader2, X, Calendar, MessageSquare, Video } from 'lucide-react'
+import { Search, Loader2, X, Calendar, MessageSquare, Video, Users, Stethoscope } from 'lucide-react'
 import { PawPrint } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import api from '../api'
@@ -47,16 +47,37 @@ function PetCard({ pet }) {
 
 function VetDashboard() {
   const { t, i18n }           = useTranslation()
+  const { user }              = useAuth()
   const navigate              = useNavigate()
   const [ownerId, setOwnerId] = useState('')
   const [name, setName]       = useState('')
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState(null)
+  const [stats, setStats]     = useState({ todayAppts: 0, pendingConsults: 0, unreadMsgs: 0, totalPatients: 0 })
 
-  const today = new Date().toLocaleDateString(i18n.language?.startsWith('he') ? 'he-IL' : 'en-US', {
+  const locale = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
+  const today = new Date().toLocaleDateString(locale, {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
+  const firstName = user?.name?.split(' ')[0] ?? t('nav.fallbackVetName')
+
+  useEffect(() => {
+    const todayIso = new Date().toISOString().slice(0, 10)
+    Promise.all([
+      api.get(`/api/appointments?date=${todayIso}`).catch(() => ({ data: [] })),
+      api.get('/api/consultations/pending').catch(() => ({ data: [] })),
+      api.get('/api/messages/unread-count').catch(() => ({ data: { count: 0 } })),
+      api.get('/api/pets').catch(() => ({ data: [] })),
+    ]).then(([appts, consults, msgs, pets]) => {
+      setStats({
+        todayAppts:     (appts.data || []).filter(a => a.status !== 'cancelled').length,
+        pendingConsults:(consults.data || []).length,
+        unreadMsgs:     msgs.data?.count ?? 0,
+        totalPatients:  (pets.data || []).length,
+      })
+    })
+  }, [])
 
   async function handleSearch(e) {
     e.preventDefault()
@@ -75,15 +96,52 @@ function VetDashboard() {
 
   function clearSearch() { setResults(null); setOwnerId(''); setName('') }
 
+  const statCards = [
+    { label: t('dashboard.statTodayAppts'),      value: stats.todayAppts,      icon: Calendar,      color: 'from-blue-500 to-violet-500',     bg: 'bg-blue-50',     text: 'text-blue-700' },
+    { label: t('dashboard.statPendingConsults'), value: stats.pendingConsults, icon: Video,         color: 'from-fuchsia-500 to-pink-500',    bg: 'bg-fuchsia-50',  text: 'text-fuchsia-700' },
+    { label: t('dashboard.statUnreadMsgs'),      value: stats.unreadMsgs,      icon: MessageSquare, color: 'from-violet-500 to-purple-500',   bg: 'bg-violet-50',   text: 'text-violet-700' },
+    { label: t('dashboard.statTotalPatients'),   value: stats.totalPatients,   icon: Users,         color: 'from-emerald-500 to-teal-500',    bg: 'bg-emerald-50',  text: 'text-emerald-700' },
+  ]
+
   return (
     <AppLayout subtitle={today}>
-      <div className="max-w-3xl mx-auto px-6 py-10 space-y-8">
+      <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
 
-        {/* Hero search */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+        {/* Hero greeting */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 p-8 shadow-sm border border-violet-100">
+          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-fuchsia-200/40 blur-3xl" />
+          <div className="absolute -bottom-12 -start-12 w-52 h-52 rounded-full bg-violet-300/30 blur-3xl" />
+          <div className="relative flex items-center justify-between gap-4 rtl:flex-row-reverse">
+            <div className="rtl:text-right">
+              <h1 className="text-[#2D1B69] text-3xl font-bold tracking-tight">
+                {t('nav.greetingVet', { name: firstName })}
+              </h1>
+              <p className="text-violet-900/70 text-sm mt-2 font-medium">{t('dashboard.vetHeroSub')}</p>
+            </div>
+            <div className="hidden sm:flex w-16 h-16 bg-white/40 backdrop-blur-sm rounded-2xl items-center justify-center shrink-0 shadow-sm">
+              <Stethoscope className="w-8 h-8 text-violet-700" />
+            </div>
+          </div>
+        </div>
+
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {statCards.map(({ label, value, icon: Icon, bg, text }) => (
+            <div key={label} className={`${bg} rounded-2xl border border-white p-4 shadow-sm`}>
+              <div className="flex items-center justify-between mb-2 rtl:flex-row-reverse">
+                <Icon className={`w-5 h-5 ${text}`} />
+                <span className={`text-2xl font-bold ${text}`}>{value}</span>
+              </div>
+              <p className="text-xs text-slate-600 font-medium rtl:text-right">{label}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Search card */}
+        <div className="bg-white rounded-3xl border border-violet-100 shadow-sm p-7">
           <div className="flex items-center gap-3 mb-6 rtl:flex-row-reverse rtl:text-right">
-            <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center shrink-0">
-              <Search className="w-5 h-5 text-violet-600" />
+            <div className="w-11 h-11 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+              <Search className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-lg font-bold text-slate-800">{t('dashboard.findPatient')}</h2>
@@ -113,7 +171,7 @@ function VetDashboard() {
             <button
               type="submit"
               disabled={loading || (!ownerId.trim() && !name.trim())}
-              className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               {loading ? t('dashboard.searching') : t('dashboard.searchButton')}
@@ -156,16 +214,18 @@ function VetDashboard() {
         {results === null && (
           <div className="grid grid-cols-3 gap-4">
             {[
-              { label: t('nav.schedule'),      icon: Calendar,       path: '/schedule',      color: 'bg-blue-50 text-blue-700 border-blue-200' },
-              { label: t('nav.messages'),      icon: MessageSquare,  path: '/messages',      color: 'bg-violet-50 text-violet-700 border-violet-200' },
-              { label: t('nav.consultations'), icon: Video,          path: '/consultations', color: 'bg-purple-50 text-purple-700 border-purple-200' },
-            ].map(({ label, icon: Icon, path, color }) => (
+              { label: t('nav.schedule'),      icon: Calendar,       path: '/schedule',      iconBg: 'bg-blue-100',    iconColor: 'text-blue-600' },
+              { label: t('nav.messages'),      icon: MessageSquare,  path: '/messages',      iconBg: 'bg-violet-100',  iconColor: 'text-violet-600' },
+              { label: t('nav.consultations'), icon: Video,          path: '/consultations', iconBg: 'bg-fuchsia-100', iconColor: 'text-fuchsia-600' },
+            ].map(({ label, icon: Icon, path, iconBg, iconColor }) => (
               <button
                 key={path}
                 onClick={() => navigate(path)}
-                className={`flex flex-col items-center gap-2 p-5 rounded-2xl border font-medium text-sm transition-all hover:shadow-md ${color}`}
+                className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-white border border-violet-100 font-medium text-sm text-slate-700 transition-all hover:shadow-md hover:border-violet-300 hover:-translate-y-0.5"
               >
-                <Icon className="w-6 h-6" />
+                <div className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center`}>
+                  <Icon className={`w-6 h-6 ${iconColor}`} />
+                </div>
                 {label}
               </button>
             ))}
