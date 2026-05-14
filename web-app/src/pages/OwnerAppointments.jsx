@@ -128,9 +128,9 @@ export default function OwnerAppointments() {
           <>
             {upcoming.length > 0 && (
               <section className="space-y-3">
-                <div className="flex items-center gap-3 mb-3 rtl:flex-row-reverse">
+                <div className="flex items-center gap-3 mb-3">
                   <div className="w-1.5 h-7 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
-                  <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 rtl:flex-row-reverse">
+                  <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-violet-500" /> {t('ownerAppointments.upcoming', { count: upcoming.length })}
                   </h2>
                 </div>
@@ -139,7 +139,7 @@ export default function OwnerAppointments() {
             )}
             {past.length > 0 && (
               <section className="space-y-3">
-                <div className="flex items-center gap-3 mb-3 rtl:flex-row-reverse">
+                <div className="flex items-center gap-3 mb-3">
                   <div className="w-1.5 h-7 bg-slate-300 rounded-full" />
                   <h2 className="text-base font-bold text-slate-500">{t('ownerAppointments.pastAndCancelled')}</h2>
                 </div>

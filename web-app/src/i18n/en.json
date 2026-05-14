@@ -62,6 +62,9 @@
       "message_received": "New message from {{senderName}}",
       "consultation_requested": "{{ownerName}} requested a video consultation{{petSuffix}}",
       "consultation_active": "Your vet is ready for the consultation{{petSuffix}}",
+      "appointment_reminder": "Reminder: appointment tomorrow at {{time}}{{petSuffix}}",
+      "appointment_reminder_vet": "Reminder: appointment tomorrow at {{time}} with {{ownerName}}{{petSuffix}}",
+      "vaccination_reminder": "Time for a booster vaccination{{petSuffix}} (last vaccination {{months}} months ago)",
       "fallback": "New notification"
     },
     "petSuffix": " for {{petName}}"
@@ -604,6 +607,7 @@
       "labResult": "Lab Result",
       "xray": "X-Ray",
       "bloodTest": "Blood Test",
+      "consultation": "Online Consultation",
       "other": "Other"
     }
   },

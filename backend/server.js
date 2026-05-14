@@ -43,9 +43,19 @@ app.use((err, _req, res, _next) => {
 });
 
 // ── Start ──────────────────────────────────────────────────────────────
+const { startReminderJobs, runAll: runRemindersNow } = require('./jobs/reminders');
+
+// Dev-only: allow a manually-authenticated call to trigger reminders now.
+app.post('/api/admin/run-reminders', requireAuth, async (req, res) => {
+  if (req.user.role !== 'vet') return res.status(403).json({ message: 'Forbidden.' });
+  await runRemindersNow();
+  res.json({ ok: true });
+});
+
 connectDB()
   .then(() => {
     const server = app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+    startReminderJobs();
     server.on('error', err => {
       if (err.code === 'EADDRINUSE') {
         console.error(`\n[ERROR] Port ${PORT} is already in use.\nKill the old process first:\n  Windows: taskkill /F /IM node.exe\n  Mac/Linux: pkill -f "node server"\nThen restart: npm start\n`);

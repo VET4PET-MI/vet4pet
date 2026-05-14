@@ -1,6 +1,7 @@
-const Consultation  = require('../models/Consultation');
-const User          = require('../models/User');
-const notifications = require('./notificationController');
+const Consultation   = require('../models/Consultation');
+const User           = require('../models/User');
+const MedicalRecord  = require('../models/MedicalRecord');
+const notifications  = require('./notificationController');
 
 async function getConsultations(req, res) {
   try {
@@ -89,6 +90,31 @@ async function updateStatus(req, res) {
         params:      { petName: consultation.petName || '' },
         link:        '/consultations',
       });
+    }
+
+    // Auto-document the consultation in the pet's medical record when it ends
+    if (status === 'ended' && consultation.petId && consultation.startedAt) {
+      try {
+        const vetName = req.user?.role === 'vet' ? req.user.name : '';
+        const durationMs = (consultation.endedAt || new Date()) - new Date(consultation.startedAt);
+        const minutes = Math.max(1, Math.round(durationMs / 60000));
+        const parts = [
+          `Online video consultation via Jitsi Meet.`,
+          `Duration: ~${minutes} minutes.`,
+        ];
+        if (consultation.notes?.trim()) parts.push(`Owner's note: ${consultation.notes.trim()}`);
+
+        await MedicalRecord.create({
+          petId:    consultation.petId,
+          date:     consultation.endedAt || new Date(),
+          vetName,
+          type:     'CONSULTATION',
+          findings: parts.join('\n'),
+        });
+        console.log('[Consultation] medical record auto-created for pet', consultation.petId);
+      } catch (recErr) {
+        console.error('[Consultation] failed to create medical record:', recErr.message);
+      }
     }
 
     res.json(consultation);

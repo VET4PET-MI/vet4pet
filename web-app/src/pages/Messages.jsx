@@ -52,11 +52,19 @@ function ComposeModal({ onClose, onSent }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-800">{t('messages.newMessage')}</h2>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl"><X className="w-5 h-5" /></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-violet-100 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+          <div className="relative flex items-center justify-between rtl:flex-row-reverse">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <Send className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-[#2D1B69]">{t('messages.newMessage')}</h2>
+            </div>
+            <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
+          </div>
         </div>
         <form onSubmit={handleSend} className="px-6 py-5 space-y-4">
           <div>
@@ -79,7 +87,7 @@ function ComposeModal({ onClose, onSent }) {
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending}
-              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              className="flex-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {t('messages.send')}
             </button>
@@ -124,16 +132,19 @@ function MessageClinicModal({ onClose, onSent }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <div className="flex items-center gap-3 rtl:flex-row-reverse">
-            <div className="w-9 h-9 bg-violet-100 rounded-xl flex items-center justify-center shrink-0">
-              <Stethoscope className="w-5 h-5 text-violet-600" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-violet-100 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+          <div className="relative flex items-center justify-between rtl:flex-row-reverse">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <Stethoscope className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-[#2D1B69]">{t('messages.messageClinic')}</h2>
             </div>
-            <h2 className="text-lg font-bold text-slate-800">{t('messages.messageClinic')}</h2>
+            <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSend} className="px-6 py-5 space-y-4">
           {loading ? (
@@ -167,7 +178,7 @@ function MessageClinicModal({ onClose, onSent }) {
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending || loading || !vetId}
-              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              className="flex-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {t('messages.sendMessage')}
             </button>

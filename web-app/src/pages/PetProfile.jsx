@@ -15,6 +15,7 @@ const RECORD_TYPE_DEFS = [
   { value: 'LAB_RESULT',    key: 'labResult',    icon: '🧪', color: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500' },
   { value: 'XRAY',          key: 'xray',         icon: '🔬', color: 'bg-purple-50 text-purple-700 border-purple-200', dot: 'bg-purple-500' },
   { value: 'BLOOD_TEST',    key: 'bloodTest',    icon: '🩸', color: 'bg-red-50 text-red-700 border-red-200',     dot: 'bg-red-500' },
+  { value: 'CONSULTATION',  key: 'consultation', icon: '📹', color: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200', dot: 'bg-fuchsia-500' },
   { value: 'OTHER',         key: 'other',        icon: '📋', color: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' },
 ]
 
@@ -251,18 +252,27 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col border border-violet-100 overflow-hidden">
 
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
-          <div>
-            <h2 className="text-lg font-bold text-slate-800">{t('petProfile.addModalTitle')}</h2>
-            <p className="text-sm text-slate-400 mt-0.5">{t('petProfile.addModalSub')}</p>
+        {/* Gradient banner */}
+        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100 shrink-0">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+          <div className="relative flex items-center justify-between rtl:flex-row-reverse">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <FileText className="w-5 h-5 text-white" />
+              </div>
+              <div className="rtl:text-right">
+                <h2 className="text-lg font-bold text-[#2D1B69]">{t('petProfile.addModalTitle')}</h2>
+                <p className="text-xs text-violet-900/70 mt-0.5">{t('petProfile.addModalSub')}</p>
+              </div>
+            </div>
+            <button type="button" onClick={onClose}
+              className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition shrink-0">
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <button type="button" onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition">
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
@@ -364,7 +374,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="flex-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
             >
               {submitting
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.saving')}</>
@@ -527,7 +537,7 @@ export default function PetProfile({ readOnly = false }) {
         </div>
 
         <section>
-          <div className="flex items-center gap-3 mb-6 rtl:flex-row-reverse">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-1.5 h-7 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
             <h2 className="text-lg font-bold text-slate-800">{t('petProfile.medicalHistory')}</h2>
           </div>

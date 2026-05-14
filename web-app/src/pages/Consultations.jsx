@@ -118,16 +118,19 @@ function OwnerRequestModal({ user, onClose, onCreated }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <div className="flex items-center gap-3 rtl:flex-row-reverse">
-            <div className="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
-              <Video className="w-5 h-5 text-green-600" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-violet-100 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+          <div className="relative flex items-center justify-between rtl:flex-row-reverse">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <Video className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-[#2D1B69]">{t('consultationsPage.modalRequestTitle')}</h2>
             </div>
-            <h2 className="text-lg font-bold text-slate-800">{t('consultationsPage.modalRequestTitle')}</h2>
+            <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
@@ -192,11 +195,19 @@ function SimulateModal({ onClose, onCreated }) {
   ]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-800">{t('consultationsPage.simulateTitle')}</h2>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl"><X className="w-5 h-5" /></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-violet-100 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+          <div className="relative flex items-center justify-between rtl:flex-row-reverse">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <PhoneCall className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-[#2D1B69]">{t('consultationsPage.simulateTitle')}</h2>
+            </div>
+            <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
+          </div>
         </div>
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           {fields.map(({ key, label, placeholder, required }) => (

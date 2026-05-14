@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Plus, X, Loader2, Clock, Trash2, Settings, Lock, LockOpen } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus, X, Loader2, Clock, Trash2, Settings, Lock, LockOpen, Calendar } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import api from '../api'
 import { useAuth } from '../context/AuthContext'
@@ -124,11 +124,19 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[92vh] flex flex-col">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 shrink-0">
-          <h2 className="text-lg font-bold text-slate-800">{isEdit ? t('schedule.editTitle') : t('schedule.bookTitle')}</h2>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition"><X className="w-5 h-5" /></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[92vh] flex flex-col border border-violet-100 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100 shrink-0">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+          <div className="relative flex items-center justify-between rtl:flex-row-reverse">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <Calendar className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-[#2D1B69]">{isEdit ? t('schedule.editTitle') : t('schedule.bookTitle')}</h2>
+            </div>
+            <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
@@ -218,7 +226,7 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
               {t('schedule.close')}
             </button>
             <button type="submit" disabled={submitting}
-              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              className="flex-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('schedule.saving')}</> : (isEdit ? t('schedule.update') : t('schedule.book'))}
             </button>
           </div>
@@ -372,7 +380,7 @@ export default function Schedule() {
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-3xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between mb-4 rtl:flex-row-reverse">
-              <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="flex items-center gap-3">
                 <div className="w-1.5 h-7 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
                 <h3 className="text-base font-bold text-slate-800">{dateLabel}</h3>
               </div>

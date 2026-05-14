@@ -62,6 +62,9 @@
       "message_received": "הודעה חדשה מ-{{senderName}}",
       "consultation_requested": "{{ownerName}} ביקש/ה שיחת ייעוץ{{petSuffix}}",
       "consultation_active": "הווטרינר מוכן לשיחת הייעוץ{{petSuffix}}",
+      "appointment_reminder": "תזכורת: תור מחר ב-{{time}}{{petSuffix}}",
+      "appointment_reminder_vet": "תזכורת: תור מחר ב-{{time}} עם {{ownerName}}{{petSuffix}}",
+      "vaccination_reminder": "הגיע הזמן לחיסון חוזר{{petSuffix}} (חיסון אחרון לפני {{months}} חודשים)",
       "fallback": "התראה חדשה"
     },
     "petSuffix": " עבור {{petName}}"
@@ -604,6 +607,7 @@
       "labResult": "תוצאת מעבדה",
       "xray": "צילום רנטגן",
       "bloodTest": "בדיקת דם",
+      "consultation": "שיחת ייעוץ אונליין",
       "other": "אחר"
     }
   },
