@@ -2,6 +2,19 @@
 
 @theme {
   --font-sans: "Heebo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Brand — sky blue, aligned with favicon */
+  --color-brand:       #2BA8F5;
+  --color-brand-dark:  #0E86CC;
+  --color-brand-deep:  #0A4E7A;
+  --color-brand-soft:  #E0F2FE;
+  --color-brand-tint:  #F0F9FF;
+
+  /* Neutrals */
+  --color-bg:          #F8FAFC;
+  --color-surface:     #FFFFFF;
+  --color-ink:         #0F172A;
+  --color-ink-muted:   #64748B;
 }
 
 html, body {

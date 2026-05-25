@@ -46,28 +46,25 @@ export default function Login() {
   const isVet = tab === 'vet'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-200 via-fuchsia-100 to-pink-100 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-bg flex items-center justify-center p-4 relative overflow-hidden">
       {/* Decorative blobs */}
-      <div className="absolute -top-20 -end-20 w-[28rem] h-[28rem] rounded-full bg-violet-400/40 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-20 -start-20 w-[28rem] h-[28rem] rounded-full bg-fuchsia-400/40 blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 start-1/3 w-80 h-80 rounded-full bg-pink-300/40 blur-3xl pointer-events-none" />
-      <div className="absolute top-10 start-10 w-40 h-40 rounded-full bg-purple-300/50 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 end-10 w-48 h-48 rounded-full bg-rose-300/40 blur-3xl pointer-events-none" />
+      <div className="absolute -top-20 -end-20 w-[28rem] h-[28rem] rounded-full bg-brand/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 -start-20 w-[28rem] h-[28rem] rounded-full bg-brand/10 blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative">
 
         {/* Language switcher */}
         <div className="flex justify-end mb-4">
-          <LanguageSwitcher className="text-slate-500 hover:text-violet-700" />
+          <LanguageSwitcher className="text-slate-500 hover:text-brand-dark" />
         </div>
 
         {/* Logo */}
-        <div className="flex flex-col items-center mb-6 bg-violet-50/60 border border-violet-100 rounded-3xl py-6 px-4 backdrop-blur-sm">
-          <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center shadow-xl mb-4">
+        <div className="flex flex-col items-center mb-6 bg-white/70 border border-brand/15 rounded-3xl py-6 px-4 backdrop-blur-md shadow-sm">
+          <div className="w-16 h-16 bg-brand rounded-2xl flex items-center justify-center shadow-xl mb-4">
             <PawPrint className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 tracking-wide">{t('common.appName')}</h1>
-          <p className="text-slate-500 text-sm mt-1">{t('auth.portalTagline')}</p>
+          <h1 className="text-2xl font-bold text-ink tracking-wide">{t('common.appName')}</h1>
+          <p className="text-ink-muted text-sm mt-1">{t('auth.portalTagline')}</p>
         </div>
 
         {/* Role tab */}
@@ -83,8 +80,8 @@ export default function Login() {
               className={[
                 'flex-1 py-3 text-sm font-semibold transition-all',
                 tab === id
-                  ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white shadow'
-                  : 'text-slate-500 hover:text-violet-700',
+                  ? 'bg-brand text-white shadow'
+                  : 'text-slate-500 hover:text-brand-dark',
               ].join(' ')}
             >
               {label}
@@ -93,8 +90,8 @@ export default function Login() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-3xl shadow-xl border border-violet-100 p-8">
-          <h2 className="text-xl font-bold text-slate-800 mb-1">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-8">
+          <h2 className="text-xl font-bold text-ink mb-1">
             {isVet ? t('auth.welcomeBackDoctor') : t('auth.welcomeBack')}
           </h2>
           <p className="text-slate-400 text-sm mb-7">
@@ -114,7 +111,7 @@ export default function Login() {
                 onChange={handleChange}
                 placeholder={isVet ? t('auth.emailPlaceholderVet') : t('auth.emailPlaceholderOwner')}
                 required
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
               />
             </div>
 
@@ -131,7 +128,7 @@ export default function Login() {
                   onChange={handleChange}
                   placeholder={t('auth.passwordPlaceholder')}
                   required
-                  className="w-full px-4 py-3 pe-12 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3 pe-12 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
                 />
                 <button
                   type="button"
@@ -154,7 +151,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-brand hover:bg-brand-dark disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? t('auth.signingIn') : t('auth.signIn')}
@@ -164,7 +161,7 @@ export default function Login() {
 
         <p className="text-center text-slate-500 text-sm mt-6">
           {t('auth.noAccount')}{' '}
-          <Link to="/register" className="text-violet-600 hover:text-violet-800 font-medium">
+          <Link to="/register" className="text-brand hover:text-brand-dark font-medium">
             {t('auth.signUp')}
           </Link>
         </p>
@@ -172,7 +169,7 @@ export default function Login() {
         <p className="text-center text-slate-400 text-xs mt-2">
           {isVet
             ? t('auth.vetAdminNote')
-            : <>{t('auth.testCreds')} <span className="text-violet-600 font-medium">owner@test.com / owner123</span></>}
+            : <>{t('auth.testCreds')} <span className="text-brand font-medium">owner@test.com / owner123</span></>}
         </p>
       </div>
     </div>

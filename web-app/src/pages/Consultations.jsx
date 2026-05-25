@@ -51,12 +51,12 @@ function VetJoinModal({ consultation, onClose, onJoined, onDeclined }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
-        <div className="bg-gradient-to-br from-violet-600 to-purple-600 px-6 py-8 text-center">
+        <div className="bg-brand px-6 py-8 text-center">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
             <Video className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-white font-bold text-xl">{t('consultationsPage.modalIncoming')}</h2>
-          <p className="text-violet-200 mt-1 text-sm">
+          <p className="text-brand-soft mt-1 text-sm">
             {consultation.ownerName || t('consultationsPage.petOwnerFallback')}
             {consultation.petName && t('consultationsPage.aboutPet', { name: consultation.petName })}
           </p>
@@ -118,16 +118,16 @@ function OwnerRequestModal({ user, onClose, onCreated }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-violet-100 overflow-hidden">
-        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100">
-          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-slate-200 overflow-hidden">
+        <div className="relative bg-brand-tint px-6 py-5 border-b border-brand/15">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-brand-soft/60 blur-2xl pointer-events-none" />
           <div className="relative flex items-center justify-between rtl:flex-row-reverse">
             <div className="flex items-center gap-3 rtl:flex-row-reverse">
               <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
                 <Video className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-lg font-bold text-[#2D1B69]">{t('consultationsPage.modalRequestTitle')}</h2>
+              <h2 className="text-lg font-bold text-brand-deep">{t('consultationsPage.modalRequestTitle')}</h2>
             </div>
             <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
           </div>
@@ -136,12 +136,12 @@ function OwnerRequestModal({ user, onClose, onCreated }) {
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('consultationsPage.modalRequestPet')}</label>
             {loading ? (
-              <div className="flex justify-center py-2"><Loader2 className="w-4 h-4 animate-spin text-violet-400" /></div>
+              <div className="flex justify-center py-2"><Loader2 className="w-4 h-4 animate-spin text-brand" /></div>
             ) : pets.length === 0 ? (
-              <p className="text-sm text-slate-400 py-2">{t('consultationsPage.noPetsRegistered')} <a href="/my-pets" className="text-violet-600">{t('consultationsPage.addPetFirst')}</a></p>
+              <p className="text-sm text-slate-400 py-2">{t('consultationsPage.noPetsRegistered')} <a href="/my-pets" className="text-brand">{t('consultationsPage.addPetFirst')}</a></p>
             ) : (
               <select value={petId} onChange={e => setPetId(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
                 {pets.map(p => <option key={p._id} value={p._id}>{p.name} ({localizeSpecies(p.species, t)})</option>)}
               </select>
             )}
@@ -152,9 +152,9 @@ function OwnerRequestModal({ user, onClose, onCreated }) {
             </label>
             <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
               placeholder={t('consultationsPage.modalRequestConcernPh')}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500" />
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand" />
           </div>
-          <div className="p-3 bg-violet-50 border border-violet-100 rounded-xl text-xs text-violet-600 flex items-start gap-2 rtl:flex-row-reverse">
+          <div className="p-3 bg-brand-soft border border-brand/20 rounded-xl text-xs text-brand-dark flex items-start gap-2 rtl:flex-row-reverse">
             <Video className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{t('consultationsPage.modalRequestInfo')}</span>
           </div>
@@ -195,16 +195,16 @@ function SimulateModal({ onClose, onCreated }) {
   ]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-violet-100 overflow-hidden">
-        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100">
-          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-slate-200 overflow-hidden">
+        <div className="relative bg-brand-tint px-6 py-5 border-b border-brand/15">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-brand-soft/60 blur-2xl pointer-events-none" />
           <div className="relative flex items-center justify-between rtl:flex-row-reverse">
             <div className="flex items-center gap-3 rtl:flex-row-reverse">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+              <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center shadow-md shrink-0">
                 <PhoneCall className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-lg font-bold text-[#2D1B69]">{t('consultationsPage.simulateTitle')}</h2>
+              <h2 className="text-lg font-bold text-brand-deep">{t('consultationsPage.simulateTitle')}</h2>
             </div>
             <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
           </div>
@@ -215,13 +215,13 @@ function SimulateModal({ onClose, onCreated }) {
               <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
               <input value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                 placeholder={placeholder} required={required}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
             </div>
           ))}
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl">{t('consultationsPage.cancel')}</button>
             <button type="submit" disabled={saving}
-              className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2">
+              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <PhoneCall className="w-4 h-4" />}
               {t('consultationsPage.simulate')}
             </button>
@@ -273,7 +273,7 @@ function ConsultationCard({ c, isOwner, onJoin, onEnd }) {
         {!isOwner && c.status === 'active' && (
           <>
             <a href={url} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-50 hover:bg-violet-100 text-violet-600 text-xs font-medium rounded-lg transition-colors border border-violet-200">
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-soft hover:bg-brand-tint text-brand-dark text-xs font-medium rounded-lg transition-colors border border-brand/20">
               <ExternalLink className="w-3.5 h-3.5" /> {t('consultationsPage.rejoin')}
             </a>
             <button onClick={() => onEnd(c._id)}
@@ -363,7 +363,7 @@ export default function Consultations() {
               <Plus className="w-4 h-4" /> {t('consultationsPage.requestBtn')}
             </button>
           : <button onClick={() => setRequest(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
               <Plus className="w-4 h-4" /> {t('consultationsPage.simulateBtn')}
             </button>
       }
@@ -435,7 +435,7 @@ export default function Consultations() {
           </h2>
 
           {loading ? (
-            <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
+            <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-brand" /></div>
           ) : consultations.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-slate-200">
               <Video className="w-10 h-10 text-slate-300 mx-auto mb-4" />
@@ -459,11 +459,11 @@ export default function Consultations() {
           )}
         </div>
 
-        <div className="bg-violet-50 border border-violet-100 rounded-2xl p-4 flex gap-3 rtl:flex-row-reverse rtl:text-right">
-          <ExternalLink className="w-5 h-5 text-violet-400 shrink-0 mt-0.5" />
+        <div className="bg-brand-soft border border-brand/20 rounded-2xl p-4 flex gap-3 rtl:flex-row-reverse rtl:text-right">
+          <ExternalLink className="w-5 h-5 text-brand shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-violet-700">{t('consultationsPage.poweredBy')}</p>
-            <p className="text-xs text-violet-500 mt-0.5">
+            <p className="text-sm font-medium text-brand-dark">{t('consultationsPage.poweredBy')}</p>
+            <p className="text-xs text-brand mt-0.5">
               {t('consultationsPage.poweredByHint')}<span className="font-mono">meet.jit.si/Vet4Pet-[ID]</span>{t('consultationsPage.poweredByHint2')}
             </p>
           </div>

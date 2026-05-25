@@ -79,13 +79,13 @@ export default function EmergencyVets() {
         <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
           {!coords ? (
             <div className="text-center space-y-3">
-              <MapPin className="w-10 h-10 text-violet-400 mx-auto" />
+              <MapPin className="w-10 h-10 text-brand mx-auto" />
               <p className="text-sm text-slate-600">{t('emergency.noLocation')}</p>
               <p className="text-xs text-slate-400">{t('emergency.useMyLocationHint')}</p>
               <button
                 onClick={locate}
                 disabled={locating}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors rtl:flex-row-reverse"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors rtl:flex-row-reverse"
               >
                 {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
                 {locating ? t('emergency.locating') : t('emergency.findMyLocation')}
@@ -97,8 +97,8 @@ export default function EmergencyVets() {
           ) : (
             <div className="flex items-center justify-between gap-4 rtl:flex-row-reverse rtl:text-right">
               <div className="flex items-center gap-3 rtl:flex-row-reverse">
-                <div className="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5 text-violet-600" />
+                <div className="w-9 h-9 bg-brand-soft rounded-xl flex items-center justify-center shrink-0">
+                  <MapPin className="w-5 h-5 text-brand" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-800">{coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}</p>
@@ -107,7 +107,7 @@ export default function EmergencyVets() {
               </div>
               <button
                 onClick={locate}
-                className="flex items-center gap-1.5 text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors"
+                className="flex items-center gap-1.5 text-xs font-medium text-brand hover:text-brand-dark transition-colors"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
               </button>
@@ -119,7 +119,7 @@ export default function EmergencyVets() {
               type="checkbox"
               checked={onCallOnly}
               onChange={e => setOnCall(e.target.checked)}
-              className="w-4 h-4 rounded text-violet-600 focus:ring-violet-500"
+              className="w-4 h-4 rounded text-brand focus:ring-brand"
             />
             <span className="text-sm text-slate-700">{t('emergency.onCallOnly')}</span>
           </label>
@@ -127,11 +127,11 @@ export default function EmergencyVets() {
 
         {/* Vet list */}
         {loading ? (
-          <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
+          <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-brand" /></div>
         ) : vets.length === 0 ? (
-          <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-violet-200">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-3xl flex items-center justify-center">
-              <Stethoscope className="w-10 h-10 text-violet-500" />
+          <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-brand/40">
+            <div className="w-20 h-20 mx-auto mb-4 bg-brand-soft rounded-3xl flex items-center justify-center">
+              <Stethoscope className="w-10 h-10 text-brand" />
             </div>
             <p className="font-semibold text-slate-700">{t('emergency.noResults')}</p>
             <p className="text-sm text-slate-400 mt-1">{t('emergency.noResultsHint')}</p>
@@ -141,15 +141,15 @@ export default function EmergencyVets() {
             {vets.map(v => (
               <div
                 key={v._id}
-                className="bg-white rounded-2xl border border-violet-100 p-5 hover:shadow-lg hover:border-violet-300 hover:-translate-y-0.5 transition-all"
+                className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-brand/40 hover:-translate-y-0.5 transition-all"
               >
                 <div className="flex items-start gap-4 rtl:flex-row-reverse rtl:text-right">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
                     v.isOnCall
                       ? 'bg-gradient-to-br from-green-500 to-emerald-500 shadow-md'
-                      : 'bg-gradient-to-br from-violet-100 to-fuchsia-100'
+                      : 'bg-brand-soft'
                   }`}>
-                    <Stethoscope className={`w-6 h-6 ${v.isOnCall ? 'text-white' : 'text-violet-600'}`} />
+                    <Stethoscope className={`w-6 h-6 ${v.isOnCall ? 'text-white' : 'text-brand'}`} />
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -190,7 +190,7 @@ export default function EmergencyVets() {
                   )}
                   <button
                     onClick={() => navigate('/messages')}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-violet-50 hover:bg-violet-100 text-violet-700 text-sm font-medium rounded-xl transition-colors border border-violet-200 rtl:flex-row-reverse"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-brand-soft hover:bg-brand-tint text-brand-dark text-sm font-medium rounded-xl transition-colors border border-brand/20 rtl:flex-row-reverse"
                   >
                     <MessageSquare className="w-4 h-4" /> {t('emergency.messageBtn')}
                   </button>

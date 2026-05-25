@@ -50,7 +50,7 @@ export default function VetScheduleSettings() {
     <AppLayout title={t('vetScheduleSettings.title')} subtitle={t('vetScheduleSettings.subtitle')}>
       <div className="max-w-2xl mx-auto px-6 py-8">
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
+          <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-brand" /></div>
         ) : (
           <form onSubmit={handleSave} className="space-y-8">
 
@@ -70,8 +70,8 @@ export default function VetScheduleSettings() {
                       className={[
                         'w-14 py-3 rounded-xl text-sm font-semibold border transition-all',
                         active
-                          ? 'bg-violet-600 text-white border-violet-600 shadow-sm'
-                          : 'bg-white text-slate-500 border-slate-200 hover:border-violet-300',
+                          ? 'bg-brand text-white border-brand shadow-sm'
+                          : 'bg-white text-slate-500 border-slate-200 hover:border-brand/40',
                       ].join(' ')}
                     >
                       {label}
@@ -98,7 +98,7 @@ export default function VetScheduleSettings() {
                     type="time"
                     value={form.workStart}
                     onChange={e => { setForm(f => ({ ...f, workStart: e.target.value })); setSaved(false) }}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand transition"
                   />
                 </div>
                 <div>
@@ -107,7 +107,7 @@ export default function VetScheduleSettings() {
                     type="time"
                     value={form.workEnd}
                     onChange={e => { setForm(f => ({ ...f, workEnd: e.target.value })); setSaved(false) }}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand transition"
                   />
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function VetScheduleSettings() {
             <button
               type="submit"
               disabled={saving || form.workingDays.length === 0}
-              className="w-full bg-violet-600 hover:bg-violet-700 disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-brand hover:bg-brand-dark disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
               {saving  ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('vetScheduleSettings.saving')}</>
                : saved ? <><Check className="w-4 h-4" /> {t('vetScheduleSettings.saved')}</>

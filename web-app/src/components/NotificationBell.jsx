@@ -125,7 +125,7 @@ export default function NotificationBell() {
             {count > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="flex items-center gap-1 text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors"
+                className="flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-dark transition-colors"
               >
                 <Check className="w-3.5 h-3.5" /> {t('notifications.markAllRead')}
               </button>
@@ -146,12 +146,12 @@ export default function NotificationBell() {
                       onClick={() => handleClick(n)}
                       className={[
                         'w-full text-start px-4 py-3 hover:bg-slate-50 transition-colors flex items-start gap-3 rtl:flex-row-reverse',
-                        n.read ? '' : 'bg-violet-50/40',
+                        n.read ? '' : 'bg-brand-soft/50',
                       ].join(' ')}
                     >
                       <span className={[
                         'mt-1 w-2 h-2 rounded-full shrink-0',
-                        n.read ? 'bg-transparent' : 'bg-violet-500',
+                        n.read ? 'bg-transparent' : 'bg-brand',
                       ].join(' ')} />
                       <div className="flex-1 min-w-0 rtl:text-right">
                         <p className={`text-sm leading-snug ${n.read ? 'text-slate-600' : 'text-slate-800 font-medium'}`}>

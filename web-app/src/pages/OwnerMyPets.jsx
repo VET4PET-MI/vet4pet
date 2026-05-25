@@ -8,9 +8,9 @@ import { localizeSpecies, localizeBreed } from '../utils/petLocale'
 
 const SPECIES_META = {
   dog:    { icon: '🐕', badge: 'bg-amber-50 border-amber-200 text-amber-700' },
-  cat:    { icon: '🐈', badge: 'bg-purple-50 border-purple-200 text-purple-700' },
+  cat:    { icon: '🐈', badge: 'bg-orange-50 border-orange-200 text-orange-700' },
   bird:   { icon: '🦜', badge: 'bg-sky-50 border-sky-200 text-sky-700' },
-  rabbit: { icon: '🐇', badge: 'bg-pink-50 border-pink-200 text-pink-700' },
+  rabbit: { icon: '🐇', badge: 'bg-rose-50 border-rose-200 text-rose-700' },
 }
 function speciesMeta(s = '') {
   return SPECIES_META[s.toLowerCase()] ?? { icon: '🐾', badge: 'bg-slate-100 border-slate-200 text-slate-600' }
@@ -40,17 +40,17 @@ function AddPetModal({ onClose, onAdded }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-violet-100 overflow-hidden">
-        {/* Gradient banner */}
-        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100">
-          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-slate-200 overflow-hidden">
+        {/* Banner */}
+        <div className="relative bg-brand-tint px-6 py-5 border-b border-brand/15">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-brand-soft/60 blur-2xl pointer-events-none" />
           <div className="relative flex items-center justify-between rtl:flex-row-reverse">
             <div className="flex items-center gap-3 rtl:flex-row-reverse">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md">
+              <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center shadow-md">
                 <PawPrint className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-lg font-bold text-[#2D1B69]">{t('ownerMyPets.addPetTitle')}</h2>
+              <h2 className="text-lg font-bold text-brand-deep">{t('ownerMyPets.addPetTitle')}</h2>
             </div>
             <button onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition"><X className="w-5 h-5" /></button>
           </div>
@@ -59,13 +59,13 @@ function AddPetModal({ onClose, onAdded }) {
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.petName')} <span className="text-red-400">*</span></label>
             <input value={form.name} onChange={e => set('name', e.target.value)} placeholder={t('ownerMyPets.petNamePh')} required
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.species')}</label>
               <select value={form.species} onChange={e => set('species', e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
                 <option value="">{t('ownerMyPets.selectPlaceholder')}</option>
                 <option value="Dog">{t('ownerMyPets.speciesDog')}</option>
                 <option value="Cat">{t('ownerMyPets.speciesCat')}</option>
@@ -77,7 +77,7 @@ function AddPetModal({ onClose, onAdded }) {
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.gender')}</label>
               <select value={form.gender} onChange={e => set('gender', e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500">
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
                 <option value="">{t('ownerMyPets.selectPlaceholder')}</option>
                 <option value="Male">{t('ownerMyPets.male')}</option>
                 <option value="Female">{t('ownerMyPets.female')}</option>
@@ -88,19 +88,19 @@ function AddPetModal({ onClose, onAdded }) {
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.breed')}</label>
               <input value={form.breed} onChange={e => set('breed', e.target.value)} placeholder={t('ownerMyPets.breedPh')}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.age')}</label>
               <input type="number" min="0" max="30" value={form.age} onChange={e => set('age', e.target.value)} placeholder={t('ownerMyPets.agePh')}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500" />
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
             </div>
           </div>
           {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('ownerMyPets.cancel')}</button>
             <button type="submit" disabled={saving}
-              className="flex-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg">
+              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
               {t('ownerMyPets.savePet')}
             </button>
@@ -132,23 +132,23 @@ export default function OwnerMyPets() {
       subtitle={t('ownerMyPets.subtitle')}
       actions={
         <button onClick={() => setAdd(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
+          className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
           <Plus className="w-4 h-4" /> {t('ownerMyPets.addPet')}
         </button>
       }
     >
       <div className="max-w-3xl mx-auto px-6 py-8">
         {loading ? (
-          <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-violet-400" /></div>
+          <div className="flex justify-center py-20"><Loader2 className="w-6 h-6 animate-spin text-brand" /></div>
         ) : pets.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-violet-200">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-3xl flex items-center justify-center text-5xl">
+          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-brand/25">
+            <div className="w-20 h-20 mx-auto mb-4 bg-brand-soft rounded-3xl flex items-center justify-center text-5xl">
               🐾
             </div>
             <p className="font-semibold text-slate-700">{t('ownerMyPets.noPetsTitle')}</p>
             <p className="text-sm text-slate-400 mt-1 mb-6">{t('ownerMyPets.noPetsHint')}</p>
             <button onClick={() => setAdd(true)}
-              className="px-5 py-2.5 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
+              className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
               {t('ownerMyPets.addFirstBtn')}
             </button>
           </div>
@@ -160,23 +160,23 @@ export default function OwnerMyPets() {
                 <div
                   key={pet._id}
                   onClick={() => navigate(`/pet/${pet._id}`)}
-                  className="group bg-white rounded-2xl border border-violet-100 p-5 hover:shadow-lg hover:border-violet-300 hover:-translate-y-0.5 transition-all cursor-pointer flex flex-col gap-3"
+                  className="group bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-lg hover:border-brand/40 hover:-translate-y-0.5 transition-all cursor-pointer flex flex-col gap-3"
                 >
                   <div className="flex items-start justify-between">
-                    <div className="w-14 h-14 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-2xl flex items-center justify-center text-3xl leading-none shadow-sm">
+                    <div className="w-14 h-14 bg-brand-soft rounded-2xl flex items-center justify-center text-3xl leading-none shadow-sm">
                       {icon}
                     </div>
                     <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badge}`}>{localizeSpecies(pet.species, t) || '—'}</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-800 group-hover:text-violet-600 transition-colors">{pet.name}</h3>
+                    <h3 className="font-semibold text-ink group-hover:text-brand-dark transition-colors">{pet.name}</h3>
                     <p className="text-slate-400 text-sm mt-0.5">{localizeBreed(pet.breed, t) || '—'}{pet.age ? ` · ${pet.age} ${t('ownerMyPets.yearShort')}` : ''}</p>
                   </div>
-                  <div className="mt-auto pt-3 border-t border-violet-50 flex items-center justify-between">
+                  <div className="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
                       <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block" />{t('ownerMyPets.active')}
                     </span>
-                    <span className="text-xs text-violet-600 font-semibold group-hover:text-fuchsia-600 transition-colors">{t('ownerMyPets.viewRecords')}</span>
+                    <span className="text-xs text-brand font-semibold group-hover:text-brand-dark transition-colors">{t('ownerMyPets.viewRecords')}</span>
                   </div>
                 </div>
               )

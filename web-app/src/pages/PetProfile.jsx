@@ -13,9 +13,9 @@ const RECORD_TYPE_DEFS = [
   { value: 'VISIT_SUMMARY', key: 'visitSummary', icon: '🩺', color: 'bg-blue-50 text-blue-700 border-blue-200',   dot: 'bg-blue-500' },
   { value: 'VACCINATION',   key: 'vaccination',  icon: '💉', color: 'bg-green-50 text-green-700 border-green-200', dot: 'bg-green-500' },
   { value: 'LAB_RESULT',    key: 'labResult',    icon: '🧪', color: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500' },
-  { value: 'XRAY',          key: 'xray',         icon: '🔬', color: 'bg-purple-50 text-purple-700 border-purple-200', dot: 'bg-purple-500' },
+  { value: 'XRAY',          key: 'xray',         icon: '🔬', color: 'bg-sky-50 text-sky-700 border-sky-200',     dot: 'bg-sky-500' },
   { value: 'BLOOD_TEST',    key: 'bloodTest',    icon: '🩸', color: 'bg-red-50 text-red-700 border-red-200',     dot: 'bg-red-500' },
-  { value: 'CONSULTATION',  key: 'consultation', icon: '📹', color: 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200', dot: 'bg-fuchsia-500' },
+  { value: 'CONSULTATION',  key: 'consultation', icon: '📹', color: 'bg-teal-50 text-teal-700 border-teal-200',  dot: 'bg-teal-500' },
   { value: 'OTHER',         key: 'other',        icon: '📋', color: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' },
 ]
 
@@ -46,7 +46,7 @@ function FileAttachment({ fileUrl, originalFileName }) {
         </a>
         <div className="flex gap-4 mt-2">
           <a href={href} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors">
+            className="flex items-center gap-1.5 text-xs font-medium text-brand hover:text-brand-dark transition-colors">
             <ExternalLink className="w-3.5 h-3.5" /> {t('petProfile.viewFullSize')}
           </a>
           <a href={href} download={name}
@@ -65,7 +65,7 @@ function FileAttachment({ fileUrl, originalFileName }) {
       </div>
       <span className="flex-1 min-w-0 text-sm text-slate-700 font-medium truncate">{name}</span>
       <a href={href} target="_blank" rel="noopener noreferrer"
-        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-violet-50 text-violet-600 hover:bg-violet-100 text-xs font-medium rounded-lg transition-colors">
+        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-brand-soft text-brand-dark hover:bg-brand-soft/70 text-xs font-medium rounded-lg transition-colors">
         <ExternalLink className="w-3.5 h-3.5" /> {t('petProfile.view')}
       </a>
       <a href={href} download={name}
@@ -115,7 +115,7 @@ function RecordCard({ record }) {
               {isLong && (
                 <button
                   onClick={() => setExpanded(e => !e)}
-                  className="mt-1.5 flex items-center gap-1 text-xs font-medium text-violet-600 hover:text-violet-800 transition-colors"
+                  className="mt-1.5 flex items-center gap-1 text-xs font-medium text-brand hover:text-brand-dark transition-colors"
                 >
                   {expanded
                     ? <><ChevronUp className="w-3.5 h-3.5" /> {t('petProfile.showLess')}</>
@@ -182,8 +182,8 @@ function DropZone({ file, onFile, onRemove }) {
       className={[
         'border-2 border-dashed rounded-xl p-6 text-center cursor-pointer select-none transition-colors',
         dragging
-          ? 'border-violet-400 bg-violet-50'
-          : 'border-slate-200 hover:border-violet-300 hover:bg-slate-50',
+          ? 'border-brand bg-brand-soft'
+          : 'border-slate-200 hover:border-brand/40 hover:bg-slate-50',
       ].join(' ')}
     >
       <Upload className="w-6 h-6 text-slate-400 mx-auto mb-2" />
@@ -252,20 +252,20 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-violet-900/40 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col border border-violet-100 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] flex flex-col border border-slate-200 overflow-hidden">
 
-        {/* Gradient banner */}
-        <div className="relative bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 px-6 py-5 border-b border-violet-100 shrink-0">
-          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-fuchsia-200/50 blur-2xl pointer-events-none" />
+        {/* Banner */}
+        <div className="relative bg-brand-tint px-6 py-5 border-b border-brand/15 shrink-0">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-brand-soft/60 blur-2xl pointer-events-none" />
           <div className="relative flex items-center justify-between rtl:flex-row-reverse">
             <div className="flex items-center gap-3 rtl:flex-row-reverse">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+              <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center shadow-md shrink-0">
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div className="rtl:text-right">
-                <h2 className="text-lg font-bold text-[#2D1B69]">{t('petProfile.addModalTitle')}</h2>
-                <p className="text-xs text-violet-900/70 mt-0.5">{t('petProfile.addModalSub')}</p>
+                <h2 className="text-lg font-bold text-brand-deep">{t('petProfile.addModalTitle')}</h2>
+                <p className="text-xs text-ink-muted mt-0.5">{t('petProfile.addModalSub')}</p>
               </div>
             </div>
             <button type="button" onClick={onClose}
@@ -307,7 +307,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                   type="date"
                   value={form.date}
                   onChange={e => set('date', e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand transition"
                 />
               </div>
               <div>
@@ -317,7 +317,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                   value={form.vetName}
                   onChange={e => set('vetName', e.target.value)}
                   placeholder={t('petProfile.vetNamePh')}
-                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-violet-500 transition"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand transition"
                 />
               </div>
             </div>
@@ -329,7 +329,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                 onChange={e => set('findings', e.target.value)}
                 placeholder={t('petProfile.findingsPh')}
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 transition resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand transition resize-none"
               />
             </div>
 
@@ -349,7 +349,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
                 </div>
                 <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-violet-500 rounded-full transition-all duration-200"
+                    className="h-full bg-brand rounded-full transition-all duration-200"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -374,7 +374,7 @@ function AddRecordModal({ petId, user, onClose, onSaved }) {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
             >
               {submitting
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.saving')}</>
@@ -452,17 +452,17 @@ export default function PetProfile({ readOnly = false }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F3EEFB] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-violet-500" />
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-brand" />
       </div>
     )
   }
 
   if (error || !pet) {
     return (
-      <div className="min-h-screen bg-[#F3EEFB] flex flex-col items-center justify-center gap-3 p-4">
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center gap-3 p-4">
         <p className="text-red-600 font-medium">{error ?? t('petProfile.petNotFound')}</p>
-        <button onClick={() => navigate('/')} className="text-sm text-violet-600 hover:underline">
+        <button onClick={() => navigate('/')} className="text-sm text-brand hover:underline">
           {t('petProfile.backDashboard')}
         </button>
       </div>
@@ -472,23 +472,23 @@ export default function PetProfile({ readOnly = false }) {
   const emoji = SPECIES_EMOJI[pet.species?.toLowerCase()] ?? '🐾'
 
   return (
-    <div className="min-h-screen bg-[#F3EEFB]">
+    <div className="min-h-screen bg-bg">
 
-      <div className="bg-white/80 backdrop-blur-md border-b border-violet-100 sticky top-0 z-10">
+      <div className="bg-white/85 backdrop-blur-md border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
           <button
             onClick={() => navigate(backPath)}
-            className="flex items-center gap-1.5 text-slate-500 hover:text-violet-700 text-sm font-medium transition-colors shrink-0 rtl:flex-row-reverse"
+            className="flex items-center gap-1.5 text-slate-500 hover:text-brand-dark text-sm font-medium transition-colors shrink-0 rtl:flex-row-reverse"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180" /> {backLabel}
           </button>
-          <span className="text-violet-300 select-none">/</span>
+          <span className="text-slate-300 select-none">/</span>
           <span className="text-slate-800 font-semibold text-sm truncate">{pet.name}</span>
 
           {!readOnly && (
             <button
               onClick={() => setModal(true)}
-              className="ms-auto flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 rtl:flex-row-reverse"
+              className="ms-auto flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 rtl:flex-row-reverse"
             >
               <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
             </button>
@@ -499,17 +499,16 @@ export default function PetProfile({ readOnly = false }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
         {/* Hero card */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-200 via-violet-100 to-fuchsia-100 p-7 shadow-sm border border-violet-100">
-          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-fuchsia-200/40 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-12 -start-12 w-52 h-52 rounded-full bg-violet-300/30 blur-3xl pointer-events-none" />
+        <div className="relative overflow-hidden rounded-3xl bg-brand-tint p-7 shadow-sm ring-1 ring-brand/15">
+          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-brand-soft/60 blur-3xl pointer-events-none" />
 
           <div className="relative flex items-center gap-6 rtl:flex-row-reverse rtl:text-right">
-            <div className="w-24 h-24 bg-white/60 backdrop-blur-sm rounded-3xl flex items-center justify-center text-5xl shrink-0 shadow-md border border-white/40">
+            <div className="w-24 h-24 bg-white/70 backdrop-blur-sm rounded-3xl flex items-center justify-center text-5xl shrink-0 shadow-md ring-1 ring-brand/10">
               {emoji}
             </div>
 
             <div className="flex-1 min-w-0">
-              <h1 className="text-[#2D1B69] text-3xl font-bold tracking-tight">{pet.name}</h1>
+              <h1 className="text-brand-deep text-3xl font-bold tracking-tight">{pet.name}</h1>
               <div className="flex flex-wrap gap-2 mt-3">
                 {[
                   [t('petProfile.speciesLabel'), localizeSpecies(pet.species, t)],
@@ -517,8 +516,8 @@ export default function PetProfile({ readOnly = false }) {
                   [t('petProfile.ageLabel'),     pet.age != null ? t('petProfile.ageValue', { n: pet.age }) : null],
                   [t('petProfile.genderLabel'),  localizeGender(pet.gender, t)],
                 ].map(([label, val]) => val ? (
-                  <span key={label} className="inline-flex items-center gap-1.5 text-xs font-medium text-violet-900/80 bg-white/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/40">
-                    <span className="text-violet-700 font-semibold">{label}:</span> {val}
+                  <span key={label} className="inline-flex items-center gap-1.5 text-xs font-medium text-ink/80 bg-white/70 backdrop-blur-sm px-3 py-1.5 rounded-full ring-1 ring-brand/10">
+                    <span className="text-brand-dark font-semibold">{label}:</span> {val}
                   </span>
                 ) : null)}
               </div>
@@ -529,7 +528,7 @@ export default function PetProfile({ readOnly = false }) {
                 <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                 {t('petProfile.activePatient')}
               </span>
-              <span className="text-xs text-violet-900/60 font-medium">
+              <span className="text-xs text-ink-muted font-medium">
                 {t('petProfile.recordsCount', { count: total })}
               </span>
             </div>
@@ -538,13 +537,13 @@ export default function PetProfile({ readOnly = false }) {
 
         <section>
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-7 bg-gradient-to-b from-violet-500 to-fuchsia-500 rounded-full" />
-            <h2 className="text-lg font-bold text-slate-800">{t('petProfile.medicalHistory')}</h2>
+            <div className="w-1.5 h-7 bg-brand rounded-full" />
+            <h2 className="text-lg font-bold text-ink">{t('petProfile.medicalHistory')}</h2>
           </div>
 
           {records.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-violet-200">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-violet-100 to-fuchsia-100 rounded-3xl flex items-center justify-center text-5xl">
+            <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-brand/25">
+              <div className="w-20 h-20 mx-auto mb-4 bg-brand-soft rounded-3xl flex items-center justify-center text-5xl">
                 📋
               </div>
               <p className="font-semibold text-slate-700">{t('petProfile.noRecordsTitle')}</p>
@@ -554,7 +553,7 @@ export default function PetProfile({ readOnly = false }) {
               {!readOnly && (
                 <button
                   onClick={() => setModal(true)}
-                  className="px-5 py-2.5 bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
+                  className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
                 >
                   {t('petProfile.addFirstRecord')}
                 </button>
@@ -571,7 +570,7 @@ export default function PetProfile({ readOnly = false }) {
                   <button
                     onClick={loadMore}
                     disabled={loadingMore}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-violet-200 hover:bg-violet-50 hover:border-violet-300 text-violet-700 text-sm font-medium rounded-xl transition-colors disabled:opacity-60"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-white border border-brand/25 hover:bg-brand-soft hover:border-brand/40 text-brand-dark text-sm font-medium rounded-xl transition-colors disabled:opacity-60"
                   >
                     {loadingMore
                       ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.loadingMore')}</>

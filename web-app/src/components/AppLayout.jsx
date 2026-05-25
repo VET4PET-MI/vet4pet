@@ -62,7 +62,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
   const greeting = title ?? t(isOwner ? 'nav.greetingOwner' : 'nav.greetingVet', { name: firstName })
 
   return (
-    <div className="flex h-screen bg-[#F3EEFB] overflow-hidden">
+    <div className="flex h-screen bg-bg overflow-hidden">
 
       {/* Mobile overlay */}
       {open && (
@@ -78,7 +78,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
 
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-100 shrink-0 rtl:flex-row-reverse">
-          <div className="w-9 h-9 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-md shrink-0">
+          <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center shadow-md shrink-0">
             <PawPrint className="w-5 h-5 text-white" />
           </div>
           <div className="min-w-0 flex-1 rtl:text-right">
@@ -104,8 +104,8 @@ export default function AppLayout({ title, subtitle, actions, children }) {
                 className={[
                   'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors text-start rtl:flex-row-reverse',
                   isActive(path)
-                    ? 'bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white shadow-md'
-                    : 'text-slate-600 hover:bg-violet-50 hover:text-violet-700',
+                    ? 'bg-brand text-white shadow-md'
+                    : 'text-slate-600 hover:bg-brand-soft hover:text-brand-dark',
                 ].join(' ')}
               >
                 <Icon size={18} className="shrink-0" />
@@ -117,7 +117,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
                       ? 'text-red-500 animate-pulse'
                       : isActive(path)
                         ? 'bg-white/25 text-white px-1.5 py-0.5 min-w-[1.25rem] text-center'
-                        : 'bg-violet-500 text-white px-1.5 py-0.5 min-w-[1.25rem] text-center',
+                        : 'bg-brand text-white px-1.5 py-0.5 min-w-[1.25rem] text-center',
                   ].join(' ')}>
                     {badge}
                   </span>
@@ -130,7 +130,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
         {/* User badge + logout */}
         <div className="p-4 border-t border-slate-100 shrink-0 space-y-2">
           <div className="flex items-center gap-3 rtl:flex-row-reverse">
-            <div className="w-9 h-9 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-sm">
+            <div className="w-9 h-9 bg-brand rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-sm">
               {user?.name?.slice(0, 2).toUpperCase() ?? 'ME'}
             </div>
             <div className="min-w-0 flex-1 rtl:text-right">
