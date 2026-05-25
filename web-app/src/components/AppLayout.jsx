@@ -56,10 +56,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
   function go(path) { navigate(path); setOpen(false) }
   function handleLogout() { logout(); navigate('/login') }
 
-  const firstName = user?.name?.split(' ')[0]
-    ?? (isOwner ? t('nav.fallbackOwnerName') : t('nav.fallbackVetName'))
   const portalLabel = isOwner ? t('nav.ownerPortal') : t('nav.vetPortal')
-  const greeting = title ?? t(isOwner ? 'nav.greetingOwner' : 'nav.greetingVet', { name: firstName })
 
   return (
     <div className="flex h-screen bg-bg overflow-hidden">
@@ -161,7 +158,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
           </button>
 
           <div className="min-w-0 flex-1">
-            <h1 className="text-xl font-bold text-slate-800 truncate">{greeting}</h1>
+            {title && <h1 className="text-xl font-bold text-ink truncate">{title}</h1>}
             {subtitle && <p className="text-sm text-slate-400">{subtitle}</p>}
           </div>
 

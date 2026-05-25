@@ -60,7 +60,8 @@ function VetDashboard() {
   const today = new Date().toLocaleDateString(locale, {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   })
-  const firstName = user?.name?.split(' ')[0] ?? t('nav.fallbackVetName')
+  const rawName  = user?.name?.replace(/^Dr\.?\s+/i, '') ?? ''
+  const firstName = rawName.split(' ')[0] || t('nav.fallbackVetName')
 
   useEffect(() => {
     const todayIso = new Date().toISOString().slice(0, 10)
@@ -170,7 +171,7 @@ function VetDashboard() {
             <button
               type="submit"
               disabled={loading || (!ownerId.trim() && !name.trim())}
-              className="w-full bg-brand hover:bg-brand-dark disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              className="w-full bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               {loading ? t('dashboard.searching') : t('dashboard.searchButton')}
@@ -249,7 +250,8 @@ function OwnerHome() {
       .finally(() => setLoading(false))
   }, [])
 
-  const firstName = user?.name?.split(' ')[0] ?? ''
+  const rawName  = user?.name?.replace(/^Dr\.?\s+/i, '') ?? ''
+  const firstName = rawName.split(' ')[0]
 
   return (
     <AppLayout subtitle={t('dashboard.ownerSubGreeting')}>

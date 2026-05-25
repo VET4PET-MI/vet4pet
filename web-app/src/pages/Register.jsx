@@ -56,7 +56,7 @@ export default function Register() {
     <div className="min-h-screen bg-bg flex items-center justify-center p-4 relative overflow-hidden">
       {/* Decorative blobs */}
       <div className="absolute -top-20 -end-20 w-[28rem] h-[28rem] rounded-full bg-brand/20 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-20 -start-20 w-[28rem] h-[28rem] rounded-full bg-brand/10 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 -start-20 w-[28rem] h-[28rem] rounded-full bg-brand/15 blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative">
 

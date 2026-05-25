@@ -183,7 +183,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(2)}
               disabled={!selectedPet}
-              className="w-full mt-4 bg-brand hover:bg-brand-dark disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full mt-4 bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -244,7 +244,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(3)}
               disabled={!selectedVet}
-              className="w-full mt-4 bg-brand hover:bg-brand-dark disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full mt-4 bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -317,7 +317,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(4)}
               disabled={!selectedSlot}
-              className="w-full bg-brand hover:bg-brand-dark disabled:opacity-50 text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
