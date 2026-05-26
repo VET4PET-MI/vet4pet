@@ -16,7 +16,11 @@ const app  = express();
 const PORT = process.env.PORT || 5000;
 
 // ── Middleware ─────────────────────────────────────────────────────────
-app.use(cors());
+// In production set CLIENT_ORIGIN to lock CORS to the deployed frontend.
+// In dev (no env var) we allow any origin.
+app.use(cors(process.env.CLIENT_ORIGIN
+  ? { origin: process.env.CLIENT_ORIGIN, credentials: true }
+  : {}));
 app.use(express.json());
 
 // ── Static file serving for uploads ───────────────────────────────────

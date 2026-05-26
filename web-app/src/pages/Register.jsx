@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { PawPrint, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
+import { API_BASE } from '../api'
 import { useAuth } from '../context/AuthContext'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 
@@ -35,7 +36,7 @@ export default function Register() {
     setLoading(true)
     setError(null)
     try {
-      const { data } = await axios.post('http://localhost:5000/api/auth/register', {
+      const { data } = await axios.post(`${API_BASE}/api/auth/register`, {
         name:     form.name,
         email:    form.email,
         password: form.password,
