@@ -55,6 +55,20 @@ function dayBounds(dateStr) {
   };
 }
 
+// Wall-clock "now" in Israel — regardless of where the server runs.
+// Render runs in UTC, so using getHours() directly skews 2–3 hours.
+function nowInIsrael() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jerusalem',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).formatToParts(new Date()).reduce((acc, p) => (acc[p.type] = p.value, acc), {});
+  return {
+    date:    `${parts.year}-${parts.month}-${parts.day}`,
+    minutes: parseInt(parts.hour, 10) * 60 + parseInt(parts.minute, 10),
+  };
+}
+
 // ── Controllers ────────────────────────────────────────────────────────────────
 
 async function getAppointments(req, res) {
@@ -97,12 +111,13 @@ async function createAppointment(req, res) {
       payload.ownerName = payload.ownerName || req.user.name;
     }
 
-    // Reject appointments scheduled in the past
+    // Reject appointments scheduled in the past (interpreting date+time as Israel wall-clock)
     if (payload.date && payload.time) {
-      const [h, m] = payload.time.split(':').map(Number);
-      const apptDateTime = new Date(payload.date);
-      apptDateTime.setHours(h, m, 0, 0);
-      if (apptDateTime.getTime() <= Date.now()) {
+      const { date: todayIL, minutes: nowMins } = nowInIsrael();
+      const apptDate = String(payload.date).slice(0, 10);
+      const apptMins = timeToMins(payload.time);
+      const isPast = apptDate < todayIL || (apptDate === todayIL && apptMins <= nowMins);
+      if (isPast) {
         return res.status(400).json({ message: 'Cannot book an appointment in the past.' });
       }
     }
@@ -229,11 +244,9 @@ async function getAvailableSlots(req, res) {
       return res.json({ date, duration: slotDuration, slots: [] });
     }
 
-    // If the date is today, skip slots that have already started
-    const now = new Date();
-    const todayLocal = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    const isToday = date === todayLocal;
-    const currentMins = now.getHours() * 60 + now.getMinutes();
+    // If the date is today (Israel), skip slots that have already started
+    const { date: todayIL, minutes: currentMins } = nowInIsrael();
+    const isToday = date === todayIL;
 
     const { start, end } = dayBounds(date);
     const bookedFilter = {
