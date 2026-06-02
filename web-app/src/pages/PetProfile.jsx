@@ -408,7 +408,9 @@ export default function PetProfile({ readOnly = false }) {
   const [hasMore, setHasMore] = useState(false)
   const [loading, setLoading] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
+  const [recordsLoading, setRecordsLoading] = useState(true)
   const [error, setError]     = useState(null)
+  const [recordsError, setRecordsError] = useState(null)
   const [showModal, setModal] = useState(false)
   const [tab, setTab] = useState('medical') // 'medical' | 'docs'
 
@@ -421,13 +423,15 @@ export default function PetProfile({ readOnly = false }) {
       setPet(data)
     } catch {
       setError(t('petProfile.notFound'))
+    } finally {
+      setLoading(false)
     }
   }
 
   async function fetchRecords(reset) {
-    if (reset) setLoading(true)
+    if (reset) setRecordsLoading(true)
     else       setLoadingMore(true)
-    setError(null)
+    setRecordsError(null)
     try {
       const skip = reset ? 0 : records.length
       const { data } = await api.get(`/api/records/pet/${id}`, {
@@ -441,9 +445,9 @@ export default function PetProfile({ readOnly = false }) {
       setTotal(data.total)
       setHasMore(data.hasMore)
     } catch {
-      if (reset) setError(t('petProfile.notFound'))
+      if (reset) { setRecords([]); setRecordsError(t('petProfile.notFound')) }
     } finally {
-      setLoading(false)
+      setRecordsLoading(false)
       setLoadingMore(false)
     }
   }
@@ -569,7 +573,15 @@ export default function PetProfile({ readOnly = false }) {
             </div>
           </div>
 
-          {records.length === 0 ? (
+          {recordsLoading ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="w-6 h-6 animate-spin text-brand" />
+            </div>
+          ) : recordsError ? (
+            <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-red-200">
+              <p className="font-semibold text-red-600">{recordsError}</p>
+            </div>
+          ) : records.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-brand/25">
               <div className="w-20 h-20 mx-auto mb-4 bg-brand-soft rounded-3xl flex items-center justify-center text-5xl">
                 📋
