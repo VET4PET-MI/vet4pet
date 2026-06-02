@@ -13,7 +13,7 @@ export default function Register() {
   const navigate  = useNavigate()
 
   const [tab, setTab]         = useState('owner')
-  const [form, setForm]       = useState({ name: '', email: '', password: '', confirm: '' })
+  const [form, setForm]       = useState({ name: '', email: '', password: '', confirm: '', nationalId: '' })
   const [showPw, setShowPw]   = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState(null)
@@ -33,6 +33,10 @@ export default function Register() {
       setError(t('auth.errorPwShort'))
       return
     }
+    if (tab === 'owner' && !/^\d{9}$/.test(form.nationalId.trim())) {
+      setError(t('auth.errorIdInvalid'))
+      return
+    }
     setLoading(true)
     setError(null)
     try {
@@ -41,6 +45,7 @@ export default function Register() {
         email:    form.email,
         password: form.password,
         role:     tab,
+        ...(tab === 'owner' && { nationalId: form.nationalId.trim() }),
       })
       login(data.user, data.token)
       navigate('/', { replace: true })
@@ -125,6 +130,26 @@ export default function Register() {
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
               />
             </div>
+
+            {/* National ID (owners only) */}
+            {!isVet && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  {t('auth.nationalIdLabel')}
+                </label>
+                <input
+                  type="text"
+                  name="nationalId"
+                  inputMode="numeric"
+                  value={form.nationalId}
+                  onChange={handleChange}
+                  placeholder={t('auth.nationalIdPlaceholder')}
+                  required
+                  maxLength={9}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent transition"
+                />
+              </div>
+            )}
 
             {/* Email */}
             <div>
