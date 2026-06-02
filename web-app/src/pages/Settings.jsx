@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Mail, Shield, Calendar, ChevronRight, LogOut, Languages, MapPin, Loader2, Save, Check } from 'lucide-react'
+import { User, Mail, Shield, Calendar, ChevronRight, LogOut, Languages, MapPin, Loader2, Save, Check, IdCard } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
@@ -141,6 +141,85 @@ function VetClinicSection() {
   )
 }
 
+function OwnerIdSection() {
+  const { t } = useTranslation()
+  const [value, setValue]   = useState('')
+  const [loading, setLoad]  = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved]   = useState(false)
+  const [error, setError]   = useState(null)
+
+  useEffect(() => {
+    api.get('/api/users/me')
+      .then(r => setValue(r.data.nationalId ?? ''))
+      .catch(() => {})
+      .finally(() => setLoad(false))
+  }, [])
+
+  async function handleSave(e) {
+    e.preventDefault()
+    setError(null); setSaved(false)
+    if (!/^\d{9}$/.test(value.trim())) {
+      setError(t('settings.ownerIdInvalid'))
+      return
+    }
+    setSaving(true)
+    try {
+      await api.patch('/api/users/me', { nationalId: value.trim() })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (err) {
+      const status = err.response?.status
+      setError(
+        status === 409 ? t('settings.ownerIdTaken')
+        : status === 400 ? t('settings.ownerIdInvalid')
+        : t('settings.ownerIdSaveFail')
+      )
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 flex justify-center">
+        <Loader2 className="w-5 h-5 animate-spin text-brand" />
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSave} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <div className="px-5 py-3 border-b border-slate-100">
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{t('settings.ownerIdTitle')}</p>
+        <p className="text-xs text-slate-400 mt-1">{t('settings.ownerIdDesc')}</p>
+      </div>
+      <div className="px-5 py-5 space-y-4">
+        <div>
+          <label className="block text-xs font-medium text-slate-600 mb-1.5">{t('settings.ownerIdLabel')}</label>
+          <input
+            value={value}
+            onChange={e => { setValue(e.target.value); setSaved(false); setError(null) }}
+            inputMode="numeric"
+            maxLength={9}
+            placeholder={t('settings.ownerIdPlaceholder')}
+            className="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+          />
+        </div>
+
+        {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
+
+        <button type="submit" disabled={saving}
+          className="w-full bg-brand hover:bg-brand-dark disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+          {saving  ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('emergency.vetSettings.saving')}</>
+           : saved ? <><Check className="w-4 h-4" /> {t('settings.ownerIdSaved')}</>
+           : <><IdCard className="w-4 h-4" /> {t('settings.ownerIdSave')}</>}
+        </button>
+      </div>
+    </form>
+  )
+}
+
 export default function Settings() {
   const { t, i18n }      = useTranslation()
   const { user, logout } = useAuth()
@@ -220,6 +299,9 @@ export default function Settings() {
             </div>
           </div>
         </div>
+
+        {/* Owner-only: national ID (so vets can find their pets) */}
+        {user?.role === 'owner' && <OwnerIdSection />}
 
         {/* Vet-only: clinic info (for emergency vet search) */}
         {user?.role === 'vet' && <VetClinicSection />}
