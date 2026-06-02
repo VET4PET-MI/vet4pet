@@ -45,11 +45,11 @@ export default function App() {
       <Route path="/pet/:id" element={<ProtectedRoute><PetProfileRoute /></ProtectedRoute>} />
       <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
       <Route path="/consultations" element={<ProtectedRoute><Consultations /></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
       {/* Vet-only routes */}
       <Route path="/schedule" element={<RoleRoute role="vet"><Schedule /></RoleRoute>} />
       <Route path="/vet-schedule-settings" element={<RoleRoute role="vet"><VetScheduleSettings /></RoleRoute>} />
-      <Route path="/settings" element={<RoleRoute role="vet"><Settings /></RoleRoute>} />
 
       {/* Owner-only routes */}
       <Route path="/my-pets" element={<RoleRoute role="owner"><OwnerMyPets /></RoleRoute>} />

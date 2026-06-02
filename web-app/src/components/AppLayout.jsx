@@ -35,6 +35,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
     { icon: MessageSquare,   label: t('nav.messages'),       path: '/messages' },
     { icon: Video,           label: t('nav.consultations'),  path: '/consultations' },
     { icon: Siren,           label: t('emergency.navLabel'), path: '/emergency' },
+    { icon: Settings,        label: t('nav.settings'),       path: '/settings' },
   ]
 
   const NAV = isOwner ? OWNER_NAV : VET_NAV
