@@ -49,7 +49,7 @@ function VetDashboard() {
   const { t, i18n }           = useTranslation()
   const { user }              = useAuth()
   const navigate              = useNavigate()
-  const [ownerId, setOwnerId] = useState('')
+  const [nationalId, setNationalId] = useState('')
   const [name, setName]       = useState('')
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -82,12 +82,12 @@ function VetDashboard() {
 
   async function handleSearch(e) {
     e.preventDefault()
-    if (!ownerId.trim() && !name.trim()) return
+    if (!nationalId.trim() && !name.trim()) return
     setLoading(true); setError(null)
     try {
       const params = {}
-      if (ownerId.trim()) params.ownerId = ownerId.trim()
-      if (name.trim())    params.name    = name.trim()
+      if (nationalId.trim()) params.nationalId = nationalId.trim()
+      if (name.trim())       params.name       = name.trim()
       const { data } = await api.get('/api/pets', { params })
       setResults(data)
     } catch {
@@ -95,7 +95,7 @@ function VetDashboard() {
     } finally { setLoading(false) }
   }
 
-  function clearSearch() { setResults(null); setOwnerId(''); setName('') }
+  function clearSearch() { setResults(null); setNationalId(''); setName('') }
 
   const statCards = [
     { label: t('dashboard.statTodayAppts'),      value: stats.todayAppts,      icon: Calendar,      bg: 'bg-sky-50',     text: 'text-sky-700' },
@@ -154,7 +154,8 @@ function VetDashboard() {
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('dashboard.ownerId')}</label>
                 <input
-                  type="text" value={ownerId} onChange={e => setOwnerId(e.target.value)}
+                  type="text" value={nationalId} onChange={e => setNationalId(e.target.value)}
+                  inputMode="numeric" maxLength={9}
                   placeholder={t('dashboard.ownerIdPlaceholder')}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand transition"
                 />
@@ -170,7 +171,7 @@ function VetDashboard() {
             </div>
             <button
               type="submit"
-              disabled={loading || (!ownerId.trim() && !name.trim())}
+              disabled={loading || (!nationalId.trim() && !name.trim())}
               className="w-full bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
