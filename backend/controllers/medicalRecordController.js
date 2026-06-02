@@ -6,6 +6,12 @@ async function getRecordsByPet(req, res) {
     const skip  = Math.max(parseInt(req.query.skip,  10) || 0, 0);
     const filter = { petId: req.params.petId };
 
+    // Optional comma-separated type filter (used by the profile tabs).
+    if (req.query.types) {
+      const types = req.query.types.split(',').map(s => s.trim()).filter(Boolean);
+      if (types.length) filter.type = { $in: types };
+    }
+
     const [items, total] = await Promise.all([
       MedicalRecord.find(filter).sort({ date: -1 }).skip(skip).limit(limit),
       MedicalRecord.countDocuments(filter),

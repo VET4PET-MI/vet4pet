@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const RECORD_TYPES = ['VISIT_SUMMARY', 'VACCINATION', 'LAB_RESULT', 'XRAY', 'BLOOD_TEST', 'CONSULTATION', 'OTHER'];
+const RECORD_TYPES = ['VISIT_SUMMARY', 'VACCINATION', 'LAB_RESULT', 'XRAY', 'BLOOD_TEST', 'CONSULTATION', 'PRESCRIPTION', 'OTHER'];
 
 const medicalRecordSchema = new mongoose.Schema(
   {
