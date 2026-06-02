@@ -16,8 +16,12 @@ const RECORD_TYPE_DEFS = [
   { value: 'XRAY',          key: 'xray',         icon: '🔬', color: 'bg-sky-50 text-sky-700 border-sky-200',     dot: 'bg-sky-500' },
   { value: 'BLOOD_TEST',    key: 'bloodTest',    icon: '🩸', color: 'bg-red-50 text-red-700 border-red-200',     dot: 'bg-red-500' },
   { value: 'CONSULTATION',  key: 'consultation', icon: '📹', color: 'bg-teal-50 text-teal-700 border-teal-200',  dot: 'bg-teal-500' },
+  { value: 'PRESCRIPTION',  key: 'prescription', icon: '💊', color: 'bg-violet-50 text-violet-700 border-violet-200', dot: 'bg-violet-500' },
   { value: 'OTHER',         key: 'other',        icon: '📋', color: 'bg-slate-100 text-slate-700 border-slate-200', dot: 'bg-slate-400' },
 ]
+
+const MEDICAL_TYPES = ['VISIT_SUMMARY', 'VACCINATION', 'LAB_RESULT', 'XRAY', 'BLOOD_TEST', 'CONSULTATION']
+const DOCS_TYPES    = ['PRESCRIPTION', 'OTHER']
 
 function isImage(url = '') {
   return /\.(jpg|jpeg|png|gif|webp)$/i.test(url)
@@ -200,10 +204,10 @@ function DropZone({ file, onFile, onRemove }) {
   )
 }
 
-function AddRecordModal({ petId, user, onClose, onSaved }) {
+function AddRecordModal({ petId, user, defaultType = 'VISIT_SUMMARY', onClose, onSaved }) {
   const { t } = useTranslation()
   const today = new Date().toISOString().slice(0, 10)
-  const [form, setForm]         = useState({ type: 'VISIT_SUMMARY', date: today, vetName: user?.name ?? '', findings: '' })
+  const [form, setForm]         = useState({ type: defaultType, date: today, vetName: user?.name ?? '', findings: '' })
   const [file, setFile]         = useState(null)
   const [submitting, setSub]    = useState(false)
   const [progress, setProgress] = useState(0)
@@ -406,48 +410,52 @@ export default function PetProfile({ readOnly = false }) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError]     = useState(null)
   const [showModal, setModal] = useState(false)
+  const [tab, setTab] = useState('medical') // 'medical' | 'docs'
 
-  useEffect(() => { fetchAll() }, [id])
+  useEffect(() => { fetchPet() }, [id])
+  useEffect(() => { fetchRecords(true) }, [id, tab])
 
-  async function fetchAll() {
-    setLoading(true)
-    setError(null)
+  async function fetchPet() {
     try {
-      const [petRes, recRes] = await Promise.all([
-        api.get(`/api/pets/${id}`),
-        api.get(`/api/records/pet/${id}`, { params: { limit: PAGE_SIZE, skip: 0 } }),
-      ])
-      setPet(petRes.data)
-      setRecords(recRes.data.items)
-      setTotal(recRes.data.total)
-      setHasMore(recRes.data.hasMore)
+      const { data } = await api.get(`/api/pets/${id}`)
+      setPet(data)
     } catch {
       setError(t('petProfile.notFound'))
-    } finally {
-      setLoading(false)
     }
   }
 
-  async function loadMore() {
-    if (loadingMore || !hasMore) return
-    setLoadingMore(true)
+  async function fetchRecords(reset) {
+    if (reset) setLoading(true)
+    else       setLoadingMore(true)
+    setError(null)
     try {
+      const skip = reset ? 0 : records.length
       const { data } = await api.get(`/api/records/pet/${id}`, {
-        params: { limit: PAGE_SIZE, skip: records.length },
+        params: { limit: PAGE_SIZE, skip, types: (tab === 'medical' ? MEDICAL_TYPES : DOCS_TYPES).join(',') },
       })
-      setRecords(prev => [...prev, ...data.items])
+      if (reset) {
+        setRecords(data.items)
+      } else {
+        setRecords(prev => [...prev, ...data.items])
+      }
+      setTotal(data.total)
       setHasMore(data.hasMore)
-    } catch {}
-    finally { setLoadingMore(false) }
+    } catch {
+      if (reset) setError(t('petProfile.notFound'))
+    } finally {
+      setLoading(false)
+      setLoadingMore(false)
+    }
+  }
+
+  function loadMore() {
+    if (loadingMore || !hasMore) return
+    fetchRecords(false)
   }
 
   async function handleSaved() {
     setModal(false)
-    // After adding a record, reload the first page (the newest record will be on top)
-    const { data } = await api.get(`/api/records/pet/${id}`, { params: { limit: PAGE_SIZE, skip: 0 } })
-    setRecords(data.items)
-    setTotal(data.total)
-    setHasMore(data.hasMore)
+    fetchRecords(true)
   }
 
   if (loading) {
@@ -536,9 +544,29 @@ export default function PetProfile({ readOnly = false }) {
         </div>
 
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1.5 h-7 bg-brand rounded-full" />
-            <h2 className="text-lg font-bold text-ink">{t('petProfile.medicalHistory')}</h2>
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-1.5 h-7 bg-brand rounded-full" />
+              <h2 className="text-lg font-bold text-ink">
+                {tab === 'medical' ? t('petProfile.medicalHistory') : t('petProfile.tabDocs')}
+              </h2>
+            </div>
+            <div className="ms-auto flex rounded-xl border border-slate-200 overflow-hidden text-sm font-semibold">
+              <button
+                type="button"
+                onClick={() => setTab('medical')}
+                className={`px-3 py-1.5 transition-colors ${tab === 'medical' ? 'bg-brand text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+              >
+                {t('petProfile.tabMedical')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setTab('docs')}
+                className={`px-3 py-1.5 transition-colors ${tab === 'docs' ? 'bg-brand text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+              >
+                {t('petProfile.tabDocs')}
+              </button>
+            </div>
           </div>
 
           {records.length === 0 ? (
@@ -546,16 +574,16 @@ export default function PetProfile({ readOnly = false }) {
               <div className="w-20 h-20 mx-auto mb-4 bg-brand-soft rounded-3xl flex items-center justify-center text-5xl">
                 📋
               </div>
-              <p className="font-semibold text-slate-700">{t('petProfile.noRecordsTitle')}</p>
+              <p className="font-semibold text-slate-700">{tab === 'medical' ? t('petProfile.noRecordsTitle') : t('petProfile.noDocsTitle')}</p>
               <p className="text-sm text-slate-400 mt-1 mb-5">
-                {t('petProfile.noRecordsHint')}
+                {tab === 'medical' ? t('petProfile.noRecordsHint') : t('petProfile.noDocsHint')}
               </p>
               {!readOnly && (
                 <button
                   onClick={() => setModal(true)}
                   className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
                 >
-                  {t('petProfile.addFirstRecord')}
+                  {tab === 'medical' ? t('petProfile.addFirstRecord') : t('petProfile.addFirstDoc')}
                 </button>
               )}
             </div>
@@ -596,6 +624,7 @@ export default function PetProfile({ readOnly = false }) {
         <AddRecordModal
           petId={pet._id}
           user={user}
+          defaultType={tab === 'docs' ? 'PRESCRIPTION' : 'VISIT_SUMMARY'}
           onClose={() => setModal(false)}
           onSaved={handleSaved}
         />
