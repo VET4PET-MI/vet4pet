@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 const User   = require('../models/User');
+const { isValidIsraeliId } = require('../utils/israeliId');
 
 function signToken(user) {
   return jwt.sign(
@@ -16,15 +17,37 @@ function sanitize(user) {
 
 async function register(req, res) {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, nationalId } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Name, email and password are required.' });
     }
+
+    const userRole = role || 'owner';
+
+    // Owners must supply a valid national ID; vets ignore it.
+    let normalizedId;
+    if (userRole === 'owner') {
+      normalizedId = isValidIsraeliId(nationalId);
+      if (!normalizedId) {
+        return res.status(400).json({ message: 'A valid national ID is required.' });
+      }
+      if (await User.findOne({ nationalId: normalizedId })) {
+        return res.status(409).json({ message: 'National ID already registered.' });
+      }
+    }
+
     if (await User.findOne({ email })) {
       return res.status(409).json({ message: 'Email already in use.' });
     }
+
     const hashed = await bcrypt.hash(password, 12);
-    const user   = await User.create({ name, email, password: hashed, role: role || 'owner' });
+    const user   = await User.create({
+      name,
+      email,
+      password: hashed,
+      role: userRole,
+      ...(normalizedId && { nationalId: normalizedId }),
+    });
     console.log('[Auth] registered:', user.email, 'role:', user.role);
     res.status(201).json({ token: signToken(user), user: sanitize(user) });
   } catch (err) {
