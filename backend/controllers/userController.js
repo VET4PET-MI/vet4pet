@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { isValidIsraeliId } = require('../utils/israeliId');
 
 async function getVets(req, res) {
   try {
@@ -58,6 +59,17 @@ async function updateMe(req, res) {
     const allowed = ['name', 'clinicName', 'address', 'phone', 'lat', 'lng', 'isOnCall'];
     const update = {};
     for (const k of allowed) if (k in req.body) update[k] = req.body[k];
+
+    // nationalId needs validation + uniqueness, so handle it separately.
+    if ('nationalId' in req.body) {
+      const normalizedId = isValidIsraeliId(req.body.nationalId);
+      if (!normalizedId) {
+        return res.status(400).json({ message: 'A valid national ID is required.' });
+      }
+      const clash = await User.findOne({ nationalId: normalizedId, _id: { $ne: req.user.id } }).select('_id');
+      if (clash) return res.status(409).json({ message: 'National ID already registered.' });
+      update.nationalId = normalizedId;
+    }
 
     const updated = await User.findByIdAndUpdate(req.user.id, update, {
       new: true, runValidators: true,
