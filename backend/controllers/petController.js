@@ -1,15 +1,27 @@
 const Pet = require('../models/Pet');
+const User = require('../models/User');
+const { isValidIsraeliId } = require('../utils/israeliId');
 
 async function getPets(req, res) {
   try {
-    const { ownerId, name } = req.query;
+    const { nationalId, name } = req.query;
     const filter = {};
+
     if (req.user.role === 'owner') {
       filter.ownerId = req.user.id;
     } else {
-      if (ownerId) filter.ownerId = ownerId;
-      if (name)    filter.name    = { $regex: name, $options: 'i' };
+      // Vet: resolve a national ID to the owning user, then scope by their _id.
+      if (nationalId) {
+        const normalizedId = isValidIsraeliId(nationalId);
+        const owner = normalizedId
+          ? await User.findOne({ nationalId: normalizedId, role: 'owner' }).select('_id')
+          : null;
+        if (!owner) return res.json([]); // no such owner -> empty result, not an error
+        filter.ownerId = owner._id.toString();
+      }
+      if (name) filter.name = { $regex: name, $options: 'i' };
     }
+
     const pets = await Pet.find(filter).sort({ createdAt: -1 });
     res.json(pets);
   } catch (err) {
