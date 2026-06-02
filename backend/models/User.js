@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role:     { type: String, enum: ['vet', 'owner'], default: 'owner' },
 
+    // Owner identity — used by vets to look up a client's pets.
+    // sparse+unique: existing/owner-less users without a value are unaffected.
+    nationalId: { type: String, trim: true, default: undefined },
+
     // Vet-only fields for emergency search
     clinicName: { type: String, default: '' },
     address:    { type: String, default: '' },
@@ -19,5 +23,6 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.index({ lat: 1, lng: 1 });
+userSchema.index({ nationalId: 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.model('User', userSchema);
