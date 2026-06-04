@@ -1,7 +1,6 @@
 package com.vet4pet.app.data.models.api
 
 import com.google.gson.annotations.SerializedName
-import com.google.gson.internal.LinkedTreeMap
 
 data class NotificationDto(
     @SerializedName("_id") val id: String,
