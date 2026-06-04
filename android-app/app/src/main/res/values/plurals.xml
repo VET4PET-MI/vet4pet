@@ -8,4 +8,8 @@
         <item quantity="one">%d mo</item>
         <item quantity="other">%d mo</item>
     </plurals>
+    <plurals name="notif_unread">
+        <item quantity="one">%d unread</item>
+        <item quantity="other">%d unread</item>
+    </plurals>
 </resources>

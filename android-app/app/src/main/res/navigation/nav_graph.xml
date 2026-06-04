@@ -71,6 +71,12 @@
         tools:layout="@layout/fragment_profile" />
 
     <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.vet4pet.app.ui.fragments.NotificationsFragment"
+        android:label="@string/nav_notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <fragment
         android:id="@+id/emergencyVetsFragment"
         android:name="com.vet4pet.app.ui.fragments.EmergencyVetsFragment"
         android:label="@string/nav_emergency"

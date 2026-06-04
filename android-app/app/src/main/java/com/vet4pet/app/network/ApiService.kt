@@ -19,11 +19,14 @@ import com.vet4pet.app.data.models.api.CreateConsultationRequest
 import com.vet4pet.app.data.models.api.UpdateStatusRequest
 import com.vet4pet.app.data.models.api.MessageDto
 import com.vet4pet.app.data.models.api.SendMessageRequest
+import com.vet4pet.app.data.models.api.NotificationDto
+import com.vet4pet.app.data.models.api.UnreadCountDto
 import com.vet4pet.app.data.models.api.UpdateProfileRequest
 import com.vet4pet.app.data.models.api.UploadResponse
 import com.vet4pet.app.data.models.api.UserProfileDto
 import okhttp3.MultipartBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
@@ -124,6 +127,22 @@ interface ApiService {
 
     @PUT("api/messages/conversation/{otherId}/read")
     suspend fun markConversationRead(@Path("otherId") otherId: String): Map<String, Boolean>
+
+    // ── Notifications ─────────────────────────────────────────────────────
+    @GET("api/notifications")
+    suspend fun getNotifications(): List<NotificationDto>
+
+    @GET("api/notifications/unread-count")
+    suspend fun getUnreadCount(): UnreadCountDto
+
+    @PATCH("api/notifications/read-all")
+    suspend fun markAllRead(): Map<String, Boolean>
+
+    @PATCH("api/notifications/{id}/read")
+    suspend fun markRead(@Path("id") id: String): NotificationDto
+
+    @DELETE("api/notifications/{id}")
+    suspend fun deleteNotification(@Path("id") id: String): Map<String, Boolean>
 
     // ── File Upload ───────────────────────────────────────────────────────
     @Multipart

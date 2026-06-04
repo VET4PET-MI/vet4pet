@@ -24,6 +24,7 @@ import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.data.models.api.UpdateProfileRequest
 import com.vet4pet.app.data.models.api.UserProfileDto
 import com.vet4pet.app.databinding.FragmentProfileBinding
+import com.vet4pet.app.ui.viewmodels.NotificationsViewModel
 import com.vet4pet.app.ui.viewmodels.ProfileViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
 
@@ -32,6 +33,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ProfileViewModel by viewModels()
+    private val notifViewModel: NotificationsViewModel by viewModels()
 
     private var pendingLat: Double? = null
     private var pendingLng: Double? = null
@@ -87,6 +89,20 @@ class ProfileFragment : Fragment() {
                 else -> {}
             }
         }
+
+        // Notifications row
+        notifViewModel.unreadCount.observe(viewLifecycleOwner) { count ->
+            if (count > 0) {
+                binding.tvUnreadCount.text      = resources.getQuantityString(R.plurals.notif_unread, count, count)
+                binding.tvUnreadCount.visibility = android.view.View.VISIBLE
+            } else {
+                binding.tvUnreadCount.visibility = android.view.View.GONE
+            }
+        }
+        binding.rowNotifications.setOnClickListener {
+            findNavController().navigate(R.id.notificationsFragment)
+        }
+        notifViewModel.loadUnreadCount()
 
         // Set Location button
         binding.btnSetLocation.setOnClickListener { checkAndFetchLocation() }

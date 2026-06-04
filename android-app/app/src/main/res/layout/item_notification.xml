@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Unread dot -->
+    <View
+        android:id="@+id/view_unread_dot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_brand_circle"
+        android:visibility="invisible" />
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/iv_notif_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="10dp"
+        android:background="@drawable/bg_avatar"
+        app:tint="@color/brand_dark"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_notifications" />
+
+    <!-- Text -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_notif_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="@color/ink"
+            tools:text="New message from Dr. Cohen" />
+
+        <TextView
+            android:id="@+id/tv_notif_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="@color/ink_muted"
+            android:singleLine="true"
+            android:ellipsize="end"
+            tools:text="Tap to open conversation" />
+
+        <TextView
+            android:id="@+id/tv_notif_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="@color/brand"
+            tools:text="5 min ago" />
+
+    </LinearLayout>
+
+    <!-- Delete button -->
+    <ImageView
+        android:id="@+id/btn_delete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="6dp"
+        android:src="@drawable/ic_logout"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:alpha="0.4"
+        app:tint="?attr/colorOnSurfaceVariant"
+        tools:ignore="ContentDescription" />
+
+</LinearLayout>

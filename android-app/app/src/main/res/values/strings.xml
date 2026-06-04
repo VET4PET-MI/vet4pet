@@ -124,6 +124,7 @@
 
     <!-- Navigation -->
     <string name="nav_messages">Messages</string>
+    <string name="nav_notifications">Notifications</string>
     <string name="nav_consultations">Consultations</string>
 
     <!-- Messages / Chat screens -->
@@ -143,6 +144,10 @@
     <string name="messages_recipient_name_optional">Recipient name (optional)</string>
     <string name="messages_role_vet">Veterinarian</string>
     <string name="messages_role_owner">Pet Owner</string>
+
+    <!-- Notifications screen -->
+    <string name="notif_empty">No notifications yet</string>
+    <string name="notif_mark_all_read">Mark all read</string>
 
     <!-- Profile Edit screen -->
     <string name="profile_edit_title">Edit Profile</string>

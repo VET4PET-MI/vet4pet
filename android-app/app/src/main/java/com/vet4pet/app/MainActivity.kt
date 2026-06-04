@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         R.id.bookAppointmentFragment,
         R.id.medicalHistoryFragment,
         R.id.medicalRecordDetailFragment,
-        R.id.addMedicalRecordFragment
+        R.id.addMedicalRecordFragment,
+        R.id.notificationsFragment
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
