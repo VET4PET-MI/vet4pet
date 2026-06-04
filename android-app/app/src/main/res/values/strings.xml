@@ -96,6 +96,8 @@
     <string name="action_change_file">Change File</string>
     <!-- General -->
     <string name="error_save_failed">Failed to save. Please try again.</string>
+    <string name="pet_photo_uploading">Uploading photo…</string>
+    <string name="pet_photo_saved">Photo saved!</string>
 
     <!-- Auth screens -->
     <string name="auth_tagline">Veterinary Portal</string>

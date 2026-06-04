@@ -61,6 +61,31 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun uploadAndSavePetPhoto(
+        petId: String,
+        fileUri: android.net.Uri,
+        onDone: (success: Boolean, error: String?) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val ctx  = getApplication<Application>()
+                val file = uriToTempFile(ctx, fileUri)
+                val mime = ctx.contentResolver.getType(fileUri) ?: "image/jpeg"
+                val part = okhttp3.MultipartBody.Part.createFormData(
+                    "file", file.name,
+                    file.asRequestBody(mime.toMediaTypeOrNull())
+                )
+                val uploadResp = api.uploadFile(part)
+                file.delete()
+                api.updatePetImage(petId, mapOf("profileImageUrl" to uploadResp.url))
+                loadPets()
+                onDone(true, null)
+            } catch (e: Exception) {
+                onDone(false, e.toUserMessage())
+            }
+        }
+    }
+
     // ── Records ───────────────────────────────────────────────────────────
 
     private val _records      = MutableLiveData<List<MedicalRecord>>(emptyList())

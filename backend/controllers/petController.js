@@ -80,4 +80,22 @@ async function deletePet(req, res) {
   }
 }
 
-module.exports = { getPets, getPetById, addPet, updatePet, deletePet };
+async function updatePetImage(req, res) {
+  try {
+    const { profileImageUrl } = req.body;
+    const pet = await Pet.findById(req.params.id);
+    if (!pet) return res.status(404).json({ message: 'Pet not found' });
+    if (req.user.role === 'owner' && pet.ownerId !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden.' });
+    }
+    pet.profileImageUrl = profileImageUrl ?? null;
+    await pet.save();
+    console.log('[Pet] image updated:', pet._id);
+    res.json(pet);
+  } catch (err) {
+    console.error('[Pet] updatePetImage error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { getPets, getPetById, addPet, updatePet, deletePet, updatePetImage };

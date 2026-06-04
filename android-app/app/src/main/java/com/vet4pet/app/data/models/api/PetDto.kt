@@ -13,6 +13,7 @@ data class PetDto(
     val age: Int?,
     val gender: String?,
     val ownerId: String?,
+    val profileImageUrl: String?,
     val createdAt: String?
 ) {
     fun toDomain(): Pet = Pet(
@@ -29,7 +30,7 @@ data class PetDto(
             it.name.equals(gender, ignoreCase = true)
         } ?: Gender.UNKNOWN,
         weight     = null,
-        profileImageUrl = null,
+        profileImageUrl = profileImageUrl,
         createdAt  = createdAt?.let { runCatching { Instant.parse(it).toEpochMilli() }.getOrDefault(0L) } ?: 0L
     )
 }

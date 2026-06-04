@@ -6,7 +6,8 @@ const controller       = require('../controllers/petController');
 router.get('/',       controller.getPets);           // Vet: search all; Owner: auto-scoped in controller
 router.get('/:id',    controller.getPetById);         // Both; owner ownership enforced in controller
 router.post('/',      controller.addPet);             // Both; ownerId forced for owners in controller
-router.put('/:id',    requireRole('vet'), controller.updatePet);
+router.put('/:id',       requireRole('vet'), controller.updatePet);
+router.patch('/:id/image',               controller.updatePetImage); // owners + vets
 router.delete('/:id', requireRole('vet'), controller.deletePet);
 
 module.exports = router;

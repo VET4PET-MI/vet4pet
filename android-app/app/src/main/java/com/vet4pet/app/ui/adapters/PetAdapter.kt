@@ -7,6 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.CircleCropTransformation
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.imageview.ShapeableImageView
 import com.vet4pet.app.R
 import com.vet4pet.app.data.enums.Gender
 import com.vet4pet.app.data.models.Pet
@@ -16,45 +20,72 @@ import java.time.Period
 import java.time.ZoneId
 
 class PetAdapter(
-    private val onItemClick: (Pet) -> Unit
+    private val onItemClick: (Pet) -> Unit,
+    private val onPhotoClick: ((Pet) -> Unit)? = null   // null = photo not tappable
 ) : ListAdapter<Pet, PetAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_pet, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_pet, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val tvName: TextView = itemView.findViewById(R.id.tv_pet_name)
-        private val tvBreed: TextView = itemView.findViewById(R.id.tv_pet_breed)
-        private val tvGender: TextView = itemView.findViewById(R.id.tv_pet_gender)
-        private val tvAge: TextView = itemView.findViewById(R.id.tv_pet_age)
+        private val tvName:      TextView          = itemView.findViewById(R.id.tv_pet_name)
+        private val tvBreed:     TextView          = itemView.findViewById(R.id.tv_pet_breed)
+        private val tvGender:    TextView          = itemView.findViewById(R.id.tv_pet_gender)
+        private val tvAge:       TextView          = itemView.findViewById(R.id.tv_pet_age)
+        private val imgPhoto:    ShapeableImageView = itemView.findViewById(R.id.img_pet_photo)
+        private val framePhoto:  View              = itemView.findViewById(R.id.frame_pet_photo)
+        private val badgeCamera: MaterialCardView  = itemView.findViewById(R.id.badge_camera)
 
         fun bind(pet: Pet) {
-            tvName.text = pet.name
+            tvName.text  = pet.name
             tvBreed.text = pet.breed?.takeIf { it.isNotBlank() } ?: pet.species
             tvGender.text = itemView.context.getString(pet.gender.toLabelRes())
             tvAge.text = pet.dateOfBirth?.let { formatAge(it) }
                 ?: itemView.context.getString(R.string.age_unknown)
+
+            // Photo
+            if (!pet.profileImageUrl.isNullOrBlank()) {
+                imgPhoto.load(pet.profileImageUrl) {
+                    transformations(CircleCropTransformation())
+                    placeholder(R.drawable.ic_nav_pets)
+                    error(R.drawable.ic_nav_pets)
+                }
+                imgPhoto.setPadding(0, 0, 0, 0)
+                imgPhoto.clearColorFilter()
+                imgPhoto.backgroundTintList = null
+            } else {
+                imgPhoto.setImageResource(R.drawable.ic_nav_pets)
+                imgPhoto.setPadding(40, 40, 40, 40)
+                imgPhoto.backgroundTintList =
+                    itemView.context.getColorStateList(
+                        com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary_container
+                    )
+            }
+
+            // Camera badge (only when onPhotoClick is wired)
+            if (onPhotoClick != null) {
+                badgeCamera.visibility = View.VISIBLE
+                framePhoto.setOnClickListener { onPhotoClick.invoke(pet) }
+            } else {
+                badgeCamera.visibility = View.GONE
+                framePhoto.setOnClickListener(null)
+            }
+
             itemView.setOnClickListener { onItemClick(pet) }
         }
 
         private fun formatAge(epochMs: Long): String {
-            val dob = Instant.ofEpochMilli(epochMs)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
+            val dob = Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault()).toLocalDate()
             val period = Period.between(dob, LocalDate.now())
             return when {
-                period.years > 0 -> itemView.context.resources
-                    .getQuantityString(R.plurals.age_years, period.years, period.years)
-                period.months > 0 -> itemView.context.resources
-                    .getQuantityString(R.plurals.age_months, period.months, period.months)
-                else -> itemView.context.getString(R.string.age_less_than_one_month)
+                period.years > 0  -> itemView.context.resources.getQuantityString(R.plurals.age_years,  period.years,  period.years)
+                period.months > 0 -> itemView.context.resources.getQuantityString(R.plurals.age_months, period.months, period.months)
+                else              -> itemView.context.getString(R.string.age_less_than_one_month)
             }
         }
     }
@@ -68,7 +99,7 @@ class PetAdapter(
 }
 
 private fun Gender.toLabelRes(): Int = when (this) {
-    Gender.MALE -> R.string.gender_male
-    Gender.FEMALE -> R.string.gender_female
+    Gender.MALE    -> R.string.gender_male
+    Gender.FEMALE  -> R.string.gender_female
     Gender.UNKNOWN -> R.string.gender_unknown
 }

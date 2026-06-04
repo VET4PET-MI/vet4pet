@@ -15,20 +15,49 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
-        <!-- ── Pet photo (circular) ── -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img_pet_photo"
+        <!-- ── Pet photo (circular) + camera badge ── -->
+        <FrameLayout
+            android:id="@+id/frame_pet_photo"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:padding="16dp"
-            android:src="@drawable/ic_nav_pets"
-            android:backgroundTint="?attr/colorSecondaryContainer"
-            app:tint="?attr/colorOnSecondaryContainer"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Circle"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_pet_photo"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:padding="16dp"
+                android:src="@drawable/ic_nav_pets"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                app:tint="?attr/colorOnSecondaryContainer"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Circle"
+                tools:ignore="ContentDescription" />
+
+            <!-- Camera badge (bottom-end) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/badge_camera"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="bottom|end"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="11dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_edit"
+                    app:tint="?attr/colorOnPrimary"
+                    tools:ignore="ContentDescription" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </FrameLayout>
 
         <!-- ── Pet name ── -->
         <TextView

@@ -54,6 +54,12 @@ interface ApiService {
     @POST("api/pets")
     suspend fun addPet(@Body request: AddPetRequest): PetDto
 
+    @PATCH("api/pets/{id}/image")
+    suspend fun updatePetImage(
+        @Path("id") id: String,
+        @Body body: Map<String, String?>
+    ): PetDto
+
     // ── Medical Records ───────────────────────────────────────────────────
     @GET("api/records/pet/{petId}")
     suspend fun getRecordsByPet(
