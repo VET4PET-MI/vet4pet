@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.navigation.fragment.findNavController
 import com.vet4pet.app.R
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.data.models.api.PetDto
@@ -60,8 +61,11 @@ class HomeFragment : Fragment() {
             binding.btnSecondaryAction.setText(R.string.home_action_my_pets)
         }
 
-        binding.btnPrimaryAction.setOnClickListener   { navigateTo(R.id.appointmentsFragment) }
-        binding.btnSecondaryAction.setOnClickListener { navigateTo(R.id.petsListFragment) }
+        binding.btnPrimaryAction.setOnClickListener      { navigateTo(R.id.appointmentsFragment) }
+        binding.btnSecondaryAction.setOnClickListener    { navigateTo(R.id.petsListFragment) }
+        binding.btnConsultationsAction.setOnClickListener {
+            findNavController().navigate(R.id.consultationsFragment)
+        }
 
         // ── Section visibility ────────────────────────────────────────────────
         binding.layoutStats.isVisible      = isVet

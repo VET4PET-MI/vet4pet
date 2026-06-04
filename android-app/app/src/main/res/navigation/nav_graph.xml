@@ -71,6 +71,12 @@
         tools:layout="@layout/fragment_profile" />
 
     <fragment
+        android:id="@+id/consultationsFragment"
+        android:name="com.vet4pet.app.ui.fragments.ConsultationsFragment"
+        android:label="@string/nav_consultations"
+        tools:layout="@layout/fragment_consultations" />
+
+    <fragment
         android:id="@+id/messagesFragment"
         android:name="com.vet4pet.app.ui.fragments.MessagesFragment"
         android:label="@string/nav_messages"

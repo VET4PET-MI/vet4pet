@@ -182,6 +182,18 @@
             app:iconGravity="textStart"
             app:cornerRadius="14dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_consultations_action"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:paddingVertical="14dp"
+            android:text="@string/home_action_consultations"
+            app:icon="@drawable/ic_video_call"
+            app:iconGravity="textStart"
+            app:cornerRadius="14dp" />
+
         <!-- ══ My Pets section header (owner only) ═══════════════════════════ -->
         <LinearLayout
             android:id="@+id/layout_pets_header"

@@ -10,7 +10,7 @@ import com.vet4pet.app.data.local.SessionManager
 class MainActivity : AppCompatActivity() {
 
     private val authDestinations   = setOf(R.id.loginFragment, R.id.registerFragment)
-    private val noNavDestinations  = setOf(R.id.loginFragment, R.id.registerFragment, R.id.chatFragment)
+    private val noNavDestinations  = setOf(R.id.loginFragment, R.id.registerFragment, R.id.chatFragment, R.id.consultationsFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

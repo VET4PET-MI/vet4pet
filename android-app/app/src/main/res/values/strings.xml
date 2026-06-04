@@ -124,6 +124,7 @@
 
     <!-- Navigation -->
     <string name="nav_messages">Messages</string>
+    <string name="nav_consultations">Consultations</string>
 
     <!-- Messages / Chat screens -->
     <string name="messages_empty">No messages yet</string>
@@ -143,7 +144,36 @@
     <string name="messages_role_vet">Veterinarian</string>
     <string name="messages_role_owner">Pet Owner</string>
 
+    <!-- Consultations screen -->
+    <string name="consult_consultation">Consultation</string>
+    <string name="consult_pet_owner">Pet Owner</string>
+    <string name="consult_status_pending">Pending</string>
+    <string name="consult_status_active">Active</string>
+    <string name="consult_status_ended">Ended</string>
+    <string name="consult_stat_pending">Pending</string>
+    <string name="consult_stat_active">Active</string>
+    <string name="consult_stat_ended">Ended</string>
+    <string name="consult_empty">No consultations yet</string>
+    <string name="consult_incoming_call">Incoming video call</string>
+    <string name="consult_vet_ready">Your vet is ready!</string>
+    <string name="consult_vet_ready_hint">Tap to join the video call</string>
+    <string name="consult_accept">Accept</string>
+    <string name="consult_decline">Decline</string>
+    <string name="consult_join">Rejoin</string>
+    <string name="consult_join_call">Join Call</string>
+    <string name="consult_end">End Call</string>
+    <string name="consult_end_title">End Consultation</string>
+    <string name="consult_end_message">Are you sure you want to end this consultation?</string>
+    <string name="consult_end_confirm">Yes, End</string>
+    <string name="consult_request_btn">Request Video Call</string>
+    <string name="consult_request_title">Request Consultation</string>
+    <string name="consult_request_call">Request Call</string>
+    <string name="consult_notes_hint">Describe the concern (optional)</string>
+    <string name="consult_loading_pets">Loading your pets…</string>
+    <string name="consult_no_pets">No pets found. Add a pet first.</string>
+
     <!-- Home screen -->
+    <string name="home_action_consultations">Video Consultations</string>
     <string name="home_greeting_owner">Hello, %1$s!</string>
     <string name="home_greeting_vet">Welcome, Dr. %1$s</string>
     <string name="home_sub_owner">Your pet\'s health, in your hands</string>

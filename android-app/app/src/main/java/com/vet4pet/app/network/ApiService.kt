@@ -12,7 +12,10 @@ import com.vet4pet.app.data.models.api.AddRecordRequest
 import com.vet4pet.app.data.models.api.MedicalRecordDto
 import com.vet4pet.app.data.models.api.PagedRecordsDto
 import com.vet4pet.app.data.models.api.PetDto
+import com.vet4pet.app.data.models.api.ConsultationDto
 import com.vet4pet.app.data.models.api.ConversationDto
+import com.vet4pet.app.data.models.api.CreateConsultationRequest
+import com.vet4pet.app.data.models.api.UpdateStatusRequest
 import com.vet4pet.app.data.models.api.MessageDto
 import com.vet4pet.app.data.models.api.SendMessageRequest
 import com.vet4pet.app.data.models.api.UploadResponse
@@ -74,6 +77,22 @@ interface ApiService {
     // ── Vets ──────────────────────────────────────────────────────────────
     @GET("api/users/vets")
     suspend fun getVets(): List<VetDto>
+
+    // ── Consultations ─────────────────────────────────────────────────────
+    @GET("api/consultations")
+    suspend fun getConsultations(): List<ConsultationDto>
+
+    @GET("api/consultations/pending")
+    suspend fun getPendingConsultations(): List<ConsultationDto>
+
+    @POST("api/consultations")
+    suspend fun createConsultation(@Body request: CreateConsultationRequest): ConsultationDto
+
+    @PATCH("api/consultations/{id}/status")
+    suspend fun updateConsultationStatus(
+        @Path("id") id: String,
+        @Body request: UpdateStatusRequest
+    ): ConsultationDto
 
     // ── Messages ──────────────────────────────────────────────────────────
     @GET("api/messages/conversations")
