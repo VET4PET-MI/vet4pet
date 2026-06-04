@@ -9,8 +9,18 @@ import com.vet4pet.app.data.local.SessionManager
 
 class MainActivity : AppCompatActivity() {
 
-    private val authDestinations   = setOf(R.id.loginFragment, R.id.registerFragment)
-    private val noNavDestinations  = setOf(R.id.loginFragment, R.id.registerFragment, R.id.chatFragment, R.id.consultationsFragment, R.id.emergencyVetsFragment)
+    // Destinations where the bottom navigation bar should be hidden
+    private val noNavDestinations = setOf(
+        R.id.loginFragment,
+        R.id.registerFragment,
+        R.id.chatFragment,
+        R.id.consultationsFragment,
+        R.id.emergencyVetsFragment,
+        R.id.bookAppointmentFragment,
+        R.id.medicalHistoryFragment,
+        R.id.medicalRecordDetailFragment,
+        R.id.addMedicalRecordFragment
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
