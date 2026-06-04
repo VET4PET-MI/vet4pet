@@ -145,6 +145,26 @@
     <string name="messages_role_vet">Veterinarian</string>
     <string name="messages_role_owner">Pet Owner</string>
 
+    <!-- Vet Schedule screen -->
+    <string name="schedule_title">My Schedule</string>
+    <string name="schedule_working_days">Working Days</string>
+    <string name="schedule_working_days_hint">Select the days you see patients</string>
+    <string name="schedule_clinic_hours">Clinic Hours</string>
+    <string name="schedule_clinic_hours_hint">Appointments will only be available within these hours</string>
+    <string name="schedule_start_time">Start time</string>
+    <string name="schedule_end_time">End time</string>
+    <string name="schedule_save">Save Schedule</string>
+    <string name="schedule_saved">Schedule saved</string>
+    <string name="schedule_select_at_least_one">Select at least one working day</string>
+    <string name="schedule_pick_time">Select time</string>
+    <string name="day_sun">Sun</string>
+    <string name="day_mon">Mon</string>
+    <string name="day_tue">Tue</string>
+    <string name="day_wed">Wed</string>
+    <string name="day_thu">Thu</string>
+    <string name="day_fri">Fri</string>
+    <string name="day_sat">Sat</string>
+
     <!-- Notifications screen -->
     <string name="notif_empty">No notifications yet</string>
     <string name="notif_mark_all_read">Mark all read</string>

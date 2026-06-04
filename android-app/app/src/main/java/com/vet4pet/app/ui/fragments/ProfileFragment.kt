@@ -90,6 +90,14 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        // My Schedule row (vet only)
+        if (isVet) {
+            binding.cardSchedule.isVisible = true
+            binding.rowSchedule.setOnClickListener {
+                findNavController().navigate(R.id.vetScheduleFragment)
+            }
+        }
+
         // Notifications row
         notifViewModel.unreadCount.observe(viewLifecycleOwner) { count ->
             if (count > 0) {

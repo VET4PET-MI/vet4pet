@@ -22,6 +22,8 @@ import com.vet4pet.app.data.models.api.SendMessageRequest
 import com.vet4pet.app.data.models.api.NotificationDto
 import com.vet4pet.app.data.models.api.UnreadCountDto
 import com.vet4pet.app.data.models.api.UpdateProfileRequest
+import com.vet4pet.app.data.models.api.VetScheduleDto
+import com.vet4pet.app.data.models.api.VetScheduleRequest
 import com.vet4pet.app.data.models.api.UploadResponse
 import com.vet4pet.app.data.models.api.UserProfileDto
 import okhttp3.MultipartBody
@@ -127,6 +129,13 @@ interface ApiService {
 
     @PUT("api/messages/conversation/{otherId}/read")
     suspend fun markConversationRead(@Path("otherId") otherId: String): Map<String, Boolean>
+
+    // ── Vet Schedule ──────────────────────────────────────────────────────
+    @GET("api/vet-schedule")
+    suspend fun getVetSchedule(): VetScheduleDto
+
+    @PUT("api/vet-schedule")
+    suspend fun upsertVetSchedule(@Body request: VetScheduleRequest): VetScheduleDto
 
     // ── Notifications ─────────────────────────────────────────────────────
     @GET("api/notifications")

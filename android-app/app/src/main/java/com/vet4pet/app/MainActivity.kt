@@ -20,7 +20,8 @@ class MainActivity : AppCompatActivity() {
         R.id.medicalHistoryFragment,
         R.id.medicalRecordDetailFragment,
         R.id.addMedicalRecordFragment,
-        R.id.notificationsFragment
+        R.id.notificationsFragment,
+        R.id.vetScheduleFragment
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
