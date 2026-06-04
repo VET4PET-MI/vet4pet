@@ -10,6 +10,8 @@ import com.vet4pet.app.data.models.MedicalRecord
 import com.vet4pet.app.data.models.Pet
 import com.vet4pet.app.data.models.api.AddPetRequest
 import com.vet4pet.app.data.models.api.AddRecordRequest
+import com.vet4pet.app.data.local.db.AppDatabase
+import com.vet4pet.app.data.local.db.toEntity
 import com.vet4pet.app.network.ApiClient
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -30,6 +32,7 @@ sealed class UiState<out T> {
 class PetsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val api = ApiClient.get(application)
+    private val db  = AppDatabase.get(application)
 
     // ── Pets ──────────────────────────────────────────────────────────────
 
@@ -37,13 +40,20 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
     val petsState: LiveData<UiState<List<Pet>>> = _pets
 
     fun loadPets() {
-        _pets.value = UiState.Loading
         viewModelScope.launch {
+            // 1. Show cache immediately (fast path)
+            val cached = db.petDao().getAll().map { it.toDomain() }
+            if (cached.isNotEmpty()) _pets.value = UiState.Success(cached)
+            else _pets.value = UiState.Loading
+
+            // 2. Fetch fresh from network
             try {
-                val pets = api.getPets().map { it.toDomain() }
-                _pets.value = UiState.Success(pets)
+                val fresh = api.getPets().map { it.toDomain() }
+                db.petDao().replaceAll(fresh.map { it.toEntity() })
+                _pets.value = UiState.Success(fresh)
             } catch (e: Exception) {
-                _pets.value = UiState.Error(e.toUserMessage())
+                if (cached.isEmpty()) _pets.value = UiState.Error(e.toUserMessage())
+                // else: keep showing cached data silently
             }
         }
     }

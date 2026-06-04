@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.vet4pet.app.data.models.Appointment
 import com.vet4pet.app.data.models.api.CreateAppointmentRequest
 import com.vet4pet.app.data.models.api.VetDto
+import com.vet4pet.app.data.local.db.AppDatabase
+import com.vet4pet.app.data.local.db.toEntity
 import com.vet4pet.app.network.ApiClient
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -16,6 +18,7 @@ import java.io.IOException
 class AppointmentsViewModel(application: Application) : AndroidViewModel(application) {
 
     private val api = ApiClient.get(application)
+    private val db  = AppDatabase.get(application)
 
     // ── Appointment list ──────────────────────────────────────────────────
 
@@ -23,13 +26,19 @@ class AppointmentsViewModel(application: Application) : AndroidViewModel(applica
     val appointmentsState: LiveData<UiState<List<Appointment>>> = _appointments
 
     fun loadAppointments() {
-        _appointments.value = UiState.Loading
         viewModelScope.launch {
+            // 1. Show cache immediately
+            val cached = db.appointmentDao().getAll().map { it.toDomain() }
+            if (cached.isNotEmpty()) _appointments.value = UiState.Success(cached)
+            else _appointments.value = UiState.Loading
+
+            // 2. Fetch fresh from network
             try {
-                val list = api.getAppointments().map { it.toDomain() }
-                _appointments.value = UiState.Success(list)
+                val fresh = api.getAppointments().map { it.toDomain() }
+                db.appointmentDao().replaceAll(fresh.map { it.toEntity() })
+                _appointments.value = UiState.Success(fresh)
             } catch (e: Exception) {
-                _appointments.value = UiState.Error(e.toUserMessage())
+                if (cached.isEmpty()) _appointments.value = UiState.Error(e.toUserMessage())
             }
         }
     }
@@ -38,6 +47,7 @@ class AppointmentsViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch {
             try {
                 api.cancelAppointment(id)
+                db.appointmentDao().markCancelled(id)
                 loadAppointments()
                 onDone(true)
             } catch (e: Exception) {
