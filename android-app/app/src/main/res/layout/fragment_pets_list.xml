@@ -45,6 +45,25 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Loading + empty state -->
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_pets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_empty_pets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="32dp"
+            android:gravity="center"
+            android:text="@string/pets_empty"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:visibility="gone" />
+
         <!-- ══════════════════════════════════════════════════════════════════
              PET LIST
              ══════════════════════════════════════════════════════════════════ -->

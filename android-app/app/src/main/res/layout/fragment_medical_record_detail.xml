@@ -216,39 +216,78 @@
                 android:visibility="gone" />
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_image_placeholder"
+                android:id="@+id/card_attachment"
                 style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="16dp"
                 android:visibility="gone">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="?attr/colorSecondaryContainer">
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp">
 
+                    <!-- Image (loaded with Coil) -->
                     <ImageView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:src="@drawable/ic_quick_records"
-                        app:tint="?attr/colorOnSecondaryContainer"
-                        android:alpha="0.6"
+                        android:id="@+id/img_attachment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="200dp"
+                        android:maxHeight="400dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
                         tools:ignore="ContentDescription" />
 
-                    <TextView
+                    <!-- Loading spinner while image loads -->
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progress_attachment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/label_image_preview_mock"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSecondaryContainer"
-                        android:alpha="0.7" />
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
 
-                </LinearLayout>
+                    <!-- PDF open button -->
+                    <LinearLayout
+                        android:id="@+id/layout_open_pdf"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="?attr/colorSecondaryContainer"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:src="@drawable/ic_attachment"
+                            app:tint="?attr/colorOnSecondaryContainer"
+                            tools:ignore="ContentDescription" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/label_pdf_document"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOnSecondaryContainer" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_open_pdf"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/action_open_file"
+                            style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
 
             </com.google.android.material.card.MaterialCardView>
 

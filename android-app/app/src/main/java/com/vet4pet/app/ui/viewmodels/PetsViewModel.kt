@@ -1,110 +1,180 @@
 package com.vet4pet.app.ui.viewmodels
 
+import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.vet4pet.app.data.enums.EventType
-import com.vet4pet.app.data.enums.Gender
+import androidx.lifecycle.viewModelScope
 import com.vet4pet.app.data.models.MedicalRecord
 import com.vet4pet.app.data.models.Pet
+import com.vet4pet.app.data.models.api.AddPetRequest
+import com.vet4pet.app.data.models.api.AddRecordRequest
+import com.vet4pet.app.network.ApiClient
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.HttpException
+import java.io.File
+import java.io.IOException
+import java.time.Instant
 
-class PetsViewModel : ViewModel() {
+sealed class UiState<out T> {
+    object Idle : UiState<Nothing>()
+    object Loading : UiState<Nothing>()
+    data class Success<T>(val data: T) : UiState<T>()
+    data class Error(val message: String) : UiState<Nothing>()
+}
 
-    val pets: LiveData<List<Pet>> = MutableLiveData(MOCK_PETS)
-    val medicalRecords: LiveData<List<MedicalRecord>> = MutableLiveData(MOCK_RECORDS)
+class PetsViewModel(application: Application) : AndroidViewModel(application) {
 
-    fun recordsForPet(petId: String): List<MedicalRecord> =
-        MOCK_RECORDS.filter { it.petId == petId }
+    private val api = ApiClient.get(application)
 
-    companion object {
+    // ── Pets ──────────────────────────────────────────────────────────────
 
-        private val MOCK_PETS = listOf(
-            Pet(
-                id = "pet_1", ownerId = "user_1",
-                name = "Buddy", species = "Dog",
-                breed = "Labrador Retriever",
-                dateOfBirth = 1_580_000_000_000L,
-                gender = Gender.MALE,
-                weight = 28.5,
-                profileImageUrl = null,
-                createdAt = 1_580_000_000_000L
-            ),
-            Pet(
-                id = "pet_2", ownerId = "user_1",
-                name = "Luna", species = "Cat",
-                breed = "British Shorthair",
-                dateOfBirth = 1_640_000_000_000L,
-                gender = Gender.FEMALE,
-                weight = 4.2,
-                profileImageUrl = null,
-                createdAt = 1_640_000_000_000L
-            )
-        )
+    private val _pets = MutableLiveData<UiState<List<Pet>>>(UiState.Idle)
+    val petsState: LiveData<UiState<List<Pet>>> = _pets
 
-        private val MOCK_RECORDS = listOf(
-            MedicalRecord(
-                id = "rec_1", petId = "pet_1",
-                vetId = "vet_1", vetName = "Dr. Hagai Cohen",
-                date = 1_746_403_200_000L,       // 2025-05-05
-                type = EventType.VISIT_SUMMARY,
-                findings = "Routine annual checkup. Dog is in excellent health. Weight stable at 28.5 kg.",
-                diagnosis = null, prescription = null,
-                fileUrl = null, attachments = emptyList(),
-                createdAt = 1_746_403_200_000L
-            ),
-            MedicalRecord(
-                id = "rec_2", petId = "pet_1",
-                vetId = "vet_1", vetName = "Dr. Hagai Cohen",
-                date = 1_736_899_200_000L,       // 2025-01-15
-                type = EventType.BLOOD_TEST,
-                findings = "Complete blood count normal. All values within healthy range.",
-                diagnosis = null, prescription = null,
-                fileUrl = "records/buddy_cbc_jan2025.pdf",
-                attachments = emptyList(),
-                createdAt = 1_736_899_200_000L
-            ),
-            MedicalRecord(
-                id = "rec_3", petId = "pet_1",
-                vetId = "vet_2", vetName = "Dr. Sara Levi",
-                date = 1_733_184_000_000L,       // 2024-12-03
-                type = EventType.XRAY,
-                findings = "Hip X-ray shows no signs of dysplasia. Joints appear healthy for age.",
-                diagnosis = null, prescription = null,
-                fileUrl = "records/buddy_hip_xray_dec2024.jpg",
-                attachments = emptyList(),
-                createdAt = 1_733_184_000_000L
-            ),
-            MedicalRecord(
-                id = "rec_4", petId = "pet_1",
-                vetId = "vet_1", vetName = "Dr. Hagai Cohen",
-                date = 1_726_704_000_000L,       // 2024-09-19
-                type = EventType.VACCINATION,
-                findings = "Annual booster vaccinations administered: DHPP, Rabies. No adverse reactions.",
-                diagnosis = null, prescription = null,
-                fileUrl = null, attachments = emptyList(),
-                createdAt = 1_726_704_000_000L
-            ),
-            MedicalRecord(
-                id = "rec_5", petId = "pet_2",
-                vetId = "vet_1", vetName = "Dr. Hagai Cohen",
-                date = 1_743_811_200_000L,       // 2025-04-05
-                type = EventType.VISIT_SUMMARY,
-                findings = "Luna presented for a general wellness exam. Coat and teeth in good condition.",
-                diagnosis = null, prescription = null,
-                fileUrl = null, attachments = emptyList(),
-                createdAt = 1_743_811_200_000L
-            ),
-            MedicalRecord(
-                id = "rec_6", petId = "pet_2",
-                vetId = "vet_2", vetName = "Dr. Sara Levi",
-                date = 1_738_022_400_000L,       // 2025-01-28
-                type = EventType.LAB_RESULT,
-                findings = "Urinalysis and thyroid panel results within normal limits.",
-                diagnosis = null, prescription = null,
-                fileUrl = "records/luna_lab_jan2025.pdf",
-                attachments = emptyList(),
-                createdAt = 1_738_022_400_000L
-            )
-        )
+    fun loadPets() {
+        _pets.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                val pets = api.getPets().map { it.toDomain() }
+                _pets.value = UiState.Success(pets)
+            } catch (e: Exception) {
+                _pets.value = UiState.Error(e.toUserMessage())
+            }
+        }
+    }
+
+    fun addPet(name: String, species: String, breed: String?, age: Int?, gender: String,
+               onDone: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                api.addPet(AddPetRequest(name, species, breed?.takeIf { it.isNotBlank() }, age, gender))
+                loadPets()
+                onDone(true)
+            } catch (e: Exception) {
+                onDone(false)
+            }
+        }
+    }
+
+    // ── Records ───────────────────────────────────────────────────────────
+
+    private val _records      = MutableLiveData<List<MedicalRecord>>(emptyList())
+    private val _recordsState = MutableLiveData<UiState<Unit>>(UiState.Idle)
+    private val _hasMore      = MutableLiveData(false)
+
+    val records:      LiveData<List<MedicalRecord>> = _records
+    val recordsState: LiveData<UiState<Unit>>       = _recordsState
+    val hasMore:      LiveData<Boolean>             = _hasMore
+
+    private var currentPetId = ""
+    private var currentSkip  = 0
+    private val pageSize     = 10
+
+    fun loadRecords(petId: String, refresh: Boolean = false) {
+        if (petId != currentPetId) {
+            currentPetId = petId
+            currentSkip  = 0
+            _records.value = emptyList()
+        }
+        if (refresh) {
+            currentSkip = 0
+            _records.value = emptyList()
+        }
+        if (_recordsState.value is UiState.Loading) return
+
+        _recordsState.value = UiState.Loading
+        viewModelScope.launch {
+            try {
+                val page = api.getRecordsByPet(petId, pageSize, currentSkip)
+                val existing = if (currentSkip == 0) emptyList() else _records.value ?: emptyList()
+                val newList  = existing + page.items.map { it.toDomain() }
+                _records.value  = newList
+                _hasMore.value  = page.hasMore
+                currentSkip    += page.items.size
+                _recordsState.value = UiState.Success(Unit)
+            } catch (e: Exception) {
+                _recordsState.value = UiState.Error(e.toUserMessage())
+            }
+        }
+    }
+
+    fun loadNextPage() {
+        if (_hasMore.value == true) loadRecords(currentPetId)
+    }
+
+    fun addRecord(
+        petId: String,
+        vetName: String,
+        type: String,
+        findings: String,
+        dateMs: Long,
+        fileUri: Uri?,
+        onDone: (success: Boolean, error: String?) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val ctx = getApplication<Application>()
+                var uploadedUrl: String? = null
+                var uploadedName: String? = null
+
+                if (fileUri != null) {
+                    val file = uriToTempFile(ctx, fileUri)
+                    val mime = ctx.contentResolver.getType(fileUri) ?: "application/octet-stream"
+                    val part = MultipartBody.Part.createFormData(
+                        "file", file.name,
+                        file.asRequestBody(mime.toMediaTypeOrNull())
+                    )
+                    val resp = api.uploadFile(part)
+                    uploadedUrl  = resp.url
+                    uploadedName = resp.originalName
+                    file.delete()
+                }
+
+                api.addRecord(
+                    AddRecordRequest(
+                        petId            = petId,
+                        date             = Instant.ofEpochMilli(dateMs).toString(),
+                        vetName          = vetName,
+                        type             = type,
+                        findings         = findings,
+                        fileUrl          = uploadedUrl,
+                        originalFileName = uploadedName
+                    )
+                )
+                loadRecords(petId, refresh = true)
+                onDone(true, null)
+            } catch (e: Exception) {
+                onDone(false, e.toUserMessage())
+            }
+        }
+    }
+
+    private fun uriToTempFile(ctx: android.content.Context, uri: Uri): File {
+        val inputStream = ctx.contentResolver.openInputStream(uri)!!
+        val ext = ctx.contentResolver.getType(uri)?.let {
+            when {
+                it.contains("pdf")  -> "pdf"
+                it.contains("png")  -> "png"
+                it.contains("jpeg") -> "jpg"
+                it.contains("jpg")  -> "jpg"
+                it.contains("gif")  -> "gif"
+                it.contains("webp") -> "webp"
+                else -> "bin"
+            }
+        } ?: "bin"
+        val file = File.createTempFile("upload_", ".$ext", ctx.cacheDir)
+        file.outputStream().use { out -> inputStream.copyTo(out) }
+        return file
+    }
+
+    private fun Exception.toUserMessage(): String = when (this) {
+        is HttpException -> "Server error (${code()})"
+        is IOException   -> "Connection failed. Check your network."
+        else             -> message ?: "Unknown error"
     }
 }

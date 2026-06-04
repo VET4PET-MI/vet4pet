@@ -6,5 +6,6 @@ enum class EventType {
     LAB_RESULT,
     XRAY,
     BLOOD_TEST,
+    CONSULTATION,
     OTHER
 }

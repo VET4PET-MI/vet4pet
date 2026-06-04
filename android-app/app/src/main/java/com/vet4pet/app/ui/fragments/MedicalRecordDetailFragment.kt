@@ -1,75 +1,127 @@
 package com.vet4pet.app.ui.fragments
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
 import androidx.core.os.BundleCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.card.MaterialCardView
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.google.android.material.color.MaterialColors
-import com.google.android.material.imageview.ShapeableImageView
 import com.vet4pet.app.R
 import com.vet4pet.app.data.enums.EventType
 import com.vet4pet.app.data.models.MedicalRecord
+import com.vet4pet.app.databinding.FragmentMedicalRecordDetailBinding
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class MedicalRecordDetailFragment : Fragment(R.layout.fragment_medical_record_detail) {
+class MedicalRecordDetailFragment : Fragment() {
+
+    private var _binding: FragmentMedicalRecordDetailBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentMedicalRecordDetailBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val record = BundleCompat.getParcelable(requireArguments(), "record", MedicalRecord::class.java)!!
 
-        view.findViewById<View>(R.id.btn_back).setOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.btnBack.setOnClickListener { findNavController().popBackStack() }
 
-        bindType(view, record.type)
-        bindDate(view, record.date)
-        view.findViewById<TextView>(R.id.tv_detail_vet).text = record.vetName
-        view.findViewById<TextView>(R.id.tv_detail_findings).text = record.findings
-        bindAttachment(view, record.fileUrl)
+        bindType(record.type)
+        bindDate(record.date)
+        binding.tvDetailVet.text      = record.vetName
+        binding.tvDetailFindings.text = record.findings
+        bindAttachment(record.fileUrl)
     }
 
-    private fun bindType(view: View, type: EventType) {
-        val (iconRes, labelRes, containerAttr, onContainerAttr) = type.toDetailInfo()
-
-        view.findViewById<TextView>(R.id.tv_detail_title).setText(labelRes)
-        view.findViewById<TextView>(R.id.tv_detail_type).setText(labelRes)
-
-        val img = view.findViewById<ShapeableImageView>(R.id.img_detail_type)
-        img.setImageResource(iconRes)
-        img.backgroundTintList = ColorStateList.valueOf(
-            MaterialColors.getColor(requireContext(), containerAttr, Color.TRANSPARENT)
+    private fun bindType(type: EventType) {
+        val info = type.toDetailInfo()
+        binding.tvDetailTitle.setText(info.labelRes)
+        binding.tvDetailType.setText(info.labelRes)
+        binding.imgDetailType.setImageResource(info.iconRes)
+        binding.imgDetailType.backgroundTintList = ColorStateList.valueOf(
+            MaterialColors.getColor(requireContext(), info.containerAttr, Color.TRANSPARENT)
         )
-        img.imageTintList = ColorStateList.valueOf(
-            MaterialColors.getColor(requireContext(), onContainerAttr, Color.TRANSPARENT)
+        binding.imgDetailType.imageTintList = ColorStateList.valueOf(
+            MaterialColors.getColor(requireContext(), info.onContainerAttr, Color.TRANSPARENT)
         )
     }
 
-    private fun bindDate(view: View, epochMs: Long) {
+    private fun bindDate(epochMs: Long) {
         val date = Instant.ofEpochMilli(epochMs)
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
-        val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault())
-        view.findViewById<TextView>(R.id.tv_detail_date).text = date.format(formatter)
+        binding.tvDetailDate.text =
+            date.format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault()))
     }
 
-    private fun bindAttachment(view: View, fileUrl: String?) {
-        val header = view.findViewById<View>(R.id.tv_attachment_header)
-        val card = view.findViewById<MaterialCardView>(R.id.card_image_placeholder)
-        if (fileUrl != null) {
-            header.visibility = View.VISIBLE
-            card.visibility = View.VISIBLE
+    private fun bindAttachment(fileUrl: String?) {
+        if (fileUrl == null) {
+            binding.tvAttachmentHeader.isVisible = false
+            binding.cardAttachment.isVisible     = false
+            return
+        }
+
+        binding.tvAttachmentHeader.isVisible = true
+        binding.cardAttachment.isVisible     = true
+
+        val isPdf = fileUrl.contains(".pdf", ignoreCase = true) ||
+                    fileUrl.contains("raw/upload", ignoreCase = true)
+
+        if (isPdf) {
+            // PDF — show a button to open externally
+            binding.imgAttachment.isVisible    = false
+            binding.progressAttachment.isVisible = false
+            binding.layoutOpenPdf.isVisible    = true
+            binding.btnOpenPdf.setOnClickListener { openExternally(fileUrl) }
+        } else {
+            // Image — load with Coil
+            binding.layoutOpenPdf.isVisible      = false
+            binding.progressAttachment.isVisible = true
+            binding.imgAttachment.isVisible      = true
+
+            binding.imgAttachment.load(fileUrl) {
+                crossfade(true)
+                placeholder(R.drawable.ic_quick_records)
+                error(R.drawable.ic_quick_records)
+                transformations(RoundedCornersTransformation(16f))
+                listener(
+                    onSuccess = { _, _ -> binding.progressAttachment.isVisible = false },
+                    onError   = { _, _ -> binding.progressAttachment.isVisible = false }
+                )
+            }
+
+            binding.imgAttachment.setOnClickListener { openExternally(fileUrl) }
         }
     }
+
+    private fun openExternally(url: String) {
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
+
+// ─── helpers ─────────────────────────────────────────────────────────────────
 
 private data class DetailTypeInfo(
     val iconRes: Int,
@@ -80,39 +132,38 @@ private data class DetailTypeInfo(
 
 private fun EventType.toDetailInfo(): DetailTypeInfo = when (this) {
     EventType.VISIT_SUMMARY -> DetailTypeInfo(
-        iconRes = R.drawable.ic_medical_cross,
-        labelRes = R.string.record_type_visit,
-        containerAttr = com.google.android.material.R.attr.colorPrimaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnPrimaryContainer
+        R.drawable.ic_medical_cross, R.string.record_type_visit,
+        com.google.android.material.R.attr.colorPrimaryContainer,
+        com.google.android.material.R.attr.colorOnPrimaryContainer
     )
     EventType.VACCINATION -> DetailTypeInfo(
-        iconRes = R.drawable.ic_nav_appointments,
-        labelRes = R.string.record_type_vaccination,
-        containerAttr = com.google.android.material.R.attr.colorTertiaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnTertiaryContainer
+        R.drawable.ic_nav_appointments, R.string.record_type_vaccination,
+        com.google.android.material.R.attr.colorTertiaryContainer,
+        com.google.android.material.R.attr.colorOnTertiaryContainer
     )
     EventType.LAB_RESULT -> DetailTypeInfo(
-        iconRes = R.drawable.ic_quick_records,
-        labelRes = R.string.record_type_lab,
-        containerAttr = com.google.android.material.R.attr.colorSecondaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnSecondaryContainer
+        R.drawable.ic_quick_records, R.string.record_type_lab,
+        com.google.android.material.R.attr.colorSecondaryContainer,
+        com.google.android.material.R.attr.colorOnSecondaryContainer
     )
     EventType.XRAY -> DetailTypeInfo(
-        iconRes = R.drawable.ic_quick_records,
-        labelRes = R.string.record_type_xray,
-        containerAttr = com.google.android.material.R.attr.colorSecondaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnSecondaryContainer
+        R.drawable.ic_quick_records, R.string.record_type_xray,
+        com.google.android.material.R.attr.colorSecondaryContainer,
+        com.google.android.material.R.attr.colorOnSecondaryContainer
     )
     EventType.BLOOD_TEST -> DetailTypeInfo(
-        iconRes = R.drawable.ic_quick_records,
-        labelRes = R.string.record_type_blood_test,
-        containerAttr = com.google.android.material.R.attr.colorErrorContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnErrorContainer
+        R.drawable.ic_quick_records, R.string.record_type_blood_test,
+        com.google.android.material.R.attr.colorErrorContainer,
+        com.google.android.material.R.attr.colorOnErrorContainer
+    )
+    EventType.CONSULTATION -> DetailTypeInfo(
+        R.drawable.ic_quick_consult, R.string.record_type_consultation,
+        com.google.android.material.R.attr.colorTertiaryContainer,
+        com.google.android.material.R.attr.colorOnTertiaryContainer
     )
     EventType.OTHER -> DetailTypeInfo(
-        iconRes = R.drawable.ic_medical_cross,
-        labelRes = R.string.record_type_other,
-        containerAttr = com.google.android.material.R.attr.colorSurfaceVariant,
-        onContainerAttr = com.google.android.material.R.attr.colorOnSurfaceVariant
+        R.drawable.ic_medical_cross, R.string.record_type_other,
+        com.google.android.material.R.attr.colorSurfaceVariant,
+        com.google.android.material.R.attr.colorOnSurfaceVariant
     )
 }

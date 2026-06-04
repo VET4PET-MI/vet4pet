@@ -29,6 +29,25 @@
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:textColor="?attr/colorOnSurface" />
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_appointments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_empty_appointments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="32dp"
+            android:gravity="center"
+            android:text="@string/appointments_empty"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:visibility="gone" />
+
         <!-- ══════════════════════════════════════════════════════════════════
              APPOINTMENTS LIST
              ══════════════════════════════════════════════════════════════════ -->

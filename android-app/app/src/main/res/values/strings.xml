@@ -23,6 +23,8 @@
     <string name="settings_payment">Payment Methods</string>
     <string name="settings_privacy">Privacy Policy</string>
     <string name="action_logout">Log Out</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="logout_confirm_message">Are you sure you want to log out?</string>
     <!-- Add medical record screen -->
     <string name="title_add_medical_record">Add Record</string>
     <string name="hint_vet_name">Vet Name</string>
@@ -46,9 +48,80 @@
     <string name="record_type_blood_test">Blood Test</string>
     <string name="record_type_lab">Lab Result</string>
     <string name="record_type_vaccination">Vaccination</string>
+    <string name="record_type_consultation">Consultation</string>
     <string name="record_type_other">Other</string>
     <string name="label_attachment">attachment</string>
     <string name="label_one_attachment">1 attachment</string>
+    <!-- Appointments -->
+    <string name="appointments_empty">No appointments yet. Tap + to book one.</string>
+    <string name="cancel_appointment_title">Cancel Appointment</string>
+    <string name="cancel_appointment_message">Are you sure you want to cancel this appointment?</string>
+    <string name="action_confirm_cancel">Yes, Cancel</string>
+    <string name="book_title">Book Appointment</string>
+    <string name="book_step_label">Step %1$d of %2$d</string>
+    <string name="book_step1_title">Select Pet</string>
+    <string name="book_step2_title">Select Veterinarian</string>
+    <string name="book_step3_title">Select Date &amp; Time</string>
+    <string name="book_step4_title">Review &amp; Confirm</string>
+    <string name="book_any_vet">Any available vet</string>
+    <string name="book_pick_date">Pick a date</string>
+    <string name="book_no_slots">No available slots for this date</string>
+    <string name="book_available_times">Available times</string>
+    <string name="book_review_pet">Pet</string>
+    <string name="book_review_vet">Vet</string>
+    <string name="book_review_date">Date</string>
+    <string name="book_review_time">Time</string>
+    <string name="book_notes_hint">Notes (optional)</string>
+    <string name="book_next">Next →</string>
+    <string name="book_prev">← Back</string>
+    <string name="book_confirm">Confirm Booking</string>
+    <string name="book_success">Appointment booked!</string>
+    <string name="book_select_pet">Please select a pet</string>
+    <string name="book_select_datetime">Please select a date and time</string>
+
+    <!-- Pets -->
+    <string name="pets_empty">No pets yet. Tap + to add one.</string>
+    <string name="add_pet_title">Add Pet</string>
+    <string name="pet_name_hint">Pet name *</string>
+    <string name="pet_species_hint">Species</string>
+    <string name="pet_breed_hint">Breed (optional)</string>
+    <string name="pet_age_hint">Age (years)</string>
+    <string name="pet_gender_hint">Gender</string>
+    <string name="pet_name_required">Pet name is required</string>
+    <!-- Medical records -->
+    <string name="records_empty">No records yet.</string>
+    <string name="label_pdf_document">PDF Document</string>
+    <string name="action_open_file">Open File</string>
+    <string name="action_attach_file">Attach File (PDF / Image)</string>
+    <string name="action_change_file">Change File</string>
+    <!-- General -->
+    <string name="error_save_failed">Failed to save. Please try again.</string>
+
+    <!-- Auth screens -->
+    <string name="auth_tagline">Veterinary Portal</string>
+    <string name="auth_welcome_back">Welcome back</string>
+    <string name="auth_welcome_back_doctor">Welcome back, Doctor</string>
+    <string name="auth_login_desc">Sign in to your account to continue</string>
+    <string name="auth_login_desc_vet">Access your clinic dashboard</string>
+    <string name="auth_email_label">Email address</string>
+    <string name="auth_password_label">Password</string>
+    <string name="auth_sign_in">Sign In</string>
+    <string name="auth_signing_in">Signing in…</string>
+    <string name="auth_no_account">Don\'t have an account?</string>
+    <string name="auth_sign_up">Sign Up</string>
+    <string name="auth_create_account">Create your account</string>
+    <string name="auth_create_account_btn">Create Account</string>
+    <string name="auth_creating_account">Creating account…</string>
+    <string name="auth_full_name_label">Full name</string>
+    <string name="auth_confirm_password_label">Confirm password</string>
+    <string name="auth_join_as_owner">Join as Pet Owner</string>
+    <string name="auth_join_as_vet">Join as Veterinarian</string>
+    <string name="auth_join_desc">Start managing your pets\' health care</string>
+    <string name="auth_join_desc_vet">Start managing your clinic and patients</string>
+    <string name="auth_have_account">Already have an account?</string>
+    <string name="auth_tab_vet">Veterinarian</string>
+    <string name="auth_tab_owner">Pet Owner</string>
+
     <!-- Gender labels -->
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>

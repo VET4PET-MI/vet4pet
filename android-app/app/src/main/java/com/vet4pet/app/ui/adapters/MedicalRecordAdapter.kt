@@ -134,6 +134,12 @@ private fun EventType.toDisplayInfo(): TypeDisplayInfo = when (this) {
         containerAttr = com.google.android.material.R.attr.colorErrorContainer,
         onContainerAttr = com.google.android.material.R.attr.colorOnErrorContainer
     )
+    EventType.CONSULTATION -> TypeDisplayInfo(
+        iconRes = R.drawable.ic_quick_consult,
+        labelRes = R.string.record_type_consultation,
+        containerAttr = com.google.android.material.R.attr.colorTertiaryContainer,
+        onContainerAttr = com.google.android.material.R.attr.colorOnTertiaryContainer
+    )
     EventType.OTHER -> TypeDisplayInfo(
         iconRes = R.drawable.ic_medical_cross,
         labelRes = R.string.record_type_other,

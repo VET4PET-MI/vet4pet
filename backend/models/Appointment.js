@@ -16,7 +16,8 @@ const appointmentSchema = new mongoose.Schema(
     duration:  { type: Number, default: 30 },    // minutes
     type:      { type: String, enum: APPT_TYPES,    default: 'CHECKUP' },
     status:    { type: String, enum: APPT_STATUSES, default: 'booked' },
-    notes:     { type: String },
+    notes:         { type: String },
+    ownerIdNumber: { type: String, default: '' },  // Israeli national ID saved for vet records
   },
   { timestamps: true }
 );

@@ -56,7 +56,7 @@ async function getNearbyVets(req, res) {
 
 async function updateMe(req, res) {
   try {
-    const allowed = ['name', 'clinicName', 'address', 'phone', 'lat', 'lng', 'isOnCall'];
+    const allowed = ['name', 'idNumber', 'clinicName', 'address', 'phone', 'lat', 'lng', 'isOnCall'];
     const update = {};
     for (const k of allowed) if (k in req.body) update[k] = req.body[k];
 

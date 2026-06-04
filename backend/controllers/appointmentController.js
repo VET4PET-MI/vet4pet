@@ -109,6 +109,8 @@ async function createAppointment(req, res) {
     } else {
       payload.ownerId   = req.user.id;
       payload.ownerName = payload.ownerName || req.user.name;
+      const ownerDoc = await User.findById(req.user.id).select('idNumber');
+      if (ownerDoc?.idNumber) payload.ownerIdNumber = ownerDoc.idNumber;
     }
 
     // Reject appointments scheduled in the past (interpreting date+time as Israel wall-clock)

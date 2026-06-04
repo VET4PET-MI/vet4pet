@@ -119,6 +119,36 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- ── Attach File ─────────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_attach_file"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_attach_file"
+                    app:icon="@drawable/ic_attachment" />
+
+                <TextView
+                    android:id="@+id/tv_selected_file"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorPrimary"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:visibility="gone"
+                    tools:text="xray_buddy_jan2025.jpg"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
             <!-- ── Findings ────────────────────────────────────────────── -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_findings"
@@ -154,14 +184,31 @@
     <!-- ══════════════════════════════════════════════════════════════════
          SAVE BUTTON — always visible, outside scroll
          ══════════════════════════════════════════════════════════════════ -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_save"
-        style="@style/Widget.Material3.Button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:enabled="false"
-        android:text="@string/action_save"
-        android:textAllCaps="false" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_margin="20dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/action_save"
+            android:textAllCaps="false" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:visibility="gone"
+            android:indeterminate="true" />
+
+    </LinearLayout>
 
 </LinearLayout>
