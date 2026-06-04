@@ -23,6 +23,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val api = ApiClient.get(application)
 
+    // ── Dashboard stats (owner + vet) ─────────────────────────────────────
+
     private val _stats = MutableLiveData<UiState<HomeStats>>(UiState.Idle)
     val statsState: LiveData<UiState<HomeStats>> = _stats
 
@@ -58,4 +60,25 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    // ── Vet patient search ────────────────────────────────────────────────
+
+    private val _searchResults = MutableLiveData<UiState<List<PetDto>>?>(null)
+    val searchResults: LiveData<UiState<List<PetDto>>?> = _searchResults
+
+    fun searchVetPets(nationalId: String?, name: String?) {
+        if (nationalId.isNullOrBlank() && name.isNullOrBlank()) return
+        _searchResults.value = UiState.Loading
+        viewModelScope.launch {
+            runCatching {
+                api.getPets(
+                    nationalId = nationalId?.trim()?.takeIf { it.isNotBlank() },
+                    name       = name?.trim()?.takeIf { it.isNotBlank() }
+                )
+            }.onSuccess { _searchResults.value = UiState.Success(it) }
+             .onFailure { _searchResults.value = UiState.Error(it.message ?: "Error") }
+        }
+    }
+
+    fun clearSearch() { _searchResults.value = null }
 }

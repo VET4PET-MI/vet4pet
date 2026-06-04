@@ -22,6 +22,8 @@ import com.vet4pet.app.data.models.api.SendMessageRequest
 import com.vet4pet.app.data.models.api.NotificationDto
 import com.vet4pet.app.data.models.api.UnreadCountDto
 import com.vet4pet.app.data.models.api.UpdateProfileRequest
+import com.vet4pet.app.data.models.api.TimeBlockDto
+import com.vet4pet.app.data.models.api.CreateTimeBlockRequest
 import com.vet4pet.app.data.models.api.VetScheduleDto
 import com.vet4pet.app.data.models.api.VetScheduleRequest
 import com.vet4pet.app.data.models.api.UploadResponse
@@ -49,7 +51,10 @@ interface ApiService {
 
     // ── Pets ──────────────────────────────────────────────────────────────
     @GET("api/pets")
-    suspend fun getPets(): List<PetDto>
+    suspend fun getPets(
+        @Query("nationalId") nationalId: String? = null,
+        @Query("name")       name:       String? = null
+    ): List<PetDto>
 
     @POST("api/pets")
     suspend fun addPet(@Body request: AddPetRequest): PetDto
@@ -135,6 +140,16 @@ interface ApiService {
 
     @PUT("api/messages/conversation/{otherId}/read")
     suspend fun markConversationRead(@Path("otherId") otherId: String): Map<String, Boolean>
+
+    // ── Time Blocks ───────────────────────────────────────────────────────
+    @GET("api/time-blocks")
+    suspend fun getTimeBlocks(@Query("date") date: String? = null): List<TimeBlockDto>
+
+    @POST("api/time-blocks")
+    suspend fun createTimeBlock(@Body request: CreateTimeBlockRequest): TimeBlockDto
+
+    @DELETE("api/time-blocks/{id}")
+    suspend fun deleteTimeBlock(@Path("id") id: String)
 
     // ── Vet Schedule ──────────────────────────────────────────────────────
     @GET("api/vet-schedule")

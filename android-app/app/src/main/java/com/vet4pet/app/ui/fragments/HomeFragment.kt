@@ -4,11 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vet4pet.app.R
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.data.models.api.PetDto
@@ -63,22 +64,56 @@ class HomeFragment : Fragment() {
 
         binding.btnPrimaryAction.setOnClickListener      { navigateTo(R.id.appointmentsFragment) }
         binding.btnSecondaryAction.setOnClickListener    { navigateTo(R.id.petsListFragment) }
-        binding.btnConsultationsAction.setOnClickListener {
-            findNavController().navigate(R.id.consultationsFragment)
-        }
-        binding.btnEmergencyAction.setOnClickListener {
-            findNavController().navigate(R.id.emergencyVetsFragment)
-        }
+        binding.btnConsultationsAction.setOnClickListener { findNavController().navigate(R.id.consultationsFragment) }
+        binding.btnEmergencyAction.setOnClickListener    { findNavController().navigate(R.id.emergencyVetsFragment) }
 
         // ── Section visibility ────────────────────────────────────────────────
-        binding.layoutStats.isVisible      = isVet
+        binding.layoutStats.isVisible  = isVet
+        binding.cardSearch.isVisible   = isVet
         binding.layoutPetsHeader.isVisible = !isVet
         binding.btnViewAllPets.setOnClickListener { navigateTo(R.id.petsListFragment) }
 
-        // ── Observe data ──────────────────────────────────────────────────────
+        // ── Vet patient search ────────────────────────────────────────────────
+        if (isVet) {
+            binding.btnSearch.setOnClickListener {
+                val id   = binding.etSearchId.text?.toString()
+                val name = binding.etSearchName.text?.toString()
+                viewModel.searchVetPets(id, name)
+            }
+            binding.btnClearSearch.setOnClickListener {
+                binding.etSearchId.text?.clear()
+                binding.etSearchName.text?.clear()
+                viewModel.clearSearch()
+                binding.layoutSearchResults.isVisible = false
+            }
+            viewModel.searchResults.observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    null -> binding.layoutSearchResults.isVisible = false
+                    is UiState.Loading -> {
+                        binding.layoutSearchResults.isVisible = true
+                        binding.tvSearchCount.text = getString(R.string.emergency_locating)
+                    }
+                    is UiState.Success -> {
+                        binding.layoutSearchResults.isVisible = true
+                        val pets = state.data
+                        binding.tvSearchCount.text =
+                            if (pets.isEmpty()) getString(R.string.home_search_no_results)
+                            else getString(R.string.home_search_results, pets.size)
+                        populateSearchResults(pets)
+                    }
+                    is UiState.Error -> {
+                        binding.layoutSearchResults.isVisible = true
+                        binding.tvSearchCount.text = state.message
+                        binding.layoutSearchPets.removeAllViews()
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+        // ── Observe dashboard stats ───────────────────────────────────────────
         viewModel.statsState.observe(viewLifecycleOwner) { state ->
             binding.progressHome.isVisible = state is UiState.Loading
-
             if (state is UiState.Success) {
                 val data = state.data
                 if (isVet) {
@@ -106,14 +141,35 @@ class HomeFragment : Fragment() {
             return
         }
         binding.layoutPetPreview.isVisible = true
+        inflatePreviewPets(pets, binding.layoutPetPreview) { pet ->
+            navigateTo(R.id.petsListFragment)
+        }
+    }
+
+    private fun populateSearchResults(pets: List<PetDto>) {
+        binding.layoutSearchPets.removeAllViews()
+        if (pets.isEmpty()) return
+        inflatePreviewPets(pets, binding.layoutSearchPets) { pet ->
+            findNavController().navigate(
+                R.id.action_homeFragment_to_medicalHistoryFragment,
+                android.os.Bundle().apply { putString("petId", pet.id); putString("petName", pet.name) }
+            )
+        }
+    }
+
+    private fun inflatePreviewPets(
+        pets: List<PetDto>,
+        container: android.widget.LinearLayout,
+        onClick: (PetDto) -> Unit
+    ) {
         val inflater = LayoutInflater.from(requireContext())
         pets.forEach { pet ->
-            val item = ItemPetPreviewBinding.inflate(inflater, binding.layoutPetPreview, false)
+            val item = ItemPetPreviewBinding.inflate(inflater, container, false)
             item.tvPetEmoji.text = speciesEmoji(pet.species)
             item.tvPetName.text  = pet.name
             item.tvPetBreed.text = pet.breed?.takeIf { it.isNotBlank() } ?: "—"
-            item.root.setOnClickListener { navigateTo(R.id.petsListFragment) }
-            binding.layoutPetPreview.addView(item.root)
+            item.root.setOnClickListener { onClick(pet) }
+            container.addView(item.root)
         }
     }
 

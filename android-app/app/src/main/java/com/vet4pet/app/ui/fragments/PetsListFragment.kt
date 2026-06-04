@@ -66,10 +66,10 @@ class PetsListFragment : Fragment() {
                     bundleOf("petId" to pet.id, "petName" to pet.name)
                 )
             },
-            onPhotoClick = if (isOwner) { pet ->
+            onPhotoClick = { pet ->
                 pendingPhotoForPet = pet
                 pickImage.launch("image/*")
-            } else null
+            }
         )
         binding.rvPets.adapter = adapter
 

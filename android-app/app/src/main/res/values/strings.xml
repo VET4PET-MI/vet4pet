@@ -166,6 +166,15 @@
     <string name="day_thu">Thu</string>
     <string name="day_fri">Fri</string>
     <string name="day_sat">Sat</string>
+    <string name="schedule_blocks_title">Blocked Time Slots</string>
+    <string name="schedule_blocks_hint">Block specific times when you are unavailable</string>
+    <string name="schedule_date">Date</string>
+    <string name="schedule_pick_date">Pick date</string>
+    <string name="schedule_block_reason">Reason (optional)</string>
+    <string name="schedule_add_block">Block This Time</string>
+    <string name="schedule_blocks_on_date">Blocks on selected date:</string>
+    <string name="schedule_no_blocks">No blocks for this date</string>
+    <string name="schedule_block_added">Time blocked</string>
 
     <!-- Notifications screen -->
     <string name="notif_empty">No notifications yet</string>
@@ -232,6 +241,13 @@
 
     <!-- Home screen -->
     <string name="home_action_consultations">Video Consultations</string>
+    <string name="home_search_title">Find Patient</string>
+    <string name="home_search_id_hint">Owner National ID (optional)</string>
+    <string name="home_search_name_hint">Pet name (optional)</string>
+    <string name="home_search_btn">Search</string>
+    <string name="home_search_clear">Clear ✕</string>
+    <string name="home_search_results">%1$d result(s)</string>
+    <string name="home_search_no_results">No patients found</string>
     <string name="home_action_emergency">Emergency Vets</string>
     <string name="home_greeting_owner">Hello, %1$s!</string>
     <string name="home_greeting_vet">Welcome, Dr. %1$s</string>
