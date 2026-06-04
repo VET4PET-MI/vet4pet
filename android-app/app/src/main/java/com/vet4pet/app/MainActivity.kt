@@ -9,7 +9,8 @@ import com.vet4pet.app.data.local.SessionManager
 
 class MainActivity : AppCompatActivity() {
 
-    private val authDestinations = setOf(R.id.loginFragment, R.id.registerFragment)
+    private val authDestinations   = setOf(R.id.loginFragment, R.id.registerFragment)
+    private val noNavDestinations  = setOf(R.id.loginFragment, R.id.registerFragment, R.id.chatFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +34,11 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        // Hide bottom nav on auth screens
+        // Hide bottom nav on auth screens and chat screen
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id in authDestinations) {
-                bottomNavView.visibility = android.view.View.GONE
-            } else {
-                bottomNavView.visibility = android.view.View.VISIBLE
-            }
+            bottomNavView.visibility =
+                if (destination.id in noNavDestinations) android.view.View.GONE
+                else android.view.View.VISIBLE
         }
     }
 }

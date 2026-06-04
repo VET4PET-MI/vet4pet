@@ -122,6 +122,27 @@
     <string name="auth_tab_vet">Veterinarian</string>
     <string name="auth_tab_owner">Pet Owner</string>
 
+    <!-- Navigation -->
+    <string name="nav_messages">Messages</string>
+
+    <!-- Messages / Chat screens -->
+    <string name="messages_empty">No messages yet</string>
+    <string name="messages_new">New Message</string>
+    <string name="messages_new_message">New Message</string>
+    <string name="messages_chat_title">Chat</string>
+    <string name="messages_send">Send</string>
+    <string name="messages_input_hint">Type a message…</string>
+    <string name="messages_loading_vets">Loading vets…</string>
+    <string name="messages_no_vets">No vets found.</string>
+    <string name="messages_load_fail">Could not load vets. Try again.</string>
+    <string name="messages_select_vet">Select Veterinarian</string>
+    <string name="messages_next">Next</string>
+    <string name="messages_to">To: %1$s</string>
+    <string name="messages_recipient_id">Recipient ID</string>
+    <string name="messages_recipient_name_optional">Recipient name (optional)</string>
+    <string name="messages_role_vet">Veterinarian</string>
+    <string name="messages_role_owner">Pet Owner</string>
+
     <!-- Home screen -->
     <string name="home_greeting_owner">Hello, %1$s!</string>
     <string name="home_greeting_vet">Welcome, Dr. %1$s</string>

@@ -71,6 +71,29 @@
         tools:layout="@layout/fragment_profile" />
 
     <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.vet4pet.app.ui.fragments.MessagesFragment"
+        android:label="@string/nav_messages"
+        tools:layout="@layout/fragment_messages">
+        <action
+            android:id="@+id/action_messagesFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.vet4pet.app.ui.fragments.ChatFragment"
+        android:label="@string/messages_chat_title"
+        tools:layout="@layout/fragment_chat">
+        <argument
+            android:name="partnerId"
+            app:argType="string" />
+        <argument
+            android:name="partnerName"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
         android:id="@+id/medicalHistoryFragment"
         android:name="com.vet4pet.app.ui.fragments.MedicalHistoryFragment"
         android:label="@string/title_medical_history"

@@ -12,6 +12,9 @@ import com.vet4pet.app.data.models.api.AddRecordRequest
 import com.vet4pet.app.data.models.api.MedicalRecordDto
 import com.vet4pet.app.data.models.api.PagedRecordsDto
 import com.vet4pet.app.data.models.api.PetDto
+import com.vet4pet.app.data.models.api.ConversationDto
+import com.vet4pet.app.data.models.api.MessageDto
+import com.vet4pet.app.data.models.api.SendMessageRequest
 import com.vet4pet.app.data.models.api.UploadResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Body
@@ -19,6 +22,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -70,6 +74,19 @@ interface ApiService {
     // ── Vets ──────────────────────────────────────────────────────────────
     @GET("api/users/vets")
     suspend fun getVets(): List<VetDto>
+
+    // ── Messages ──────────────────────────────────────────────────────────
+    @GET("api/messages/conversations")
+    suspend fun getConversations(): List<ConversationDto>
+
+    @GET("api/messages")
+    suspend fun getMessages(@Query("withUser") withUser: String): List<MessageDto>
+
+    @POST("api/messages")
+    suspend fun sendMessage(@Body request: SendMessageRequest): MessageDto
+
+    @PUT("api/messages/conversation/{otherId}/read")
+    suspend fun markConversationRead(@Path("otherId") otherId: String): Map<String, Boolean>
 
     // ── File Upload ───────────────────────────────────────────────────────
     @Multipart
