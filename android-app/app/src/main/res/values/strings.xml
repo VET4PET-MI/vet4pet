@@ -144,6 +144,20 @@
     <string name="messages_role_vet">Veterinarian</string>
     <string name="messages_role_owner">Pet Owner</string>
 
+    <!-- Profile Edit screen -->
+    <string name="profile_edit_title">Edit Profile</string>
+    <string name="profile_hint_name">Full name</string>
+    <string name="profile_hint_clinic">Clinic name</string>
+    <string name="profile_hint_address">Clinic address</string>
+    <string name="profile_hint_phone">Phone number</string>
+    <string name="profile_on_call_label">Available for emergency (On Call)</string>
+    <string name="profile_set_location">Set Current Location as Clinic</string>
+    <string name="profile_save">Save Changes</string>
+    <string name="profile_saved">Profile saved successfully</string>
+    <string name="profile_name_required">Name is required</string>
+    <string name="profile_location_set">📍 %1$s, %2$s</string>
+    <string name="profile_location_captured">Location captured — tap Save to apply</string>
+
     <!-- Emergency Vets screen -->
     <string name="nav_emergency">Emergency Vets</string>
     <string name="emergency_banner">In a life-threatening emergency call 101 (police) or 102 (ambulance). This screen helps you find a nearby vet quickly.</string>

@@ -20,6 +20,10 @@ class SessionManager(context: Context) {
             .apply()
     }
 
+    fun updateName(name: String) {
+        prefs.edit().putString(KEY_USER_NAME, name).apply()
+    }
+
     fun saveIdNumber(idNumber: String) {
         prefs.edit().putString(KEY_ID_NUMBER, idNumber).apply()
     }

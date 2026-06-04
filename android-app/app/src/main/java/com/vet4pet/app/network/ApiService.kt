@@ -19,7 +19,9 @@ import com.vet4pet.app.data.models.api.CreateConsultationRequest
 import com.vet4pet.app.data.models.api.UpdateStatusRequest
 import com.vet4pet.app.data.models.api.MessageDto
 import com.vet4pet.app.data.models.api.SendMessageRequest
+import com.vet4pet.app.data.models.api.UpdateProfileRequest
 import com.vet4pet.app.data.models.api.UploadResponse
+import com.vet4pet.app.data.models.api.UserProfileDto
 import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -74,6 +76,13 @@ interface ApiService {
         @Query("vetId") vetId: String? = null,
         @Query("duration") duration: Int = 30
     ): AvailableSlotsDto
+
+    // ── User profile ──────────────────────────────────────────────────────
+    @GET("api/users/me")
+    suspend fun getMe(): UserProfileDto
+
+    @PATCH("api/users/me")
+    suspend fun updateMe(@Body request: UpdateProfileRequest): UserProfileDto
 
     // ── Vets ──────────────────────────────────────────────────────────────
     @GET("api/users/vets")
