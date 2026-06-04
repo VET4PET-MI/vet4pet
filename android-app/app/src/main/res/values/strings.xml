@@ -122,6 +122,20 @@
     <string name="auth_tab_vet">Veterinarian</string>
     <string name="auth_tab_owner">Pet Owner</string>
 
+    <!-- Home screen -->
+    <string name="home_greeting_owner">Hello, %1$s!</string>
+    <string name="home_greeting_vet">Welcome, Dr. %1$s</string>
+    <string name="home_sub_owner">Your pet\'s health, in your hands</string>
+    <string name="home_sub_vet">Here\'s your clinic overview</string>
+    <string name="home_stat_today_appts">Today\'s appointments</string>
+    <string name="home_stat_total_patients">Total patients</string>
+    <string name="home_action_book">Book Appointment</string>
+    <string name="home_action_my_pets">My Pets</string>
+    <string name="home_action_appointments">View Appointments</string>
+    <string name="home_action_patients">My Patients</string>
+    <string name="home_my_pets">My Pets</string>
+    <string name="home_view_all">View all →</string>
+
     <!-- Gender labels -->
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
