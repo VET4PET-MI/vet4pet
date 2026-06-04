@@ -144,6 +144,23 @@
     <string name="messages_role_vet">Veterinarian</string>
     <string name="messages_role_owner">Pet Owner</string>
 
+    <!-- Emergency Vets screen -->
+    <string name="nav_emergency">Emergency Vets</string>
+    <string name="emergency_banner">In a life-threatening emergency call 101 (police) or 102 (ambulance). This screen helps you find a nearby vet quickly.</string>
+    <string name="emergency_no_location">Share your location to sort vets by distance</string>
+    <string name="emergency_find_location">Find My Location</string>
+    <string name="emergency_locating">Locating…</string>
+    <string name="emergency_refresh">Refresh</string>
+    <string name="emergency_on_call_only">Show on-call vets only</string>
+    <string name="emergency_on_call">● On Call</string>
+    <string name="emergency_off_duty">Off Duty</string>
+    <string name="emergency_call">Call</string>
+    <string name="emergency_message">Message</string>
+    <string name="emergency_no_results">No vets found nearby</string>
+    <string name="emergency_location_denied">Location permission denied</string>
+    <string name="emergency_location_unavailable">Location service unavailable</string>
+    <string name="emergency_location_timeout">Could not get location. Try again.</string>
+
     <!-- Consultations screen -->
     <string name="consult_consultation">Consultation</string>
     <string name="consult_pet_owner">Pet Owner</string>
@@ -174,6 +191,7 @@
 
     <!-- Home screen -->
     <string name="home_action_consultations">Video Consultations</string>
+    <string name="home_action_emergency">Emergency Vets</string>
     <string name="home_greeting_owner">Hello, %1$s!</string>
     <string name="home_greeting_vet">Welcome, Dr. %1$s</string>
     <string name="home_sub_owner">Your pet\'s health, in your hands</string>

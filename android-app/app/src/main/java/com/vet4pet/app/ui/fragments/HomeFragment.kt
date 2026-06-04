@@ -66,6 +66,9 @@ class HomeFragment : Fragment() {
         binding.btnConsultationsAction.setOnClickListener {
             findNavController().navigate(R.id.consultationsFragment)
         }
+        binding.btnEmergencyAction.setOnClickListener {
+            findNavController().navigate(R.id.emergencyVetsFragment)
+        }
 
         // ── Section visibility ────────────────────────────────────────────────
         binding.layoutStats.isVisible      = isVet

@@ -13,6 +13,7 @@ import com.vet4pet.app.data.models.api.MedicalRecordDto
 import com.vet4pet.app.data.models.api.PagedRecordsDto
 import com.vet4pet.app.data.models.api.PetDto
 import com.vet4pet.app.data.models.api.ConsultationDto
+import com.vet4pet.app.data.models.api.NearbyVetDto
 import com.vet4pet.app.data.models.api.ConversationDto
 import com.vet4pet.app.data.models.api.CreateConsultationRequest
 import com.vet4pet.app.data.models.api.UpdateStatusRequest
@@ -77,6 +78,14 @@ interface ApiService {
     // ── Vets ──────────────────────────────────────────────────────────────
     @GET("api/users/vets")
     suspend fun getVets(): List<VetDto>
+
+    // ── Emergency / Nearby Vets ───────────────────────────────────────────
+    @GET("api/users/vets/nearby")
+    suspend fun getNearbyVets(
+        @Query("lat")    lat:    Double? = null,
+        @Query("lng")    lng:    Double? = null,
+        @Query("onCall") onCall: String? = null
+    ): List<NearbyVetDto>
 
     // ── Consultations ─────────────────────────────────────────────────────
     @GET("api/consultations")
