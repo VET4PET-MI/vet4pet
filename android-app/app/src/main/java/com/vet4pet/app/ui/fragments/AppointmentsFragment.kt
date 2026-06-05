@@ -65,18 +65,16 @@ class AppointmentsFragment : Fragment() {
     }
 
     private fun buildSectionedList(appts: List<com.vet4pet.app.data.models.Appointment>): List<ApptListItem> {
-        val today    = LocalDate.now()
-        val upcoming = appts.filter { a ->
-            val isPast = a.status == "cancelled" || a.status == "completed" ||
-                runCatching { LocalDate.parse(a.date) }.getOrNull()?.isBefore(today) == true
-            !isPast
-        }.sortedWith(compareBy({ it.date }, { it.time }))
+        val today = LocalDate.now()
+        fun isPast(a: com.vet4pet.app.data.models.Appointment) =
+            a.status == "cancelled" || a.status == "completed" ||
+            runCatching { LocalDate.parse(a.date) }.getOrNull()?.isBefore(today) == true
 
-        val past = appts.filter { a ->
-            val isPast = a.status == "cancelled" || a.status == "completed" ||
-                runCatching { LocalDate.parse(a.date) }.getOrNull()?.isBefore(today) == true
-            isPast
-        }.sortedWith(compareByDescending<com.vet4pet.app.data.models.Appointment> { it.date }.thenByDescending { it.time })
+        val (pastList, upcomingList) = appts.partition { isPast(it) }
+        val upcoming = upcomingList.sortedWith(compareBy({ it.date }, { it.time }))
+        val past     = pastList.sortedWith(
+            compareByDescending<com.vet4pet.app.data.models.Appointment> { it.date }.thenByDescending { it.time }
+        )
 
         return buildList {
             if (upcoming.isNotEmpty()) {

@@ -101,6 +101,7 @@
     <string name="book_duration_30">30 דק\'</string>
     <string name="book_duration_45">45 דק\'</string>
     <string name="book_duration_60">60 דק\'</string>
+    <string name="book_duration_minutes">%d דק\'</string>
     <string name="book_review_type">סוג</string>
     <string name="book_review_duration">משך</string>
 
@@ -114,6 +115,7 @@
     <string name="pet_age_hint">גיל (שנים)</string>
     <string name="pet_gender_hint">מגדר</string>
     <string name="pet_name_required">שם החיה נדרש</string>
+    <string name="pet_species_required">אנא בחר מין מהרשימה</string>
 
     <!-- Medical records -->
     <string name="records_empty">אין רשומות עדיין.</string>

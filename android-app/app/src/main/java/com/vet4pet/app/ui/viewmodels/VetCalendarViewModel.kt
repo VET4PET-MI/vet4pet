@@ -84,12 +84,6 @@ class VetCalendarViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun Exception.toMsg(): String = when (this) {
-        is HttpException -> "Server error (${code()})"
-        is IOException   -> "Connection failed."
-        else             -> message ?: "Unknown error"
-    }
-
     private fun Throwable.toMsg(): String = when (this) {
         is HttpException -> "Server error (${code()})"
         is IOException   -> "Connection failed."

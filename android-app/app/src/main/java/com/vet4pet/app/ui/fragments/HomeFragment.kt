@@ -170,8 +170,10 @@ class HomeFragment : Fragment() {
                     "petName"    to pet.name,
                     "petSpecies" to (pet.species ?: ""),
                     "petBreed"   to (pet.breed ?: ""),
-                    "petGender"  to "",
-                    "petDob"     to 0L
+                    "petGender"  to (pet.gender ?: ""),
+                    "petDob"     to (pet.age?.takeIf { it >= 0 }?.let {
+                        System.currentTimeMillis() - (it * 365.25 * 24 * 3600 * 1000L).toLong()
+                    } ?: 0L)
                 )
             )
         }

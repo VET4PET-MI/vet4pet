@@ -29,6 +29,7 @@ import com.vet4pet.app.data.models.api.UpdateAppointmentRequest
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.databinding.FragmentVetCalendarBinding
 import com.vet4pet.app.databinding.ItemScheduleSlotBinding
+import com.vet4pet.app.ui.adapters.toTypeStringRes
 import com.vet4pet.app.ui.viewmodels.UiState
 import com.vet4pet.app.ui.viewmodels.VetCalendarViewModel
 import java.time.DayOfWeek
@@ -165,7 +166,8 @@ class VetCalendarFragment : Fragment() {
         val occupied = mutableSetOf<String>()
         activeAppts.forEach { appt ->
             val startIdx = TIME_SLOTS.indexOf(appt.time)
-            val slots    = Math.ceil((appt.duration ?: 30) / 30.0).toInt()
+            if (startIdx < 0) return@forEach   // time not on 30-min boundary — skip occupation
+            val slots = Math.ceil((appt.duration ?: 30) / 30.0).toInt()
             for (k in 1 until slots) {
                 val idx = startIdx + k
                 if (idx in TIME_SLOTS.indices) occupied.add(TIME_SLOTS[idx])
@@ -265,7 +267,7 @@ class VetCalendarFragment : Fragment() {
         // Duration chips
         DURATIONS.forEach { dur ->
             chipDur.addView(Chip(requireContext()).apply {
-                text = getString(R.string.book_duration_30).replace("30", dur.toString())
+                text = getString(R.string.book_duration_minutes, dur)
                 isCheckable = true
                 isChecked = dur == chosenDur
                 setOnCheckedChangeListener { _, checked -> if (checked) chosenDur = dur }
@@ -359,14 +361,8 @@ class VetCalendarFragment : Fragment() {
             .show()
     }
 
-    private fun typeLabel(type: String): String = when (type) {
-        "CHECKUP"      -> getString(R.string.book_type_checkup)
-        "VACCINATION"  -> getString(R.string.book_type_vaccination)
-        "FOLLOW_UP"    -> getString(R.string.book_type_follow_up)
-        "EMERGENCY"    -> getString(R.string.book_type_emergency)
-        "CONSULTATION" -> getString(R.string.book_type_consultation)
-        else           -> getString(R.string.book_type_other)
-    }
+    private fun typeLabel(type: String): String =
+        getString(type.toTypeStringRes())
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -408,7 +404,7 @@ class VetCalendarFragment : Fragment() {
                         b.tvApptTypeLabel.text = buildString {
                             append(typeLabel(slot.appt.type ?: "OTHER"))
                             append(" · ")
-                            append(getString(R.string.book_duration_30).replace("30", (slot.appt.duration ?: 30).toString()))
+                            append(getString(R.string.book_duration_minutes, slot.appt.duration ?: 30))
                         }
 
                         val colorRes = TYPE_COLORS[slot.appt.type] ?: android.R.color.darker_gray
