@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VET4PET</string>
+    <string name="nav_home">בית</string>
+    <string name="nav_pets">חיות מחמד</string>
+    <string name="nav_appointments">תורים</string>
+    <string name="nav_profile">פרופיל</string>
+    <string name="nav_messages">הודעות</string>
+    <string name="nav_notifications">התראות</string>
+    <string name="nav_consultations">ייעוצים</string>
+    <string name="nav_emergency">וטרינרים לחירום</string>
+
+    <string name="hint_search_pets">חפש חיות מחמד…</string>
+    <string name="fab_add_pet">הוסף חיה</string>
+    <string name="title_appointments">התורים שלי</string>
+    <string name="fab_book_appointment">קבע תור</string>
+
+    <!-- Profile screen -->
+    <string name="profile_name">שם</string>
+    <string name="profile_email">אימייל</string>
+    <string name="section_family">משפחה ובעלים משותפים</string>
+    <string name="label_co_owner">בעלים משותף</string>
+    <string name="label_emergency_contact">איש קשר לחירום</string>
+    <string name="section_settings">הגדרות</string>
+    <string name="settings_app">הגדרות אפליקציה</string>
+    <string name="settings_notifications">העדפות התראות</string>
+    <string name="settings_payment">אמצעי תשלום</string>
+    <string name="settings_privacy">מדיניות פרטיות</string>
+    <string name="action_logout">התנתק</string>
+    <string name="action_cancel">ביטול</string>
+    <string name="action_save">שמור</string>
+    <string name="action_confirm_cancel">כן, בטל</string>
+    <string name="logout_confirm_message">האם אתה בטוח שברצונך להתנתק?</string>
+
+    <!-- Add medical record screen -->
+    <string name="title_add_medical_record">הוסף רשומה</string>
+    <string name="hint_vet_name">שם הווטרינר</string>
+    <string name="hint_record_type">סוג הרשומה</string>
+    <string name="hint_date">תאריך</string>
+    <string name="hint_findings">ממצאים</string>
+    <string name="fab_add_record">הוסף רשומה</string>
+    <string name="cd_pick_date">בחר תאריך</string>
+    <string name="snack_record_saved_mock">רשומה נוספה</string>
+
+    <!-- Medical record detail screen -->
+    <string name="title_medical_record_detail">פרטי רשומה</string>
+    <string name="label_findings">ממצאים</string>
+    <string name="label_attachment_section">קובץ מצורף</string>
+    <string name="label_image_preview_mock">תצוגה מקדימה</string>
+    <string name="cd_back">חזור</string>
+
+    <!-- Medical history screen -->
+    <string name="title_medical_history">היסטוריה רפואית</string>
+    <string name="record_type_visit">סיכום ביקור</string>
+    <string name="record_type_xray">צילום רנטגן</string>
+    <string name="record_type_blood_test">בדיקת דם</string>
+    <string name="record_type_lab">תוצאת מעבדה</string>
+    <string name="record_type_vaccination">חיסון</string>
+    <string name="record_type_consultation">ייעוץ</string>
+    <string name="record_type_other">אחר</string>
+    <string name="label_attachment">קובץ מצורף</string>
+    <string name="label_one_attachment">קובץ מצורף אחד</string>
+
+    <!-- Appointments -->
+    <string name="appointments_empty">אין תורים עדיין. לחץ + לקביעת תור.</string>
+    <string name="appts_upcoming">עתידיים</string>
+    <string name="appts_past">עבר ומבוטל</string>
+    <string name="cancel_appointment_title">ביטול תור</string>
+    <string name="cancel_appointment_message">האם אתה בטוח שברצונך לבטל את התור?</string>
+    <string name="book_title">קביעת תור</string>
+    <string name="book_step_label">שלב %1$d מתוך %2$d</string>
+    <string name="book_step1_title">בחר חיה</string>
+    <string name="book_step2_title">בחר וטרינר</string>
+    <string name="book_step3_title">בחר תאריך ושעה</string>
+    <string name="book_step4_title">סקירה ואישור</string>
+    <string name="book_any_vet">כל וטרינר פנוי</string>
+    <string name="book_pick_date">בחר תאריך</string>
+    <string name="book_no_slots">אין מקומות פנויים בתאריך זה</string>
+    <string name="book_available_times">שעות פנויות</string>
+    <string name="book_review_pet">חיה</string>
+    <string name="book_review_vet">וטרינר</string>
+    <string name="book_review_date">תאריך</string>
+    <string name="book_review_time">שעה</string>
+    <string name="book_notes_hint">הערות (אופציונלי)</string>
+    <string name="book_next">הבא</string>
+    <string name="book_prev">חזור</string>
+    <string name="book_confirm">אשר הזמנה</string>
+    <string name="book_success">התור נקבע!</string>
+    <string name="book_select_pet">אנא בחר חיה</string>
+    <string name="book_select_type">אנא בחר סוג ביקור</string>
+    <string name="book_select_datetime">אנא בחר תאריך ושעה</string>
+    <string name="book_type_label">סוג ביקור</string>
+    <string name="book_duration_label">משך</string>
+    <string name="book_type_checkup">בדיקה כללית</string>
+    <string name="book_type_vaccination">חיסון</string>
+    <string name="book_type_follow_up">מעקב</string>
+    <string name="book_type_emergency">חירום</string>
+    <string name="book_type_consultation">ייעוץ</string>
+    <string name="book_type_other">אחר</string>
+    <string name="book_duration_15">15 דק\'</string>
+    <string name="book_duration_30">30 דק\'</string>
+    <string name="book_duration_45">45 דק\'</string>
+    <string name="book_duration_60">60 דק\'</string>
+    <string name="book_review_type">סוג</string>
+    <string name="book_review_duration">משך</string>
+
+    <!-- Pets -->
+    <string name="pets_empty">אין חיות מחמד עדיין. לחץ + להוספה.</string>
+    <string name="add_pet_title">הוסף חיה</string>
+    <string name="edit_pet_title">ערוך חיה</string>
+    <string name="pet_name_hint">שם החיה *</string>
+    <string name="pet_species_hint">מין</string>
+    <string name="pet_breed_hint">גזע (אופציונלי)</string>
+    <string name="pet_age_hint">גיל (שנים)</string>
+    <string name="pet_gender_hint">מגדר</string>
+    <string name="pet_name_required">שם החיה נדרש</string>
+
+    <!-- Medical records -->
+    <string name="records_empty">אין רשומות עדיין.</string>
+    <string name="records_docs_empty">אין מסמכים עדיין.</string>
+    <string name="tab_medical">היסטוריה רפואית</string>
+    <string name="tab_docs">מסמכים</string>
+    <string name="label_pdf_document">מסמך PDF</string>
+    <string name="action_open_file">פתח קובץ</string>
+    <string name="action_attach_file">צרף קובץ (PDF / תמונה)</string>
+    <string name="action_change_file">שנה קובץ</string>
+
+    <!-- General -->
+    <string name="error_save_failed">שמירה נכשלה. אנא נסה שנית.</string>
+    <string name="pet_photo_uploading">מעלה תמונה…</string>
+    <string name="pet_photo_saved">התמונה נשמרה!</string>
+
+    <!-- Auth screens -->
+    <string name="auth_tagline">פורטל וטרינרי</string>
+    <string name="auth_welcome_back">ברוך שובך</string>
+    <string name="auth_welcome_back_doctor">ברוך שובך, ד"ר</string>
+    <string name="auth_login_desc">התחבר לחשבונך להמשך</string>
+    <string name="auth_login_desc_vet">גישה ללוח הבקרה של המרפאה</string>
+    <string name="auth_email_label">כתובת אימייל</string>
+    <string name="auth_password_label">סיסמה</string>
+    <string name="auth_sign_in">כניסה</string>
+    <string name="auth_signing_in">מתחבר…</string>
+    <string name="auth_no_account">אין לך חשבון?</string>
+    <string name="auth_sign_up">הירשם</string>
+    <string name="auth_create_account">צור חשבון</string>
+    <string name="auth_create_account_btn">צור חשבון</string>
+    <string name="auth_creating_account">יוצר חשבון…</string>
+    <string name="auth_full_name_label">שם מלא</string>
+    <string name="auth_confirm_password_label">אשר סיסמה</string>
+    <string name="auth_join_as_owner">הצטרף כבעל חיה</string>
+    <string name="auth_join_as_vet">הצטרף כוטרינר</string>
+    <string name="auth_join_desc">התחל לנהל את בריאות חיות המחמד שלך</string>
+    <string name="auth_join_desc_vet">התחל לנהל את המרפאה והמטופלים שלך</string>
+    <string name="auth_have_account">יש לך כבר חשבון?</string>
+    <string name="auth_tab_vet">וטרינר</string>
+    <string name="auth_tab_owner">בעל חיה</string>
+
+    <!-- Messages / Chat -->
+    <string name="messages_empty">אין הודעות עדיין</string>
+    <string name="messages_new">הודעה חדשה</string>
+    <string name="messages_new_message">הודעה חדשה</string>
+    <string name="messages_chat_title">צ\'אט</string>
+    <string name="messages_send">שלח</string>
+    <string name="messages_input_hint">הקלד הודעה…</string>
+    <string name="messages_loading_vets">טוען וטרינרים…</string>
+    <string name="messages_no_vets">לא נמצאו וטרינרים.</string>
+    <string name="messages_load_fail">לא ניתן לטעון וטרינרים. נסה שנית.</string>
+    <string name="messages_select_vet">בחר וטרינר</string>
+    <string name="messages_next">הבא</string>
+    <string name="messages_to">אל: %1$s</string>
+    <string name="messages_recipient_id">מזהה נמען</string>
+    <string name="messages_recipient_name_optional">שם נמען (אופציונלי)</string>
+    <string name="messages_role_vet">וטרינר</string>
+    <string name="messages_role_owner">בעל חיה</string>
+
+    <!-- Vet Schedule -->
+    <string name="schedule_title">לוח שנה</string>
+    <string name="schedule_book_btn">קבע תור</string>
+    <string name="schedule_book">קבע</string>
+    <string name="schedule_block">חסום</string>
+    <string name="schedule_blocked">חסום</string>
+    <string name="schedule_book_title">קביעת תור</string>
+    <string name="schedule_edit_title">עריכת תור</string>
+    <string name="schedule_cancel_appt">ביטול תור</string>
+    <string name="schedule_pet_name">שם חיה *</string>
+    <string name="schedule_owner_name">שם בעלים (אופציונלי)</string>
+    <string name="schedule_status">סטטוס</string>
+    <string name="schedule_block_title">חסום שעה %1$s</string>
+    <string name="schedule_block_reason_hint">סיבה (אופציונלי)</string>
+    <string name="schedule_working_days">ימי עבודה</string>
+    <string name="schedule_working_days_hint">בחר את הימים בהם אתה מקבל מטופלים</string>
+    <string name="schedule_clinic_hours">שעות המרפאה</string>
+    <string name="schedule_clinic_hours_hint">ניתן לקבוע תורים רק בטווח שעות אלו</string>
+    <string name="schedule_start_time">שעת התחלה</string>
+    <string name="schedule_end_time">שעת סיום</string>
+    <string name="schedule_save">שמור לוח זמנים</string>
+    <string name="schedule_saved">לוח הזמנים נשמר</string>
+    <string name="schedule_select_at_least_one">בחר לפחות יום עבודה אחד</string>
+    <string name="schedule_pick_time">בחר שעה</string>
+    <string name="day_sun">א\'</string>
+    <string name="day_mon">ב\'</string>
+    <string name="day_tue">ג\'</string>
+    <string name="day_wed">ד\'</string>
+    <string name="day_thu">ה\'</string>
+    <string name="day_fri">ו\'</string>
+    <string name="day_sat">ש\'</string>
+    <string name="schedule_blocks_title">חסימות זמן</string>
+    <string name="schedule_blocks_hint">חסום שעות ספציפיות כשאינך זמין</string>
+    <string name="schedule_date">תאריך</string>
+    <string name="schedule_pick_date">בחר תאריך</string>
+    <string name="schedule_block_reason">סיבה (אופציונלי)</string>
+    <string name="schedule_add_block">חסום זמן זה</string>
+    <string name="schedule_blocks_on_date">חסימות בתאריך שנבחר:</string>
+    <string name="schedule_no_blocks">אין חסימות לתאריך זה</string>
+    <string name="schedule_block_added">הזמן נחסם</string>
+
+    <!-- Notifications -->
+    <string name="notif_empty">אין התראות עדיין</string>
+    <string name="notif_mark_all_read">סמן הכל כנקרא</string>
+
+    <!-- Profile Edit -->
+    <string name="profile_edit_title">עריכת פרופיל</string>
+    <string name="profile_hint_national_id">תעודת זהות (9 ספרות)</string>
+    <string name="profile_hint_name">שם מלא</string>
+    <string name="profile_hint_clinic">שם המרפאה</string>
+    <string name="profile_hint_address">כתובת המרפאה</string>
+    <string name="profile_hint_phone">מספר טלפון</string>
+    <string name="profile_on_call_label">זמין לחירום (תורן)</string>
+    <string name="profile_set_location">הגדר מיקום נוכחי כמרפאה</string>
+    <string name="profile_save">שמור שינויים</string>
+    <string name="profile_saved">הפרופיל נשמר בהצלחה</string>
+    <string name="profile_name_required">שם נדרש</string>
+    <string name="profile_location_set">📍 %1$s, %2$s</string>
+    <string name="profile_location_captured">מיקום נתפס — לחץ שמור להחלה</string>
+    <string name="profile_language">שפה</string>
+    <string name="lang_english">EN</string>
+    <string name="lang_hebrew">עב</string>
+
+    <!-- Emergency Vets -->
+    <string name="emergency_banner">במקרה חירום מסכן חיים, התקשר 101 (משטרה) או 102 (מד"א). מסך זה מסייע במציאת וטרינר קרוב.</string>
+    <string name="emergency_no_location">שתף את מיקומך למיון לפי מרחק</string>
+    <string name="emergency_find_location">מצא את מיקומי</string>
+    <string name="emergency_locating">מאתר…</string>
+    <string name="emergency_refresh">רענן</string>
+    <string name="emergency_on_call_only">הצג וטרינרים תורנים בלבד</string>
+    <string name="emergency_on_call">● תורן</string>
+    <string name="emergency_off_duty">לא בתורנות</string>
+    <string name="emergency_call">התקשר</string>
+    <string name="emergency_message">הודעה</string>
+    <string name="emergency_no_results">לא נמצאו וטרינרים בקרבת מקום</string>
+    <string name="emergency_location_denied">הרשאת מיקום נדחתה</string>
+    <string name="emergency_location_unavailable">שירות מיקום לא זמין</string>
+    <string name="emergency_location_timeout">לא ניתן לקבל מיקום. נסה שנית.</string>
+
+    <!-- Consultations -->
+    <string name="consult_consultation">ייעוץ</string>
+    <string name="consult_pet_owner">בעל חיה</string>
+    <string name="consult_status_pending">ממתין</string>
+    <string name="consult_status_active">פעיל</string>
+    <string name="consult_status_ended">הסתיים</string>
+    <string name="consult_stat_pending">ממתין</string>
+    <string name="consult_stat_active">פעיל</string>
+    <string name="consult_stat_ended">הסתיים</string>
+    <string name="consult_empty">אין ייעוצים עדיין</string>
+    <string name="consult_incoming_call">שיחת וידאו נכנסת</string>
+    <string name="consult_vet_ready">הוטרינר שלך מוכן!</string>
+    <string name="consult_vet_ready_hint">לחץ להצטרפות לשיחת הוידאו</string>
+    <string name="consult_accept">קבל</string>
+    <string name="consult_decline">דחה</string>
+    <string name="consult_join">הצטרף מחדש</string>
+    <string name="consult_join_call">הצטרף לשיחה</string>
+    <string name="consult_end">סיים שיחה</string>
+    <string name="consult_end_title">סיום ייעוץ</string>
+    <string name="consult_end_message">האם אתה בטוח שברצונך לסיים את הייעוץ?</string>
+    <string name="consult_end_confirm">כן, סיים</string>
+    <string name="consult_request_btn">בקש שיחת וידאו</string>
+    <string name="consult_request_title">בקש ייעוץ</string>
+    <string name="consult_request_call">בקש שיחה</string>
+    <string name="consult_notes_hint">תאר את הבעיה (אופציונלי)</string>
+    <string name="consult_loading_pets">טוען חיות מחמד…</string>
+    <string name="consult_no_pets">לא נמצאו חיות מחמד. הוסף חיה תחילה.</string>
+
+    <!-- Home screen -->
+    <string name="home_action_consultations">ייעוצי וידאו</string>
+    <string name="home_search_title">חיפוש מטופל</string>
+    <string name="home_search_id_hint">תעודת זהות של בעלים (אופציונלי)</string>
+    <string name="home_search_name_hint">שם חיה (אופציונלי)</string>
+    <string name="home_search_btn">חפש</string>
+    <string name="home_search_clear">נקה ✕</string>
+    <string name="home_search_results">%1$d תוצאות</string>
+    <string name="home_search_no_results">לא נמצאו מטופלים</string>
+    <string name="home_action_emergency">וטרינרים לחירום</string>
+    <string name="home_greeting_owner">שלום, %1$s!</string>
+    <string name="home_greeting_vet">ברוך הבא, ד"ר %1$s</string>
+    <string name="home_sub_owner">בריאות חיות המחמד שלך, בידיים שלך</string>
+    <string name="home_sub_vet">הנה סקירת המרפאה שלך</string>
+    <string name="home_stat_today_appts">תורים להיום</string>
+    <string name="home_stat_total_patients">סה"כ מטופלים</string>
+    <string name="home_stat_pending_consults">ייעוצים ממתינים</string>
+    <string name="home_stat_unread_messages">הודעות שלא נקראו</string>
+    <string name="home_action_book">קבע תור</string>
+    <string name="home_action_my_pets">החיות שלי</string>
+    <string name="home_action_appointments">הצג תורים</string>
+    <string name="home_action_patients">המטופלים שלי</string>
+    <string name="home_my_pets">החיות שלי</string>
+    <string name="home_view_all">הצג הכל</string>
+
+    <!-- Gender labels -->
+    <string name="gender_male">זכר</string>
+    <string name="gender_female">נקבה</string>
+    <string name="gender_unknown">לא ידוע</string>
+    <!-- Age labels -->
+    <string name="age_unknown">—</string>
+    <string name="age_less_than_one_month">פחות מחודש</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="age_years">
+        <item quantity="one">שנה אחת</item>
+        <item quantity="two">שנתיים</item>
+        <item quantity="other">%d שנים</item>
+    </plurals>
+    <plurals name="age_months">
+        <item quantity="one">חודש אחד</item>
+        <item quantity="two">חודשיים</item>
+        <item quantity="other">%d חודשים</item>
+    </plurals>
+    <plurals name="notif_unread">
+        <item quantity="one">%d לא נקראה</item>
+        <item quantity="two">%d לא נקראו</item>
+        <item quantity="other">%d לא נקראו</item>
+    </plurals>
+    <plurals name="schedule_appt_count">
+        <item quantity="one">תור אחד</item>
+        <item quantity="two">שני תורים</item>
+        <item quantity="other">%d תורים</item>
+    </plurals>
+</resources>

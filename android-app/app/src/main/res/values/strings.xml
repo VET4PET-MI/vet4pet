@@ -298,6 +298,11 @@
     <string name="home_my_pets">My Pets</string>
     <string name="home_view_all">View all →</string>
 
+    <!-- Language switcher -->
+    <string name="profile_language">Language</string>
+    <string name="lang_english">EN</string>
+    <string name="lang_hebrew">עב</string>
+
     <!-- Gender labels -->
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>

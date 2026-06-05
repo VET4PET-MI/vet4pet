@@ -24,6 +24,7 @@ import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.data.models.api.UpdateProfileRequest
 import com.vet4pet.app.data.models.api.UserProfileDto
 import com.vet4pet.app.databinding.FragmentProfileBinding
+import com.vet4pet.app.util.LanguageManager
 import com.vet4pet.app.ui.viewmodels.NotificationsViewModel
 import com.vet4pet.app.ui.viewmodels.ProfileViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
@@ -116,6 +117,19 @@ class ProfileFragment : Fragment() {
         // Set Location button
         binding.btnSetLocation.setOnClickListener { checkAndFetchLocation() }
 
+        // Language switcher
+        updateLangButtonState()
+        binding.btnLangEn.setOnClickListener {
+            if (LanguageManager.getCurrentLanguage() != "en") {
+                LanguageManager.setLanguage("en")
+            }
+        }
+        binding.btnLangHe.setOnClickListener {
+            if (!LanguageManager.isHebrew()) {
+                LanguageManager.setLanguage("he")
+            }
+        }
+
         // Save button
         binding.btnSave.setOnClickListener { save(session, isVet) }
 
@@ -136,6 +150,14 @@ class ProfileFragment : Fragment() {
         }
 
         viewModel.loadProfile()
+    }
+
+    private fun updateLangButtonState() {
+        val isHe = LanguageManager.isHebrew()
+        binding.btnLangEn.isEnabled = isHe
+        binding.btnLangHe.isEnabled = !isHe
+        binding.btnLangEn.alpha = if (isHe) 1f else 0.4f
+        binding.btnLangHe.alpha = if (!isHe) 1f else 0.4f
     }
 
     private fun populateForm(profile: UserProfileDto) {
