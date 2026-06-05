@@ -59,12 +59,13 @@ class ProfileFragment : Fragment() {
         val user    = session.getUser() ?: return
         val isVet   = user.role == "vet"
 
-        // Show vet-only fields
-        binding.layoutClinic.isVisible   = isVet
-        binding.layoutAddress.isVisible  = isVet
-        binding.layoutPhone.isVisible    = isVet
-        binding.switchOnCall.isVisible   = isVet
-        binding.btnSetLocation.isVisible = isVet
+        // Show role-specific fields
+        binding.layoutNationalId.isVisible = !isVet
+        binding.layoutClinic.isVisible     = isVet
+        binding.layoutAddress.isVisible    = isVet
+        binding.layoutPhone.isVisible      = isVet
+        binding.switchOnCall.isVisible     = isVet
+        binding.btnSetLocation.isVisible   = isVet
 
         // Observe profile load
         viewModel.profile.observe(viewLifecycleOwner) { state ->
@@ -147,6 +148,7 @@ class ProfileFragment : Fragment() {
 
         // Editable fields
         binding.etName.setText(profile.name)
+        binding.etNationalId.setText(profile.nationalId ?: "")
         binding.etClinic.setText(profile.clinicName ?: "")
         binding.etAddress.setText(profile.address ?: "")
         binding.etPhone.setText(profile.phone ?: "")
@@ -179,7 +181,10 @@ class ProfileFragment : Fragment() {
                 isOnCall   = binding.switchOnCall.isChecked
             )
         } else {
-            UpdateProfileRequest(name = name)
+            UpdateProfileRequest(
+                name       = name,
+                nationalId = binding.etNationalId.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
+            )
         }
 
         viewModel.saveProfile(request, session)

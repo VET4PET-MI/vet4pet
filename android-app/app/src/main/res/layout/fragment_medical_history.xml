@@ -43,6 +43,46 @@
                 android:textColor="?attr/colorPrimary"
                 tools:text="Buddy" />
 
+            <!-- Pet hero stats row -->
+            <LinearLayout
+                android:id="@+id/layout_pet_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_pet_species"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:background="@drawable/bg_status_ended"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp"
+                    android:layout_marginEnd="6dp"
+                    tools:text="Dog" />
+
+                <TextView
+                    android:id="@+id/tv_pet_breed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginEnd="6dp"
+                    tools:text="Labrador" />
+
+                <TextView
+                    android:id="@+id/tv_pet_age_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="3 yrs · Male" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <!-- ══════════════════════════════════════════════════════════════

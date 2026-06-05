@@ -64,7 +64,14 @@ class PetsListFragment : Fragment() {
             onItemClick  = { pet ->
                 findNavController().navigate(
                     R.id.action_petsListFragment_to_medicalHistoryFragment,
-                    bundleOf("petId" to pet.id, "petName" to pet.name)
+                    bundleOf(
+                        "petId"      to pet.id,
+                        "petName"    to pet.name,
+                        "petSpecies" to pet.species,
+                        "petBreed"   to (pet.breed ?: ""),
+                        "petGender"  to pet.gender.name,
+                        "petDob"     to (pet.dateOfBirth ?: 0L)
+                    )
                 )
             },
             onPhotoClick = { pet ->

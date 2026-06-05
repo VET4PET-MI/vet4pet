@@ -154,7 +154,14 @@ class HomeFragment : Fragment() {
         inflatePreviewPets(pets, binding.layoutSearchPets) { pet ->
             findNavController().navigate(
                 R.id.action_homeFragment_to_medicalHistoryFragment,
-                android.os.Bundle().apply { putString("petId", pet.id); putString("petName", pet.name) }
+                bundleOf(
+                    "petId"      to pet.id,
+                    "petName"    to pet.name,
+                    "petSpecies" to (pet.species ?: ""),
+                    "petBreed"   to (pet.breed ?: ""),
+                    "petGender"  to "",
+                    "petDob"     to 0L
+                )
             )
         }
     }

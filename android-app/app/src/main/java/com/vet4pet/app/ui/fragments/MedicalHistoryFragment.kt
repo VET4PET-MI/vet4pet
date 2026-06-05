@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.vet4pet.app.R
+import java.time.Instant
+import java.time.LocalDate
+import java.time.Period
+import java.time.ZoneId
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.databinding.FragmentMedicalHistoryBinding
 import com.vet4pet.app.ui.adapters.MedicalRecordAdapter
@@ -43,6 +47,7 @@ class MedicalHistoryFragment : Fragment() {
         petId = arguments?.getString("petId") ?: return
 
         binding.tvPetNameHeader.text = arguments?.getString("petName") ?: ""
+        bindPetHero()
 
         val adapter = MedicalRecordAdapter { record ->
             findNavController().navigate(
@@ -106,6 +111,38 @@ class MedicalHistoryFragment : Fragment() {
         }
 
         viewModel.loadRecords(petId, refresh = true, types = MEDICAL_TYPES)
+    }
+
+    private fun bindPetHero() {
+        val species = arguments?.getString("petSpecies") ?: ""
+        val breed   = arguments?.getString("petBreed") ?: ""
+        val gender  = arguments?.getString("petGender") ?: ""
+        val dob     = arguments?.getLong("petDob") ?: 0L
+
+        if (species.isBlank() && breed.isBlank()) return
+        binding.layoutPetStats.isVisible = true
+        binding.tvPetSpecies.text = species.replaceFirstChar { it.uppercaseChar() }
+        binding.tvPetBreed.text   = breed.takeIf { it.isNotBlank() } ?: ""
+        binding.tvPetBreed.isVisible = breed.isNotBlank()
+
+        val agePart = if (dob > 0) {
+            val birthDate = Instant.ofEpochMilli(dob).atZone(ZoneId.systemDefault()).toLocalDate()
+            val period    = Period.between(birthDate, LocalDate.now())
+            when {
+                period.years  > 0 -> resources.getQuantityString(R.plurals.age_years,  period.years,  period.years)
+                period.months > 0 -> resources.getQuantityString(R.plurals.age_months, period.months, period.months)
+                else -> null
+            }
+        } else null
+
+        val genderPart = when (gender.uppercase()) {
+            "MALE"   -> "♂"
+            "FEMALE" -> "♀"
+            else -> null
+        }
+
+        binding.tvPetAgeGender.text = listOfNotNull(agePart, genderPart).joinToString(" · ")
+        binding.tvPetAgeGender.isVisible = binding.tvPetAgeGender.text.isNotBlank()
     }
 
     override fun onResume() {

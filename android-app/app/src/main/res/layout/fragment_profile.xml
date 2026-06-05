@@ -244,6 +244,25 @@
                         android:singleLine="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- ── Owner-only: National ID ── -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_national_id"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="@string/profile_hint_national_id"
+                    android:visibility="gone">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_national_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="9"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <!-- ── Vet-only fields ── -->
 
                 <!-- Clinic name -->

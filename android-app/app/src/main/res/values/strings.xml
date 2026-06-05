@@ -54,6 +54,8 @@
     <string name="label_one_attachment">1 attachment</string>
     <!-- Appointments -->
     <string name="appointments_empty">No appointments yet. Tap + to book one.</string>
+    <string name="appts_upcoming">Upcoming</string>
+    <string name="appts_past">Past &amp; Cancelled</string>
     <string name="cancel_appointment_title">Cancel Appointment</string>
     <string name="cancel_appointment_message">Are you sure you want to cancel this appointment?</string>
     <string name="action_confirm_cancel">Yes, Cancel</string>
@@ -213,6 +215,7 @@
 
     <!-- Profile Edit screen -->
     <string name="profile_edit_title">Edit Profile</string>
+    <string name="profile_hint_national_id">National ID (9 digits)</string>
     <string name="profile_hint_name">Full name</string>
     <string name="profile_hint_clinic">Clinic name</string>
     <string name="profile_hint_address">Clinic address</string>

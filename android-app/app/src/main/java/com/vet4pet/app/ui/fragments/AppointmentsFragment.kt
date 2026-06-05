@@ -10,7 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vet4pet.app.R
+import java.time.LocalDate
 import com.vet4pet.app.databinding.FragmentAppointmentsBinding
+import com.vet4pet.app.ui.adapters.ApptListItem
 import com.vet4pet.app.ui.adapters.AppointmentAdapter
 import com.vet4pet.app.ui.viewmodels.AppointmentsViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
@@ -54,17 +56,38 @@ class AppointmentsFragment : Fragment() {
                 (state.data as List<*>).isEmpty()
 
             if (state is UiState.Success) {
-                val sorted = state.data.sortedWith(compareBy(
-                    { if (it.status == "cancelled" || it.status == "completed") 1 else 0 },
-                    { it.date },
-                    { it.time }
-                ))
-                adapter.submitList(sorted)
+                adapter.submitList(buildSectionedList(state.data))
             }
             if (state is UiState.Error) showError(state.message)
         }
 
         viewModel.loadAppointments()
+    }
+
+    private fun buildSectionedList(appts: List<com.vet4pet.app.data.models.Appointment>): List<ApptListItem> {
+        val today    = LocalDate.now()
+        val upcoming = appts.filter { a ->
+            val isPast = a.status == "cancelled" || a.status == "completed" ||
+                runCatching { LocalDate.parse(a.date) }.getOrNull()?.isBefore(today) == true
+            !isPast
+        }.sortedWith(compareBy({ it.date }, { it.time }))
+
+        val past = appts.filter { a ->
+            val isPast = a.status == "cancelled" || a.status == "completed" ||
+                runCatching { LocalDate.parse(a.date) }.getOrNull()?.isBefore(today) == true
+            isPast
+        }.sortedWith(compareByDescending<com.vet4pet.app.data.models.Appointment> { it.date }.thenByDescending { it.time })
+
+        return buildList {
+            if (upcoming.isNotEmpty()) {
+                add(ApptListItem.Header(getString(R.string.appts_upcoming)))
+                upcoming.forEach { add(ApptListItem.Item(it)) }
+            }
+            if (past.isNotEmpty()) {
+                add(ApptListItem.Header(getString(R.string.appts_past)))
+                past.forEach { add(ApptListItem.Item(it)) }
+            }
+        }
     }
 
     private fun showError(msg: String) {

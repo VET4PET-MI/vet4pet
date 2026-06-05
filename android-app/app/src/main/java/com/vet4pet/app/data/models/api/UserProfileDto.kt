@@ -18,6 +18,7 @@ data class UserProfileDto(
 
 data class UpdateProfileRequest(
     val name: String,
+    val nationalId: String? = null,
     val clinicName: String? = null,
     val address: String? = null,
     val phone: String? = null,

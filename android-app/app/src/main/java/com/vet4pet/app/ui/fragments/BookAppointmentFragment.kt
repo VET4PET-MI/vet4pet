@@ -201,9 +201,11 @@ class BookAppointmentFragment : Fragment() {
                 binding.chipGroupVets.addView(anyChip)
 
                 state.data.forEach { vet ->
-                    val label = if (vet.clinicName?.isNotBlank() == true)
-                        "Dr. ${vet.name} · ${vet.clinicName}"
-                    else "Dr. ${vet.name}"
+                    val label = buildString {
+                        append("Dr. ${vet.name}")
+                        vet.clinicName?.takeIf { it.isNotBlank() }?.let { append(" · $it") }
+                        vet.address?.takeIf { it.isNotBlank() }?.let { append(" · $it") }
+                    }
 
                     val chip = Chip(requireContext()).apply {
                         text = label
