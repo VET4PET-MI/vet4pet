@@ -305,6 +305,20 @@
     <string name="home_my_pets">החיות שלי</string>
     <string name="home_view_all">הצג הכל</string>
 
+    <!-- Language switcher -->
+    <string name="lang_switch_to_hebrew">עב</string>
+    <string name="lang_switch_to_english">EN</string>
+
+    <!-- Species -->
+    <string name="species_dog">כלב</string>
+    <string name="species_cat">חתול</string>
+    <string name="species_bird">ציפור</string>
+    <string name="species_rabbit">ארנב</string>
+    <string name="species_hamster">אוגר</string>
+    <string name="species_fish">דג</string>
+    <string name="species_reptile">זוחל</string>
+    <string name="species_other">אחר</string>
+
     <!-- Gender labels -->
     <string name="gender_male">זכר</string>
     <string name="gender_female">נקבה</string>

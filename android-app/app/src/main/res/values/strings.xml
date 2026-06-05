@@ -302,6 +302,18 @@
     <string name="profile_language">Language</string>
     <string name="lang_english">EN</string>
     <string name="lang_hebrew">עב</string>
+    <string name="lang_switch_to_hebrew">עב</string>
+    <string name="lang_switch_to_english">EN</string>
+
+    <!-- Species (used in pet dialogs + hero card) -->
+    <string name="species_dog">Dog</string>
+    <string name="species_cat">Cat</string>
+    <string name="species_bird">Bird</string>
+    <string name="species_rabbit">Rabbit</string>
+    <string name="species_hamster">Hamster</string>
+    <string name="species_fish">Fish</string>
+    <string name="species_reptile">Reptile</string>
+    <string name="species_other">Other</string>
 
     <!-- Gender labels -->
     <string name="gender_male">Male</string>

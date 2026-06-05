@@ -113,6 +113,17 @@ class MedicalHistoryFragment : Fragment() {
         viewModel.loadRecords(petId, refresh = true, types = MEDICAL_TYPES)
     }
 
+    private fun speciesToLabel(apiValue: String): String = when (apiValue.lowercase()) {
+        "dog"     -> getString(R.string.species_dog)
+        "cat"     -> getString(R.string.species_cat)
+        "bird"    -> getString(R.string.species_bird)
+        "rabbit"  -> getString(R.string.species_rabbit)
+        "hamster" -> getString(R.string.species_hamster)
+        "fish"    -> getString(R.string.species_fish)
+        "reptile" -> getString(R.string.species_reptile)
+        else      -> getString(R.string.species_other)
+    }
+
     private fun bindPetHero() {
         val species = arguments?.getString("petSpecies") ?: ""
         val breed   = arguments?.getString("petBreed") ?: ""
@@ -121,7 +132,7 @@ class MedicalHistoryFragment : Fragment() {
 
         if (species.isBlank() && breed.isBlank()) return
         binding.layoutPetStats.isVisible = true
-        binding.tvPetSpecies.text = species.replaceFirstChar { it.uppercaseChar() }
+        binding.tvPetSpecies.text = speciesToLabel(species)
         binding.tvPetBreed.text   = breed.takeIf { it.isNotBlank() } ?: ""
         binding.tvPetBreed.isVisible = breed.isNotBlank()
 

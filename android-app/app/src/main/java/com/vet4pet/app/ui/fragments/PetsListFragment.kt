@@ -126,6 +126,23 @@ class PetsListFragment : Fragment() {
         viewModel.loadPets()
     }
 
+    // API values sent to server are always English; labels shown to user are translated
+    private val speciesApiValues = listOf("Dog", "Cat", "Bird", "Rabbit", "Hamster", "Fish", "Reptile", "Other")
+    private fun speciesLabels() = listOf(
+        getString(R.string.species_dog), getString(R.string.species_cat),
+        getString(R.string.species_bird), getString(R.string.species_rabbit),
+        getString(R.string.species_hamster), getString(R.string.species_fish),
+        getString(R.string.species_reptile), getString(R.string.species_other)
+    )
+    private fun apiToLabel(apiValue: String): String {
+        val idx = speciesApiValues.indexOfFirst { it.equals(apiValue, ignoreCase = true) }
+        return if (idx >= 0) speciesLabels()[idx] else apiValue
+    }
+    private fun labelToApi(label: String): String {
+        val idx = speciesLabels().indexOf(label)
+        return if (idx >= 0) speciesApiValues[idx] else label
+    }
+
     private fun showEditPetDialog(pet: Pet) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_pet, null)
 
@@ -135,16 +152,16 @@ class PetsListFragment : Fragment() {
         val etAge     = dialogView.findViewById<TextInputEditText>(R.id.et_pet_age)
         val acGender  = dialogView.findViewById<AutoCompleteTextView>(R.id.ac_gender)
 
-        val species = listOf("Dog", "Cat", "Bird", "Rabbit", "Hamster", "Fish", "Reptile", "Other")
-        acSpecies.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, species))
+        val labels = speciesLabels()
+        acSpecies.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, labels))
 
         val genders = listOf("MALE", "FEMALE", "UNKNOWN")
         val genderLabels = listOf(getString(R.string.gender_male), getString(R.string.gender_female), getString(R.string.gender_unknown))
         acGender.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, genderLabels))
 
-        // Prefill existing values
+        // Prefill existing values (species comes from DB as English API value → translate for display)
         etName.setText(pet.name)
-        acSpecies.setText(species.firstOrNull { it.equals(pet.species, ignoreCase = true) } ?: pet.species, false)
+        acSpecies.setText(apiToLabel(pet.species), false)
         etBreed.setText(pet.breed ?: "")
         pet.dateOfBirth?.let { dob ->
             val ageYears = ((System.currentTimeMillis() - dob) / (365.25 * 24 * 3600 * 1000)).toInt()
@@ -159,7 +176,7 @@ class PetsListFragment : Fragment() {
             .setNegativeButton(R.string.action_cancel, null)
             .setPositiveButton(R.string.action_save) { _, _ ->
                 val name   = etName.text?.toString()?.trim().orEmpty()
-                val sp     = acSpecies.text?.toString()?.trim() ?: "Unknown"
+                val sp     = labelToApi(acSpecies.text?.toString()?.trim() ?: "")
                 val breed  = etBreed.text?.toString()?.trim()
                 val age    = etAge.text?.toString()?.toIntOrNull()
                 val gLabel = acGender.text?.toString()?.trim()
@@ -185,8 +202,8 @@ class PetsListFragment : Fragment() {
         val etAge     = dialogView.findViewById<TextInputEditText>(R.id.et_pet_age)
         val acGender  = dialogView.findViewById<AutoCompleteTextView>(R.id.ac_gender)
 
-        val species = listOf("Dog", "Cat", "Bird", "Rabbit", "Hamster", "Fish", "Reptile", "Other")
-        acSpecies.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, species))
+        val labels = speciesLabels()
+        acSpecies.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, labels))
 
         val genders = listOf("MALE", "FEMALE", "UNKNOWN")
         val genderLabels = listOf(getString(R.string.gender_male), getString(R.string.gender_female), getString(R.string.gender_unknown))
@@ -198,7 +215,7 @@ class PetsListFragment : Fragment() {
             .setNegativeButton(R.string.action_cancel, null)
             .setPositiveButton(R.string.action_save) { _, _ ->
                 val name   = etName.text?.toString()?.trim().orEmpty()
-                val sp     = acSpecies.text?.toString()?.trim() ?: "Unknown"
+                val sp     = labelToApi(acSpecies.text?.toString()?.trim() ?: "")
                 val breed  = etBreed.text?.toString()?.trim()
                 val age    = etAge.text?.toString()?.toIntOrNull()
                 val gLabel = acGender.text?.toString()?.trim()

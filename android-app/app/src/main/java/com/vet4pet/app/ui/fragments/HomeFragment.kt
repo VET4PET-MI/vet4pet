@@ -17,6 +17,7 @@ import com.vet4pet.app.databinding.FragmentHomeBinding
 import com.vet4pet.app.databinding.ItemPetPreviewBinding
 import com.vet4pet.app.ui.viewmodels.HomeViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
+import com.vet4pet.app.util.LanguageManager
 
 class HomeFragment : Fragment() {
 
@@ -41,6 +42,16 @@ class HomeFragment : Fragment() {
         val firstName = user.name
             .replace(Regex("^Dr\\.?\\s+", RegexOption.IGNORE_CASE), "")
             .split(" ").firstOrNull()?.takeIf { it.isNotBlank() } ?: user.name
+
+        // ── Language toggle ───────────────────────────────────────────────────
+        binding.btnToggleLanguage.text = if (LanguageManager.isHebrew())
+            getString(R.string.lang_switch_to_english)
+        else
+            getString(R.string.lang_switch_to_hebrew)
+        binding.btnToggleLanguage.setOnClickListener {
+            if (LanguageManager.isHebrew()) LanguageManager.setLanguage("en")
+            else                            LanguageManager.setLanguage("he")
+        }
 
         // ── Greeting ──────────────────────────────────────────────────────────
         if (isVet) {

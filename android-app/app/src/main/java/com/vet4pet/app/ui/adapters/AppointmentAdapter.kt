@@ -78,9 +78,8 @@ class AppointmentAdapter(
                 tvAmpm.text = ampm
             }
 
-            // Type label
-            tvType.text = appt.type.replace('_', ' ').lowercase()
-                .replaceFirstChar { it.uppercaseChar() }
+            // Type label (translated via string resource)
+            tvType.text = itemView.context.getString(appt.type.toTypeStringRes())
 
             tvPetName.text = appt.petName
             tvVetName.text = buildString {
@@ -122,4 +121,13 @@ class AppointmentAdapter(
             override fun areContentsTheSame(a: ApptListItem, b: ApptListItem) = a == b
         }
     }
+}
+
+fun String.toTypeStringRes(): Int = when (this) {
+    "CHECKUP"      -> R.string.book_type_checkup
+    "VACCINATION"  -> R.string.book_type_vaccination
+    "FOLLOW_UP"    -> R.string.book_type_follow_up
+    "EMERGENCY"    -> R.string.book_type_emergency
+    "CONSULTATION" -> R.string.book_type_consultation
+    else           -> R.string.book_type_other
 }
