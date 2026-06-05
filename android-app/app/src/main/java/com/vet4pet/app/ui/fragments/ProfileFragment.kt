@@ -94,7 +94,7 @@ class ProfileFragment : Fragment() {
         if (isVet) {
             binding.cardSchedule.isVisible = true
             binding.rowSchedule.setOnClickListener {
-                findNavController().navigate(R.id.vetScheduleFragment)
+                findNavController().navigate(R.id.vetCalendarFragment)
             }
         }
 

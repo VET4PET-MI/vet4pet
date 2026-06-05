@@ -17,4 +17,8 @@
     <color name="surface">#FFFFFF</color>
     <color name="ink">#0F172A</color>
     <color name="ink_muted">#64748B</color>
+
+    <!-- Schedule screen -->
+    <color name="block_slot_bg">#FFF1F2</color>
+    <color name="block_slot_text">#B91C1C</color>
 </resources>

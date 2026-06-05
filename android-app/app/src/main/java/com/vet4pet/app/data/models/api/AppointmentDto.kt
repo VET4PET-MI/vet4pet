@@ -58,6 +58,17 @@ data class AvailableSlotsDto(
     val slots: List<String>
 )
 
+data class UpdateAppointmentRequest(
+    val petName: String,
+    val ownerName: String? = null,
+    val date: String,
+    val time: String,
+    val duration: Int = 30,
+    val type: String = "CHECKUP",
+    val notes: String = "",
+    val status: String = "booked"
+)
+
 data class CreateAppointmentRequest(
     val petId: String,
     val petName: String,

@@ -81,6 +81,12 @@
         tools:layout="@layout/fragment_vet_schedule" />
 
     <fragment
+        android:id="@+id/vetCalendarFragment"
+        android:name="com.vet4pet.app.ui.fragments.VetCalendarFragment"
+        android:label="@string/schedule_title"
+        tools:layout="@layout/fragment_vet_calendar" />
+
+    <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.vet4pet.app.ui.fragments.NotificationsFragment"
         android:label="@string/nav_notifications"

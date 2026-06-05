@@ -6,6 +6,7 @@ import com.vet4pet.app.data.models.RegisterRequest
 import com.vet4pet.app.data.models.api.AppointmentDto
 import com.vet4pet.app.data.models.api.AvailableSlotsDto
 import com.vet4pet.app.data.models.api.CreateAppointmentRequest
+import com.vet4pet.app.data.models.api.UpdateAppointmentRequest
 import com.vet4pet.app.data.models.api.VetDto
 import com.vet4pet.app.data.models.api.AddPetRequest
 import com.vet4pet.app.data.models.api.UpdatePetRequest
@@ -86,10 +87,19 @@ interface ApiService {
 
     // ── Appointments ──────────────────────────────────────────────────────
     @GET("api/appointments")
-    suspend fun getAppointments(@Query("status") status: String? = null): List<AppointmentDto>
+    suspend fun getAppointments(
+        @Query("status") status: String? = null,
+        @Query("date")   date:   String? = null
+    ): List<AppointmentDto>
 
     @POST("api/appointments")
     suspend fun createAppointment(@Body request: CreateAppointmentRequest): AppointmentDto
+
+    @PUT("api/appointments/{id}")
+    suspend fun updateAppointment(
+        @Path("id") id: String,
+        @Body request: UpdateAppointmentRequest
+    ): AppointmentDto
 
     @PATCH("api/appointments/{id}/cancel")
     suspend fun cancelAppointment(@Path("id") id: String): AppointmentDto

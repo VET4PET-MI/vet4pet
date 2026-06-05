@@ -167,7 +167,19 @@
     <string name="messages_role_owner">Pet Owner</string>
 
     <!-- Vet Schedule screen -->
-    <string name="schedule_title">My Schedule</string>
+    <string name="schedule_title">Schedule</string>
+    <string name="schedule_book_btn">Book</string>
+    <string name="schedule_book">Book</string>
+    <string name="schedule_block">Block</string>
+    <string name="schedule_blocked">Blocked</string>
+    <string name="schedule_book_title">Book Appointment</string>
+    <string name="schedule_edit_title">Edit Appointment</string>
+    <string name="schedule_cancel_appt">Cancel Appointment</string>
+    <string name="schedule_pet_name">Pet name *</string>
+    <string name="schedule_owner_name">Owner name (optional)</string>
+    <string name="schedule_status">Status</string>
+    <string name="schedule_block_title">Block slot at %1$s</string>
+    <string name="schedule_block_reason_hint">Reason (optional)</string>
     <string name="schedule_working_days">Working Days</string>
     <string name="schedule_working_days_hint">Select the days you see patients</string>
     <string name="schedule_clinic_hours">Clinic Hours</string>
