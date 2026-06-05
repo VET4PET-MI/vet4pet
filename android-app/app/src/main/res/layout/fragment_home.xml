@@ -10,27 +10,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="28dp"
         android:paddingBottom="88dp">
 
-        <!-- ══ Language toggle ══════════════════════════════════════════════ -->
+        <!-- ══ Top bar: language toggle ══════════════════════════════════════ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginBottom="8dp">
+            android:gravity="end|center_vertical"
+            android:layout_marginBottom="16dp">
 
-            <com.google.android.material.button.MaterialButton
+            <com.google.android.material.chip.Chip
                 android:id="@+id/btn_toggle_language"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:paddingHorizontal="12dp"
+                android:layout_height="wrap_content"
                 android:textSize="13sp"
-                app:cornerRadius="16dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                tools:text="EN" />
+                android:textStyle="bold"
+                app:chipStartPadding="12dp"
+                app:chipEndPadding="12dp"
+                tools:text="עב" />
 
         </LinearLayout>
 
