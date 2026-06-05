@@ -77,11 +77,27 @@
     <string name="book_confirm">Confirm Booking</string>
     <string name="book_success">Appointment booked!</string>
     <string name="book_select_pet">Please select a pet</string>
+    <string name="book_select_type">Please select an appointment type</string>
     <string name="book_select_datetime">Please select a date and time</string>
+    <string name="book_type_label">Appointment Type</string>
+    <string name="book_duration_label">Duration</string>
+    <string name="book_type_checkup">Checkup</string>
+    <string name="book_type_vaccination">Vaccination</string>
+    <string name="book_type_follow_up">Follow-up</string>
+    <string name="book_type_emergency">Emergency</string>
+    <string name="book_type_consultation">Consultation</string>
+    <string name="book_type_other">Other</string>
+    <string name="book_duration_15">15 min</string>
+    <string name="book_duration_30">30 min</string>
+    <string name="book_duration_45">45 min</string>
+    <string name="book_duration_60">60 min</string>
+    <string name="book_review_type">Type</string>
+    <string name="book_review_duration">Duration</string>
 
     <!-- Pets -->
     <string name="pets_empty">No pets yet. Tap + to add one.</string>
     <string name="add_pet_title">Add Pet</string>
+    <string name="edit_pet_title">Edit Pet</string>
     <string name="pet_name_hint">Pet name *</string>
     <string name="pet_species_hint">Species</string>
     <string name="pet_breed_hint">Breed (optional)</string>
@@ -90,6 +106,9 @@
     <string name="pet_name_required">Pet name is required</string>
     <!-- Medical records -->
     <string name="records_empty">No records yet.</string>
+    <string name="records_docs_empty">No documents yet.</string>
+    <string name="tab_medical">Medical History</string>
+    <string name="tab_docs">Documents</string>
     <string name="label_pdf_document">PDF Document</string>
     <string name="action_open_file">Open File</string>
     <string name="action_attach_file">Attach File (PDF / Image)</string>
@@ -255,6 +274,8 @@
     <string name="home_sub_vet">Here\'s your clinic overview</string>
     <string name="home_stat_today_appts">Today\'s appointments</string>
     <string name="home_stat_total_patients">Total patients</string>
+    <string name="home_stat_pending_consults">Pending consults</string>
+    <string name="home_stat_unread_messages">Unread messages</string>
     <string name="home_action_book">Book Appointment</string>
     <string name="home_action_my_pets">My Pets</string>
     <string name="home_action_appointments">View Appointments</string>

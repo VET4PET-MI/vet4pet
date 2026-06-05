@@ -8,6 +8,7 @@ import com.vet4pet.app.data.models.api.AvailableSlotsDto
 import com.vet4pet.app.data.models.api.CreateAppointmentRequest
 import com.vet4pet.app.data.models.api.VetDto
 import com.vet4pet.app.data.models.api.AddPetRequest
+import com.vet4pet.app.data.models.api.UpdatePetRequest
 import com.vet4pet.app.data.models.api.AddRecordRequest
 import com.vet4pet.app.data.models.api.MedicalRecordDto
 import com.vet4pet.app.data.models.api.PagedRecordsDto
@@ -59,6 +60,12 @@ interface ApiService {
     @POST("api/pets")
     suspend fun addPet(@Body request: AddPetRequest): PetDto
 
+    @PUT("api/pets/{id}")
+    suspend fun updatePet(
+        @Path("id") id: String,
+        @Body request: UpdatePetRequest
+    ): PetDto
+
     @PATCH("api/pets/{id}/image")
     suspend fun updatePetImage(
         @Path("id") id: String,
@@ -70,7 +77,8 @@ interface ApiService {
     suspend fun getRecordsByPet(
         @Path("petId") petId: String,
         @Query("limit") limit: Int = 10,
-        @Query("skip") skip: Int = 0
+        @Query("skip")  skip:  Int = 0,
+        @Query("types") types: String? = null
     ): PagedRecordsDto
 
     @POST("api/records")

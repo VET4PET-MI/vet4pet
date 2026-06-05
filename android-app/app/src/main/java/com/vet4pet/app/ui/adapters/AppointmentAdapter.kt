@@ -36,6 +36,7 @@ class AppointmentAdapter(
         private val tvType:    TextView = itemView.findViewById(R.id.tv_appt_type)
         private val tvPetName: TextView = itemView.findViewById(R.id.tv_appt_pet_name)
         private val tvVetName: TextView = itemView.findViewById(R.id.tv_vet_name)
+        private val tvNotes:   TextView = itemView.findViewById(R.id.tv_appt_notes)
 
         fun bind(appt: Appointment) {
             // Date
@@ -62,6 +63,13 @@ class AppointmentAdapter(
 
             tvPetName.text = appt.petName
             tvVetName.text = if (appt.vetName.isNotBlank()) "Dr. ${appt.vetName}" else ""
+
+            if (appt.notes.isNotBlank()) {
+                tvNotes.text = "· ${appt.notes}"
+                tvNotes.visibility = android.view.View.VISIBLE
+            } else {
+                tvNotes.visibility = android.view.View.GONE
+            }
 
             // Status tint
             val alpha = if (appt.status == "cancelled" || appt.status == "completed") 0.4f else 1f

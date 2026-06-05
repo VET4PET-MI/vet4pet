@@ -21,7 +21,8 @@ import java.time.ZoneId
 
 class PetAdapter(
     private val onItemClick: (Pet) -> Unit,
-    private val onPhotoClick: ((Pet) -> Unit)? = null   // null = photo not tappable
+    private val onPhotoClick: ((Pet) -> Unit)? = null,
+    private val onEditClick: ((Pet) -> Unit)? = null    // null = edit not available
 ) : ListAdapter<Pet, PetAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -77,6 +78,11 @@ class PetAdapter(
             }
 
             itemView.setOnClickListener { onItemClick(pet) }
+            if (onEditClick != null) {
+                itemView.setOnLongClickListener { onEditClick.invoke(pet); true }
+            } else {
+                itemView.setOnLongClickListener(null)
+            }
         }
 
         private fun formatAge(epochMs: Long): String {

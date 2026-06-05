@@ -45,10 +45,21 @@
 
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
+        <!-- ══════════════════════════════════════════════════════════════
+             TABS: Medical History / Documents
+             ══════════════════════════════════════════════════════════════ -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="4dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="?attr/colorPrimary"
+            app:tabSelectedTextColor="?attr/colorPrimary"
+            app:tabTextColor="?attr/colorOnSurfaceVariant"
+            app:tabRippleColor="@android:color/transparent" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_records"

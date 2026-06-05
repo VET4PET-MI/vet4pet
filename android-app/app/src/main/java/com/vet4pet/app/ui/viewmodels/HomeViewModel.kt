@@ -14,8 +14,10 @@ import java.io.IOException
 import java.time.LocalDate
 
 data class HomeStats(
-    val todayApptCount: Int = 0,
-    val totalPetCount: Int = 0,
+    val todayApptCount:    Int = 0,
+    val pendingConsults:   Int = 0,
+    val unreadMessages:    Int = 0,
+    val totalPetCount:     Int = 0,
     val previewPets: List<PetDto> = emptyList()
 )
 
@@ -33,11 +35,15 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _stats.value = UiState.Loading
         viewModelScope.launch {
             try {
-                val petsDeferred  = async { api.getPets() }
-                val apptsDeferred = async { api.getAppointments() }
+                val petsDeferred     = async { api.getPets() }
+                val apptsDeferred    = async { api.getAppointments() }
+                val consultsDeferred = async { runCatching { api.getPendingConsultations() }.getOrDefault(emptyList()) }
+                val msgsDeferred     = async { runCatching { api.getUnreadCount() }.getOrDefault(com.vet4pet.app.data.models.api.UnreadCountDto(0)) }
 
-                val pets  = petsDeferred.await()
-                val appts = apptsDeferred.await()
+                val pets     = petsDeferred.await()
+                val appts    = apptsDeferred.await()
+                val consults = consultsDeferred.await()
+                val msgs     = msgsDeferred.await()
 
                 val today = LocalDate.now().toString()
                 val todayCount = appts.count { a ->
@@ -47,8 +53,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 _stats.value = UiState.Success(
                     HomeStats(
                         todayApptCount = todayCount,
-                        totalPetCount  = pets.size,
-                        previewPets    = pets.take(3)
+                        pendingConsults = consults.size,
+                        unreadMessages  = msgs.count,
+                        totalPetCount   = pets.size,
+                        previewPets     = pets.take(3)
                     )
                 )
             } catch (e: Exception) {

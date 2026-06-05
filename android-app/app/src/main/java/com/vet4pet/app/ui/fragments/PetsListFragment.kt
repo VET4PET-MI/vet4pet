@@ -39,6 +39,7 @@ class PetsListFragment : Fragment() {
         uri ?: return@registerForActivityResult
         Snackbar.make(binding.root, R.string.pet_photo_uploading, Snackbar.LENGTH_LONG).show()
         viewModel.uploadAndSavePetPhoto(pet.id, uri) { success, error ->
+            if (_binding == null) return@uploadAndSavePetPhoto
             if (success) {
                 Snackbar.make(binding.root, R.string.pet_photo_saved, Snackbar.LENGTH_SHORT).show()
             } else {
@@ -69,7 +70,8 @@ class PetsListFragment : Fragment() {
             onPhotoClick = { pet ->
                 pendingPhotoForPet = pet
                 pickImage.launch("image/*")
-            }
+            },
+            onEditClick  = if (!isOwner) { pet -> showEditPetDialog(pet) } else null
         )
         binding.rvPets.adapter = adapter
 
@@ -115,6 +117,56 @@ class PetsListFragment : Fragment() {
         }
 
         viewModel.loadPets()
+    }
+
+    private fun showEditPetDialog(pet: Pet) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_pet, null)
+
+        val etName    = dialogView.findViewById<TextInputEditText>(R.id.et_pet_name)
+        val acSpecies = dialogView.findViewById<AutoCompleteTextView>(R.id.ac_species)
+        val etBreed   = dialogView.findViewById<TextInputEditText>(R.id.et_pet_breed)
+        val etAge     = dialogView.findViewById<TextInputEditText>(R.id.et_pet_age)
+        val acGender  = dialogView.findViewById<AutoCompleteTextView>(R.id.ac_gender)
+
+        val species = listOf("Dog", "Cat", "Bird", "Rabbit", "Hamster", "Fish", "Reptile", "Other")
+        acSpecies.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, species))
+
+        val genders = listOf("MALE", "FEMALE", "UNKNOWN")
+        val genderLabels = listOf(getString(R.string.gender_male), getString(R.string.gender_female), getString(R.string.gender_unknown))
+        acGender.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, genderLabels))
+
+        // Prefill existing values
+        etName.setText(pet.name)
+        acSpecies.setText(species.firstOrNull { it.equals(pet.species, ignoreCase = true) } ?: pet.species, false)
+        etBreed.setText(pet.breed ?: "")
+        pet.dateOfBirth?.let { dob ->
+            val ageYears = ((System.currentTimeMillis() - dob) / (365.25 * 24 * 3600 * 1000)).toInt()
+            if (ageYears >= 0) etAge.setText(ageYears.toString())
+        }
+        val genderIndex = genders.indexOfFirst { it.equals(pet.gender.name, ignoreCase = true) }
+        if (genderIndex >= 0) acGender.setText(genderLabels[genderIndex], false)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.edit_pet_title)
+            .setView(dialogView)
+            .setNegativeButton(R.string.action_cancel, null)
+            .setPositiveButton(R.string.action_save) { _, _ ->
+                val name   = etName.text?.toString()?.trim().orEmpty()
+                val sp     = acSpecies.text?.toString()?.trim() ?: "Unknown"
+                val breed  = etBreed.text?.toString()?.trim()
+                val age    = etAge.text?.toString()?.toIntOrNull()
+                val gLabel = acGender.text?.toString()?.trim()
+                val gender = genders.getOrNull(genderLabels.indexOf(gLabel)) ?: "UNKNOWN"
+
+                if (name.isBlank()) {
+                    Toast.makeText(requireContext(), R.string.pet_name_required, Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                viewModel.updatePet(pet.id, name, sp, breed, age, gender) { success ->
+                    if (!success) Toast.makeText(requireContext(), R.string.error_save_failed, Toast.LENGTH_SHORT).show()
+                }
+            }
+            .show()
     }
 
     private fun showAddPetDialog() {

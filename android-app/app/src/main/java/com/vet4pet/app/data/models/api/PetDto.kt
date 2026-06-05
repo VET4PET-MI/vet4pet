@@ -42,3 +42,11 @@ data class AddPetRequest(
     val age: Int?,
     val gender: String
 )
+
+data class UpdatePetRequest(
+    val name: String,
+    val species: String,
+    val breed: String?,
+    val age: Int?,
+    val gender: String
+)

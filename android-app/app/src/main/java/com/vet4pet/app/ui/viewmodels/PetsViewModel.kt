@@ -9,10 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.vet4pet.app.data.models.MedicalRecord
 import com.vet4pet.app.data.models.Pet
 import com.vet4pet.app.data.models.api.AddPetRequest
+import com.vet4pet.app.data.models.api.UpdatePetRequest
 import com.vet4pet.app.data.models.api.AddRecordRequest
 import com.vet4pet.app.data.local.db.AppDatabase
 import com.vet4pet.app.data.local.db.toEntity
 import com.vet4pet.app.network.ApiClient
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -71,6 +73,19 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun updatePet(id: String, name: String, species: String, breed: String?, age: Int?,
+                  gender: String, onDone: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                api.updatePet(id, UpdatePetRequest(name, species, breed?.takeIf { it.isNotBlank() }, age, gender))
+                loadPets()
+                onDone(true)
+            } catch (e: Exception) {
+                onDone(false)
+            }
+        }
+    }
+
     fun uploadAndSavePetPhoto(
         petId: String,
         fileUri: android.net.Uri,
@@ -106,26 +121,32 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
     val recordsState: LiveData<UiState<Unit>>       = _recordsState
     val hasMore:      LiveData<Boolean>             = _hasMore
 
-    private var currentPetId = ""
-    private var currentSkip  = 0
-    private val pageSize     = 10
+    private var currentPetId  = ""
+    private var currentSkip   = 0
+    private var currentTypes: String? = null
+    private val pageSize      = 10
+    private var loadJob: Job? = null
 
-    fun loadRecords(petId: String, refresh: Boolean = false) {
-        if (petId != currentPetId) {
-            currentPetId = petId
-            currentSkip  = 0
+    fun loadRecords(petId: String, refresh: Boolean = false, types: String? = null) {
+        val typesChanged = types != currentTypes
+        if (petId != currentPetId || typesChanged) {
+            currentPetId  = petId
+            currentTypes  = types
+            currentSkip   = 0
             _records.value = emptyList()
         }
         if (refresh) {
             currentSkip = 0
             _records.value = emptyList()
         }
-        if (_recordsState.value is UiState.Loading) return
+
+        // Cancel any in-flight request so stale results can't overwrite the new state
+        loadJob?.cancel()
 
         _recordsState.value = UiState.Loading
-        viewModelScope.launch {
+        loadJob = viewModelScope.launch {
             try {
-                val page = api.getRecordsByPet(petId, pageSize, currentSkip)
+                val page = api.getRecordsByPet(petId, pageSize, currentSkip, currentTypes)
                 val existing = if (currentSkip == 0) emptyList() else _records.value ?: emptyList()
                 val newList  = existing + page.items.map { it.toDomain() }
                 _records.value  = newList
@@ -133,13 +154,14 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
                 currentSkip    += page.items.size
                 _recordsState.value = UiState.Success(Unit)
             } catch (e: Exception) {
+                if (e is kotlinx.coroutines.CancellationException) throw e
                 _recordsState.value = UiState.Error(e.toUserMessage())
             }
         }
     }
 
     fun loadNextPage() {
-        if (_hasMore.value == true) loadRecords(currentPetId)
+        if (_hasMore.value == true) loadRecords(currentPetId, types = currentTypes)
     }
 
     fun addRecord(

@@ -119,6 +119,8 @@ class HomeFragment : Fragment() {
                 if (isVet) {
                     binding.tvStatAppts.text    = data.todayApptCount.toString()
                     binding.tvStatPatients.text = data.totalPetCount.toString()
+                    binding.tvStatConsults.text = data.pendingConsults.toString()
+                    binding.tvStatMessages.text = data.unreadMessages.toString()
                 } else {
                     populatePetPreview(data.previewPets)
                 }

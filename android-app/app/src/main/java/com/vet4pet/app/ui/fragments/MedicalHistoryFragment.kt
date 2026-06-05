@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import com.vet4pet.app.R
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.databinding.FragmentMedicalHistoryBinding
@@ -24,6 +25,13 @@ class MedicalHistoryFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: PetsViewModel by viewModels()
 
+    private var petId = ""
+
+    companion object {
+        private val MEDICAL_TYPES = "VISIT_SUMMARY,VACCINATION,LAB_RESULT,X_RAY,BLOOD_TEST,CONSULTATION"
+        private val DOCS_TYPES    = "PRESCRIPTION,OTHER"
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMedicalHistoryBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,7 +40,7 @@ class MedicalHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val petId = arguments?.getString("petId") ?: return
+        petId = arguments?.getString("petId") ?: return
 
         binding.tvPetNameHeader.text = arguments?.getString("petName") ?: ""
 
@@ -54,6 +62,22 @@ class MedicalHistoryFragment : Fragment() {
             )
         }
 
+        // ── Tabs ──────────────────────────────────────────────────────────
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_medical))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_docs))
+
+        fun currentTypes() = if (binding.tabLayout.selectedTabPosition == 0) MEDICAL_TYPES else DOCS_TYPES
+        fun currentEmptyText() = if (binding.tabLayout.selectedTabPosition == 0)
+            getString(R.string.records_empty) else getString(R.string.records_docs_empty)
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewModel.loadRecords(petId, refresh = true, types = currentTypes())
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
         // Infinite scroll — load next page when near the bottom
         binding.rvMedicalRecords.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
@@ -70,6 +94,7 @@ class MedicalHistoryFragment : Fragment() {
             adapter.submitList(records)
             binding.tvEmptyRecords.isVisible = records.isEmpty() &&
                 viewModel.recordsState.value !is UiState.Loading
+            if (records.isEmpty()) binding.tvEmptyRecords.text = currentEmptyText()
         }
 
         viewModel.recordsState.observe(viewLifecycleOwner) { state ->
@@ -80,7 +105,14 @@ class MedicalHistoryFragment : Fragment() {
             }
         }
 
-        viewModel.loadRecords(petId, refresh = true)
+        viewModel.loadRecords(petId, refresh = true, types = MEDICAL_TYPES)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (petId.isEmpty() || _binding == null) return
+        val types = if (binding.tabLayout.selectedTabPosition == 0) MEDICAL_TYPES else DOCS_TYPES
+        viewModel.loadRecords(petId, refresh = true, types = types)
     }
 
     override fun onDestroyView() {

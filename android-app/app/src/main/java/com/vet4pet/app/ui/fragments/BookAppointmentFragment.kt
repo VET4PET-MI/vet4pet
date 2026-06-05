@@ -43,6 +43,8 @@ class BookAppointmentFragment : Fragment() {
     private var selectedVet:    VetDto? = null
     private var selectedDate    = ""   // YYYY-MM-DD
     private var selectedTime    = ""   // HH:MM
+    private var selectedType    = "CHECKUP"
+    private var selectedDuration = 30
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBookAppointmentBinding.inflate(inflater, container, false)
@@ -60,6 +62,8 @@ class BookAppointmentFragment : Fragment() {
         observeVets()
         observeSlots()
         observeBookState()
+        setupTypeChips()
+        setupDurationChips()
 
         petsVm.loadPets()
         apptVm.loadVets()
@@ -108,6 +112,50 @@ class BookAppointmentFragment : Fragment() {
         binding.btnPrev.isVisible = currentStep > 1
         binding.btnNext.text = if (currentStep == totalSteps)
             getString(R.string.book_confirm) else getString(R.string.book_next)
+    }
+
+    // ── Step 1: Type + Duration chips ────────────────────────────────────
+
+    private data class AppointmentType(val key: String, val labelRes: Int)
+
+    private val appointmentTypes = listOf(
+        AppointmentType("CHECKUP",      R.string.book_type_checkup),
+        AppointmentType("VACCINATION",  R.string.book_type_vaccination),
+        AppointmentType("FOLLOW_UP",    R.string.book_type_follow_up),
+        AppointmentType("EMERGENCY",    R.string.book_type_emergency),
+        AppointmentType("CONSULTATION", R.string.book_type_consultation),
+        AppointmentType("OTHER",        R.string.book_type_other)
+    )
+
+    private fun setupTypeChips() {
+        appointmentTypes.forEach { type ->
+            val chip = Chip(requireContext()).apply {
+                text = getString(type.labelRes)
+                isCheckable = true
+                isChecked = type.key == selectedType
+                setOnCheckedChangeListener { _, checked ->
+                    if (checked) selectedType = type.key
+                }
+            }
+            binding.chipGroupType.addView(chip)
+        }
+    }
+
+    private fun setupDurationChips() {
+        listOf(15 to R.string.book_duration_15,
+               30 to R.string.book_duration_30,
+               45 to R.string.book_duration_45,
+               60 to R.string.book_duration_60).forEach { (mins, labelRes) ->
+            val chip = Chip(requireContext()).apply {
+                text = getString(labelRes)
+                isCheckable = true
+                isChecked = mins == selectedDuration
+                setOnCheckedChangeListener { _, checked ->
+                    if (checked) selectedDuration = mins
+                }
+            }
+            binding.chipGroupDuration.addView(chip)
+        }
     }
 
     // ── Step 1: Select pet ────────────────────────────────────────────────
@@ -237,7 +285,16 @@ class BookAppointmentFragment : Fragment() {
             LocalDate.parse(selectedDate)
                 .format(DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy"))
         }.getOrDefault(selectedDate)
-        binding.tvReviewTime.text = selectedTime
+        binding.tvReviewTime.text     = selectedTime
+        binding.tvReviewType.text     = appointmentTypes.find { it.key == selectedType }
+            ?.let { getString(it.labelRes) } ?: selectedType
+        binding.tvReviewDuration.text = when (selectedDuration) {
+            15   -> getString(R.string.book_duration_15)
+            30   -> getString(R.string.book_duration_30)
+            45   -> getString(R.string.book_duration_45)
+            60   -> getString(R.string.book_duration_60)
+            else -> "$selectedDuration min"
+        }
     }
 
     private fun confirmBooking() {
@@ -249,6 +306,8 @@ class BookAppointmentFragment : Fragment() {
             vetName  = selectedVet?.name,
             date     = selectedDate,
             time     = selectedTime,
+            duration = selectedDuration,
+            type     = selectedType,
             notes    = notes
         )
         apptVm.bookAppointment(request)
