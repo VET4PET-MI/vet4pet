@@ -55,13 +55,11 @@ class HomeFragment : Fragment() {
 
         // ── Greeting ──────────────────────────────────────────────────────────
         if (isVet) {
-            binding.tvGreeting.text     = getString(R.string.home_greeting_vet, firstName)
-            binding.tvGreetingSub.text  = getString(R.string.home_sub_vet)
-            binding.tvGreetingIcon.text = "🩺"
+            binding.tvGreeting.text    = getString(R.string.home_greeting_vet, firstName)
+            binding.tvGreetingSub.text = getString(R.string.home_sub_vet)
         } else {
-            binding.tvGreeting.text     = getString(R.string.home_greeting_owner, firstName)
-            binding.tvGreetingSub.text  = getString(R.string.home_sub_owner)
-            binding.tvGreetingIcon.text = "🐾"
+            binding.tvGreeting.text    = getString(R.string.home_greeting_owner, firstName)
+            binding.tvGreetingSub.text = getString(R.string.home_sub_owner)
         }
 
         // ── Action buttons ────────────────────────────────────────────────────

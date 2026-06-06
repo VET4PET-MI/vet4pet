@@ -77,12 +77,13 @@
 
                 </LinearLayout>
 
-                <TextView
+                <ImageView
                     android:id="@+id/tv_greeting_icon"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:gravity="center"
-                    android:textSize="32sp" />
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/vet4pet_icon"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/app_name" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
