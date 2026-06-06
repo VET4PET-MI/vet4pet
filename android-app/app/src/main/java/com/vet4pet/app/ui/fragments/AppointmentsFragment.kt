@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vet4pet.app.R
 import java.time.LocalDate
+import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.databinding.FragmentAppointmentsBinding
 import com.vet4pet.app.ui.adapters.ApptListItem
 import com.vet4pet.app.ui.adapters.AppointmentAdapter
@@ -46,6 +47,9 @@ class AppointmentsFragment : Fragment() {
 
         binding.rvAppointments.adapter = adapter
 
+        // Only owners can book appointments via the wizard; vets book from their calendar
+        val isOwner = SessionManager(requireContext()).getUser()?.role == "owner"
+        binding.fabBookAppointment.isVisible = isOwner
         binding.fabBookAppointment.setOnClickListener {
             findNavController().navigate(R.id.action_appointmentsFragment_to_bookAppointmentFragment)
         }
