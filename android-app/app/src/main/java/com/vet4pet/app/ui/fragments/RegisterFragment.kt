@@ -15,6 +15,7 @@ import com.vet4pet.app.R
 import com.vet4pet.app.databinding.FragmentRegisterBinding
 import com.vet4pet.app.ui.viewmodels.AuthState
 import com.vet4pet.app.ui.viewmodels.AuthViewModel
+import com.vet4pet.app.util.LanguageManager
 
 class RegisterFragment : Fragment() {
 
@@ -32,10 +33,22 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupLanguageToggle()
         setupTabs()
         setupActions()
         updateNationalIdVisibility()   // owner is default tab
         observeState()
+    }
+
+    private fun setupLanguageToggle() {
+        binding.btnToggleLanguage.text = if (LanguageManager.isHebrew())
+            getString(R.string.lang_switch_to_english)
+        else
+            getString(R.string.lang_switch_to_hebrew)
+        binding.btnToggleLanguage.setOnClickListener {
+            if (LanguageManager.isHebrew()) LanguageManager.setLanguage("en")
+            else LanguageManager.setLanguage("he")
+        }
     }
 
     private fun setupTabs() {
@@ -56,13 +69,17 @@ class RegisterFragment : Fragment() {
     }
 
     private fun updateTitle() {
-        binding.tvTitle.setText(
-            if (selectedRole == "vet") R.string.auth_join_as_vet else R.string.auth_join_as_owner
-        )
+        if (selectedRole == "vet") {
+            binding.tvTitle.setText(R.string.auth_join_as_vet)
+            binding.etName.setHint(R.string.auth_name_placeholder_vet)
+        } else {
+            binding.tvTitle.setText(R.string.auth_join_as_owner)
+            binding.etName.setHint(R.string.auth_name_placeholder_owner)
+        }
     }
 
     private fun updateNationalIdVisibility() {
-        binding.layoutNationalIdRegister.isVisible = selectedRole == "owner"
+        binding.containerNationalId.isVisible = selectedRole == "owner"
     }
 
     private fun setupActions() {

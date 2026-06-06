@@ -159,6 +159,12 @@
     <string name="auth_national_id_label">תעודת זהות *</string>
     <string name="auth_national_id_required">תעודת זהות נדרשת עבור בעלי חיות</string>
     <string name="auth_national_id_invalid">אנא הכנס מספר תעודת זהות ישראלית תקין בת 9 ספרות</string>
+    <string name="auth_email_placeholder">you@example.com</string>
+    <string name="auth_password_placeholder">מינ. 6 תווים</string>
+    <string name="auth_confirm_password_placeholder">חזור על הסיסמה</string>
+    <string name="auth_name_placeholder_owner">השם המלא שלך</string>
+    <string name="auth_name_placeholder_vet">ד"ר השם שלך</string>
+    <string name="auth_national_id_placeholder">מספר ת.ז. 9 ספרות</string>
 
     <!-- Messages / Chat -->
     <string name="messages_empty">אין הודעות עדיין</string>

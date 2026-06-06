@@ -14,6 +14,7 @@ import com.vet4pet.app.R
 import com.vet4pet.app.databinding.FragmentLoginBinding
 import com.vet4pet.app.ui.viewmodels.AuthState
 import com.vet4pet.app.ui.viewmodels.AuthViewModel
+import com.vet4pet.app.util.LanguageManager
 
 class LoginFragment : Fragment() {
 
@@ -31,9 +32,21 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupLanguageToggle()
         setupTabs()
         setupActions()
         observeState()
+    }
+
+    private fun setupLanguageToggle() {
+        binding.btnToggleLanguage.text = if (LanguageManager.isHebrew())
+            getString(R.string.lang_switch_to_english)
+        else
+            getString(R.string.lang_switch_to_hebrew)
+        binding.btnToggleLanguage.setOnClickListener {
+            if (LanguageManager.isHebrew()) LanguageManager.setLanguage("en")
+            else LanguageManager.setLanguage("he")
+        }
     }
 
     private fun setupTabs() {

@@ -13,6 +13,27 @@
         android:gravity="center_horizontal"
         android:padding="24dp">
 
+        <!-- Language toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btn_toggle_language"
+                style="@style/Widget.Material3.Chip.Suggestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:chipStartPadding="12dp"
+                app:chipEndPadding="12dp"
+                android:text="EN" />
+        </LinearLayout>
+
         <!-- Logo card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -212,23 +233,38 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- National ID (owner only) -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layout_national_id_register"
+                <LinearLayout
+                    android:id="@+id/container_national_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    app:hintEnabled="false"
-                    android:visibility="visible">
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_national_id_register"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/auth_national_id_label"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/slate_700" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_national_id_register"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/auth_national_id_placeholder"
-                        android:inputType="number"
-                        android:maxLength="9"
-                        android:imeOptions="actionDone" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginBottom="20dp"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_national_id_register"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/auth_national_id_placeholder"
+                            android:inputType="number"
+                            android:maxLength="9"
+                            android:imeOptions="actionDone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                 <!-- Error -->
                 <TextView

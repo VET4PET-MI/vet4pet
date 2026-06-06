@@ -18,6 +18,7 @@ import com.vet4pet.app.databinding.ItemPetPreviewBinding
 import com.vet4pet.app.ui.viewmodels.HomeViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
 import com.vet4pet.app.util.LanguageManager
+import com.vet4pet.app.util.speciesStringRes
 
 class HomeFragment : Fragment() {
 
@@ -187,7 +188,10 @@ class HomeFragment : Fragment() {
             val item = ItemPetPreviewBinding.inflate(inflater, container, false)
             item.tvPetEmoji.text = speciesEmoji(pet.species)
             item.tvPetName.text  = pet.name
-            item.tvPetBreed.text = pet.breed?.takeIf { it.isNotBlank() } ?: "—"
+            item.tvPetBreed.text = pet.breed?.takeIf { it.isNotBlank() }
+                ?: speciesStringRes(pet.species).takeIf { it != 0 }
+                    ?.let { getString(it) }
+                ?: (pet.species ?: "—")
             item.root.setOnClickListener { onClick(pet) }
             container.addView(item.root)
         }

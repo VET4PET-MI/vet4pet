@@ -14,6 +14,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import com.vet4pet.app.R
 import com.vet4pet.app.data.enums.Gender
 import com.vet4pet.app.data.models.Pet
+import com.vet4pet.app.util.speciesStringRes
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
@@ -44,7 +45,10 @@ class PetAdapter(
 
         fun bind(pet: Pet) {
             tvName.text  = pet.name
-            tvBreed.text = pet.breed?.takeIf { it.isNotBlank() } ?: pet.species
+            tvBreed.text = pet.breed?.takeIf { it.isNotBlank() }
+                ?: speciesStringRes(pet.species).takeIf { it != 0 }
+                    ?.let { itemView.context.getString(it) }
+                ?: pet.species
             tvGender.text = itemView.context.getString(pet.gender.toLabelRes())
             tvAge.text = pet.dateOfBirth?.let { formatAge(it) }
                 ?: itemView.context.getString(R.string.age_unknown)

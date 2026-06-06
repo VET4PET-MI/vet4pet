@@ -13,6 +13,27 @@
         android:gravity="center_horizontal"
         android:padding="24dp">
 
+        <!-- Language toggle -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btn_toggle_language"
+                style="@style/Widget.Material3.Chip.Suggestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:chipStartPadding="12dp"
+                app:chipEndPadding="12dp"
+                android:text="EN" />
+        </LinearLayout>
+
         <!-- Logo card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
