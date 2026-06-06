@@ -46,6 +46,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 _state.value = AuthState.Error(msg)
             } catch (e: IOException) {
                 _state.value = AuthState.Error("Cannot connect to server. Check your internet connection.")
+            } catch (e: Exception) {
+                _state.value = AuthState.Error(e.message ?: "Unexpected error.")
             }
         }
     }
@@ -76,6 +78,8 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 _state.value = AuthState.Error(msg)
             } catch (e: IOException) {
                 _state.value = AuthState.Error("Cannot connect to server. Check your internet connection.")
+            } catch (e: Exception) {
+                _state.value = AuthState.Error(e.message ?: "Unexpected error.")
             }
         }
     }
