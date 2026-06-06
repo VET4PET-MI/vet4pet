@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.vet4pet.app.data.models.api.PetDto
 import com.vet4pet.app.network.ApiClient
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -35,30 +36,35 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _stats.value = UiState.Loading
         viewModelScope.launch {
             try {
-                val petsDeferred     = async { api.getPets() }
-                val apptsDeferred    = async { api.getAppointments() }
-                val consultsDeferred = async { runCatching { api.getPendingConsultations() }.getOrDefault(emptyList()) }
-                val msgsDeferred     = async { runCatching { api.getUnreadCount() }.getOrDefault(com.vet4pet.app.data.models.api.UnreadCountDto(0)) }
+                // coroutineScope ensures exceptions from async{} children are routed
+                // through this try-catch instead of crashing the app when all calls
+                // fail simultaneously (e.g. network timeout on first launch)
+                coroutineScope {
+                    val petsDeferred     = async { api.getPets() }
+                    val apptsDeferred    = async { api.getAppointments() }
+                    val consultsDeferred = async { runCatching { api.getPendingConsultations() }.getOrDefault(emptyList()) }
+                    val msgsDeferred     = async { runCatching { api.getUnreadCount() }.getOrDefault(com.vet4pet.app.data.models.api.UnreadCountDto(0)) }
 
-                val pets     = petsDeferred.await()
-                val appts    = apptsDeferred.await()
-                val consults = consultsDeferred.await()
-                val msgs     = msgsDeferred.await()
+                    val pets     = petsDeferred.await()
+                    val appts    = apptsDeferred.await()
+                    val consults = consultsDeferred.await()
+                    val msgs     = msgsDeferred.await()
 
-                val today = LocalDate.now().toString()
-                val todayCount = appts.count { a ->
-                    a.date?.take(10) == today && a.status != "cancelled"
-                }
+                    val today = LocalDate.now().toString()
+                    val todayCount = appts.count { a ->
+                        a.date?.take(10) == today && a.status != "cancelled"
+                    }
 
-                _stats.value = UiState.Success(
-                    HomeStats(
-                        todayApptCount = todayCount,
-                        pendingConsults = consults.size,
-                        unreadMessages  = msgs.count,
-                        totalPetCount   = pets.size,
-                        previewPets     = pets.take(3)
+                    _stats.value = UiState.Success(
+                        HomeStats(
+                            todayApptCount  = todayCount,
+                            pendingConsults  = consults.size,
+                            unreadMessages   = msgs.count,
+                            totalPetCount    = pets.size,
+                            previewPets      = pets.take(3)
+                        )
                     )
-                )
+                }
             } catch (e: Exception) {
                 _stats.value = UiState.Error(when (e) {
                     is HttpException -> "Server error (${e.code()})"
