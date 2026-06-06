@@ -50,6 +50,26 @@
         <action
             android:id="@+id/action_petsListFragment_to_medicalHistoryFragment"
             app:destination="@id/medicalHistoryFragment" />
+        <action
+            android:id="@+id/action_petsListFragment_to_petProfileFragment"
+            app:destination="@id/petProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/petProfileFragment"
+        android:name="com.vet4pet.app.ui.fragments.PetProfileFragment"
+        android:label="@string/pet_profile_title"
+        tools:layout="@layout/fragment_pet_profile">
+        <argument android:name="petId"       app:argType="string" />
+        <argument android:name="petName"     app:argType="string" android:defaultValue="" />
+        <argument android:name="petSpecies"  app:argType="string" android:defaultValue="" />
+        <argument android:name="petBreed"    app:argType="string" android:defaultValue="" />
+        <argument android:name="petGender"   app:argType="string" android:defaultValue="UNKNOWN" />
+        <argument android:name="petDob"      app:argType="long"   android:defaultValue="0" />
+        <argument android:name="petPhotoUrl" app:argType="string" android:defaultValue="" />
+        <action
+            android:id="@+id/action_petProfileFragment_to_medicalHistoryFragment"
+            app:destination="@id/medicalHistoryFragment" />
     </fragment>
 
     <fragment

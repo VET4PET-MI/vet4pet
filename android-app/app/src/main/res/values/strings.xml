@@ -309,6 +309,14 @@
     <string name="home_my_pets">My Pets</string>
     <string name="home_view_all">View all →</string>
 
+    <!-- Pet profile screen -->
+    <string name="pet_profile_title">Pet Profile</string>
+    <string name="pet_edit_btn">Edit</string>
+    <string name="pet_breed_label">Breed</string>
+    <string name="pet_age_label">Age</string>
+    <string name="pet_species_label">Species</string>
+    <string name="pet_gender_label">Gender</string>
+
     <!-- Language switcher -->
     <string name="profile_language">Language</string>
     <string name="lang_english">EN</string>

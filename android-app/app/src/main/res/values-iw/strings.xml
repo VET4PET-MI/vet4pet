@@ -166,6 +166,14 @@
     <string name="auth_name_placeholder_vet">ד"ר השם שלך</string>
     <string name="auth_national_id_placeholder">מספר ת.ז. 9 ספרות</string>
 
+    <!-- Pet profile screen -->
+    <string name="pet_profile_title">פרופיל חיה</string>
+    <string name="pet_edit_btn">ערוך</string>
+    <string name="pet_breed_label">גזע</string>
+    <string name="pet_age_label">גיל</string>
+    <string name="pet_species_label">מין</string>
+    <string name="pet_gender_label">מגדר</string>
+
     <!-- Messages / Chat -->
     <string name="messages_empty">אין הודעות עדיין</string>
     <string name="messages_new">הודעה חדשה</string>

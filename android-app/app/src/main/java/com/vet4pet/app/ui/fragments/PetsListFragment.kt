@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -31,23 +30,6 @@ class PetsListFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: PetsViewModel by viewModels()
 
-    private var pendingPhotoForPet: Pet? = null
-
-    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        val pet = pendingPhotoForPet ?: return@registerForActivityResult
-        pendingPhotoForPet = null
-        uri ?: return@registerForActivityResult
-        Snackbar.make(binding.root, R.string.pet_photo_uploading, Snackbar.LENGTH_LONG).show()
-        viewModel.uploadAndSavePetPhoto(pet.id, uri) { success, error ->
-            if (_binding == null) return@uploadAndSavePetPhoto
-            if (success) {
-                Snackbar.make(binding.root, R.string.pet_photo_saved, Snackbar.LENGTH_SHORT).show()
-            } else {
-                Snackbar.make(binding.root, error ?: getString(R.string.error_save_failed), Snackbar.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPetsListBinding.inflate(inflater, container, false)
         return binding.root
@@ -61,24 +43,22 @@ class PetsListFragment : Fragment() {
         val isOwner = role == "owner"
 
         val adapter = PetAdapter(
-            onItemClick  = { pet ->
+            onItemClick = { pet ->
                 findNavController().navigate(
-                    R.id.action_petsListFragment_to_medicalHistoryFragment,
+                    R.id.action_petsListFragment_to_petProfileFragment,
                     bundleOf(
-                        "petId"      to pet.id,
-                        "petName"    to pet.name,
-                        "petSpecies" to pet.species,
-                        "petBreed"   to (pet.breed ?: ""),
-                        "petGender"  to pet.gender.name,
-                        "petDob"     to (pet.dateOfBirth ?: 0L)
+                        "petId"       to pet.id,
+                        "petName"     to pet.name,
+                        "petSpecies"  to pet.species,
+                        "petBreed"    to (pet.breed ?: ""),
+                        "petGender"   to pet.gender.name,
+                        "petDob"      to (pet.dateOfBirth ?: 0L),
+                        "petPhotoUrl" to (pet.profileImageUrl ?: "")
                     )
                 )
             },
-            onPhotoClick = { pet ->
-                pendingPhotoForPet = pet
-                pickImage.launch("image/*")
-            },
-            onEditClick  = if (!isOwner) { pet -> showEditPetDialog(pet) } else null
+            onPhotoClick = null,
+            onEditClick  = null
         )
         binding.rvPets.adapter = adapter
 
@@ -144,58 +124,6 @@ class PetsListFragment : Fragment() {
     private fun labelToApi(label: String): String? {
         val idx = speciesLabels.indexOf(label)
         return if (idx >= 0) speciesApiValues[idx] else null
-    }
-
-    private fun showEditPetDialog(pet: Pet) {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_pet, null)
-
-        val etName    = dialogView.findViewById<TextInputEditText>(R.id.et_pet_name)
-        val acSpecies = dialogView.findViewById<AutoCompleteTextView>(R.id.ac_species)
-        val etBreed   = dialogView.findViewById<TextInputEditText>(R.id.et_pet_breed)
-        val etAge     = dialogView.findViewById<TextInputEditText>(R.id.et_pet_age)
-        val acGender  = dialogView.findViewById<AutoCompleteTextView>(R.id.ac_gender)
-
-        acSpecies.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, speciesLabels))
-
-        val genders = listOf("MALE", "FEMALE", "UNKNOWN")
-        val genderLabels = listOf(getString(R.string.gender_male), getString(R.string.gender_female), getString(R.string.gender_unknown))
-        acGender.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, genderLabels))
-
-        // Prefill existing values (species comes from DB as English API value → translate for display)
-        etName.setText(pet.name)
-        acSpecies.setText(apiToLabel(pet.species), false)
-        etBreed.setText(pet.breed ?: "")
-        pet.dateOfBirth?.let { dob ->
-            val ageYears = ((System.currentTimeMillis() - dob) / (365.25 * 24 * 3600 * 1000)).toInt()
-            if (ageYears >= 0) etAge.setText(ageYears.toString())
-        }
-        val genderIndex = genders.indexOfFirst { it.equals(pet.gender.name, ignoreCase = true) }
-        if (genderIndex >= 0) acGender.setText(genderLabels[genderIndex], false)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.edit_pet_title)
-            .setView(dialogView)
-            .setNegativeButton(R.string.action_cancel, null)
-            .setPositiveButton(R.string.action_save) { _, _ ->
-                val name   = etName.text?.toString()?.trim().orEmpty()
-                val sp     = labelToApi(acSpecies.text?.toString()?.trim() ?: "") ?: run {
-                    Toast.makeText(requireContext(), R.string.pet_species_required, Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
-                }
-                val breed  = etBreed.text?.toString()?.trim()
-                val age    = etAge.text?.toString()?.toIntOrNull()
-                val gLabel = acGender.text?.toString()?.trim()
-                val gender = genders.getOrNull(genderLabels.indexOf(gLabel)) ?: "UNKNOWN"
-
-                if (name.isBlank()) {
-                    Toast.makeText(requireContext(), R.string.pet_name_required, Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
-                }
-                viewModel.updatePet(pet.id, name, sp, breed, age, gender) { success ->
-                    if (!success) Toast.makeText(requireContext(), R.string.error_save_failed, Toast.LENGTH_SHORT).show()
-                }
-            }
-            .show()
     }
 
     private fun showAddPetDialog() {
