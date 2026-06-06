@@ -156,6 +156,9 @@
     <string name="auth_have_account">יש לך כבר חשבון?</string>
     <string name="auth_tab_vet">וטרינר</string>
     <string name="auth_tab_owner">בעל חיה</string>
+    <string name="auth_national_id_label">תעודת זהות *</string>
+    <string name="auth_national_id_required">תעודת זהות נדרשת עבור בעלי חיות</string>
+    <string name="auth_national_id_invalid">אנא הכנס מספר תעודת זהות ישראלית תקין בת 9 ספרות</string>
 
     <!-- Messages / Chat -->
     <string name="messages_empty">אין הודעות עדיין</string>

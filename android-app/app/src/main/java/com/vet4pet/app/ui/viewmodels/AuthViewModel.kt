@@ -9,6 +9,7 @@ import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.data.models.LoginRequest
 import com.vet4pet.app.data.models.RegisterRequest
 import com.vet4pet.app.network.ApiClient
+import com.vet4pet.app.util.IsraeliIdValidator
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -52,7 +53,14 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun register(name: String, email: String, password: String, confirmPassword: String, role: String) {
+    fun register(
+        name: String,
+        email: String,
+        password: String,
+        confirmPassword: String,
+        role: String,
+        nationalId: String = ""
+    ) {
         if (name.isBlank() || email.isBlank() || password.isBlank()) {
             _state.value = AuthState.Error("All fields are required.")
             return
@@ -65,10 +73,18 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _state.value = AuthState.Error("Password must be at least 6 characters.")
             return
         }
+        if (role == "owner") {
+            val normalized = IsraeliIdValidator.validate(nationalId)
+            if (normalized == null) {
+                _state.value = AuthState.Error("Please enter a valid 9-digit Israeli ID number.")
+                return
+            }
+        }
         _state.value = AuthState.Loading
         viewModelScope.launch {
             try {
-                val response = api.register(RegisterRequest(name.trim(), email.trim(), password, role))
+                val normalizedId = if (role == "owner") IsraeliIdValidator.validate(nationalId) else null
+                val response = api.register(RegisterRequest(name.trim(), email.trim(), password, role, normalizedId))
                 session.saveSession(response.token, response.user)
                 _state.value = AuthState.Success
             } catch (e: HttpException) {

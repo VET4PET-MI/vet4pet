@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
+import com.vet4pet.app.util.IsraeliIdValidator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,7 @@ class RegisterFragment : Fragment() {
 
         setupTabs()
         setupActions()
+        updateNationalIdVisibility()   // owner is default tab
         observeState()
     }
 
@@ -45,6 +47,7 @@ class RegisterFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 selectedRole = if (tab.position == 0) "vet" else "owner"
                 updateTitle()
+                updateNationalIdVisibility()
                 viewModel.resetState()
             }
             override fun onTabUnselected(tab: TabLayout.Tab) = Unit
@@ -58,8 +61,19 @@ class RegisterFragment : Fragment() {
         )
     }
 
+    private fun updateNationalIdVisibility() {
+        binding.layoutNationalIdRegister.isVisible = selectedRole == "owner"
+    }
+
     private fun setupActions() {
+        // Done on confirm-password submits when vet (no ID field); owner moves to ID field
         binding.etConfirmPassword.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE && selectedRole == "vet") {
+                submitRegister(); true
+            } else false
+        }
+        // Done on national ID field always submits
+        binding.etNationalIdRegister.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) { submitRegister(); true } else false
         }
 
@@ -71,11 +85,26 @@ class RegisterFragment : Fragment() {
     }
 
     private fun submitRegister() {
-        val name     = binding.etName.text?.toString().orEmpty()
-        val email    = binding.etEmail.text?.toString().orEmpty()
-        val password = binding.etPassword.text?.toString().orEmpty()
-        val confirm  = binding.etConfirmPassword.text?.toString().orEmpty()
-        viewModel.register(name, email, password, confirm, selectedRole)
+        val name       = binding.etName.text?.toString().orEmpty()
+        val email      = binding.etEmail.text?.toString().orEmpty()
+        val password   = binding.etPassword.text?.toString().orEmpty()
+        val confirm    = binding.etConfirmPassword.text?.toString().orEmpty()
+        val nationalId = binding.etNationalIdRegister.text?.toString().orEmpty()
+
+        // Inline validation for national ID so the error appears on the field itself
+        if (selectedRole == "owner") {
+            binding.layoutNationalIdRegister.error = null
+            if (nationalId.isBlank()) {
+                binding.layoutNationalIdRegister.error = getString(R.string.auth_national_id_required)
+                return
+            }
+            if (IsraeliIdValidator.validate(nationalId) == null) {
+                binding.layoutNationalIdRegister.error = getString(R.string.auth_national_id_invalid)
+                return
+            }
+        }
+
+        viewModel.register(name, email, password, confirm, selectedRole, nationalId)
     }
 
     private fun observeState() {

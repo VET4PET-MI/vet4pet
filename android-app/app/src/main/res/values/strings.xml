@@ -146,6 +146,9 @@
     <string name="auth_have_account">Already have an account?</string>
     <string name="auth_tab_vet">Veterinarian</string>
     <string name="auth_tab_owner">Pet Owner</string>
+    <string name="auth_national_id_label">National ID (תעודת זהות) *</string>
+    <string name="auth_national_id_required">National ID is required for pet owners</string>
+    <string name="auth_national_id_invalid">Please enter a valid 9-digit Israeli ID number</string>
 
     <!-- Navigation -->
     <string name="nav_messages">Messages</string>

@@ -9,7 +9,8 @@ data class RegisterRequest(
     val name: String,
     val email: String,
     val password: String,
-    val role: String
+    val role: String,
+    val nationalId: String? = null
 )
 
 data class UserResponse(
