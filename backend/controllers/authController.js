@@ -12,7 +12,7 @@ function signToken(user) {
 }
 
 function sanitize(user) {
-  return { id: user._id, name: user.name, email: user.email, role: user.role, idNumber: user.nationalId || '' };
+  return { id: user._id, name: user.name, email: user.email, role: user.role, nationalId: user.nationalId || '' };
 }
 
 async function register(req, res) {

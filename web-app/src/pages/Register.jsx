@@ -7,6 +7,19 @@ import { API_BASE } from '../api'
 import { useAuth } from '../context/AuthContext'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 
+function isValidIsraeliId(raw) {
+  const trimmed = raw.trim()
+  if (!trimmed) return false
+  const s = trimmed.padStart(9, '0')
+  if (!/^\d{9}$/.test(s)) return false
+  const total = Array.from(s).reduce((acc, ch, i) => {
+    let d = Number(ch) * ((i % 2) + 1)
+    if (d > 9) d -= 9
+    return acc + d
+  }, 0)
+  return total % 10 === 0
+}
+
 export default function Register() {
   const { t } = useTranslation()
   const { login } = useAuth()
@@ -33,7 +46,7 @@ export default function Register() {
       setError(t('auth.errorPwShort'))
       return
     }
-    if (tab === 'owner' && !/^\d{9}$/.test(form.nationalId.trim())) {
+    if (tab === 'owner' && !isValidIsraeliId(form.nationalId)) {
       setError(t('auth.errorIdInvalid'))
       return
     }
