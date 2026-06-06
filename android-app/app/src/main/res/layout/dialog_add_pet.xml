@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:hint="@string/pet_name_hint"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+        style="@style/Vet4Pet.TextInputLayout">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_pet_name"
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:hint="@string/pet_breed_hint"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+        style="@style/Vet4Pet.TextInputLayout">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_pet_breed"
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:hint="@string/pet_age_hint"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+        style="@style/Vet4Pet.TextInputLayout">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_pet_age"
             android:layout_width="match_parent"

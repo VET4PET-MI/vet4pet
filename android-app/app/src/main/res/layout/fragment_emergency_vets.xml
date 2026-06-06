@@ -103,7 +103,7 @@
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="1dp"
-                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeColor="@color/slate_200"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -138,7 +138,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_locate"
-                            style="@style/Widget.Material3.Button"
+                            style="@style/Vet4Pet.Button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/emergency_find_location"
@@ -187,7 +187,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/emergency_refresh"
-                            app:cornerRadius="10dp" />
+                            app:cornerRadius="12dp" />
 
                     </LinearLayout>
 

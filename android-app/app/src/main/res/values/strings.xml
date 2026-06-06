@@ -149,6 +149,12 @@
     <string name="auth_national_id_label">National ID (תעודת זהות) *</string>
     <string name="auth_national_id_required">National ID is required for pet owners</string>
     <string name="auth_national_id_invalid">Please enter a valid 9-digit Israeli ID number</string>
+    <string name="auth_email_placeholder">you@example.com</string>
+    <string name="auth_password_placeholder">Min. 6 characters</string>
+    <string name="auth_confirm_password_placeholder">Repeat your password</string>
+    <string name="auth_name_placeholder_owner">Your full name</string>
+    <string name="auth_name_placeholder_vet">Dr. Your Name</string>
+    <string name="auth_national_id_placeholder">9-digit ID number</string>
 
     <!-- Navigation -->
     <string name="nav_messages">Messages</string>

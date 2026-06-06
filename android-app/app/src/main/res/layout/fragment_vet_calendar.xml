@@ -38,14 +38,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_book_new"
-            style="@style/Widget.Material3.Button"
+            style="@style/Vet4Pet.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/brand"
             android:text="@string/schedule_book_btn"
             app:icon="@drawable/ic_add"
             app:iconGravity="textStart"
-            app:cornerRadius="10dp" />
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 

@@ -1,8 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.VET4PET" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Theme.VET4PET" parent="Theme.Material3.DayNight.NoActionBar">
 
+        <!-- ── Brand color tokens ──────────────────────────────────────── -->
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/brand_soft</item>
+        <item name="colorOnPrimaryContainer">@color/brand_deep</item>
+        <item name="colorSecondary">@color/brand_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/brand_soft</item>
+        <item name="colorOnSecondaryContainer">@color/brand_deep</item>
+        <item name="colorTertiary">@color/brand</item>
+        <item name="colorOnTertiary">@color/white</item>
+        <item name="colorTertiaryContainer">@color/brand_soft</item>
+        <item name="colorOnTertiaryContainer">@color/brand_deep</item>
+
+        <!-- ── Surface / background ────────────────────────────────────── -->
+        <item name="android:colorBackground">@color/bg</item>
+        <item name="android:windowBackground">@color/bg</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorOnSurfaceVariant">@color/ink_muted</item>
+        <item name="colorSurfaceVariant">@color/slate_100</item>
+        <item name="colorOutlineVariant">@color/slate_200</item>
+        <item name="colorOutline">@color/slate_300</item>
+
+        <!-- ── Default widget styles ──────────────────────────────────── -->
+        <item name="textInputStyle">@style/Vet4Pet.TextInputLayout</item>
+        <item name="materialButtonStyle">@style/Vet4Pet.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Vet4Pet.Button.Outlined</item>
+        <item name="bottomNavigationStyle">@style/Vet4Pet.BottomNav</item>
+
+    </style>
+
+    <!-- ── Text Input ────────────────────────────────────────────────── -->
+    <style name="Vet4Pet.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxBackgroundColor">@color/slate_50</item>
+        <item name="boxStrokeColor">@color/input_stroke_color</item>
+        <item name="boxStrokeWidth">1.5dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="hintTextColor">@color/ink_muted</item>
+        <item name="android:textColorHint">@color/slate_400</item>
+    </style>
+
+    <!-- ── Buttons ────────────────────────────────────────────────────── -->
+    <style name="Vet4Pet.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <style name="Vet4Pet.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="strokeColor">@color/slate_200</item>
+    </style>
+
+    <style name="Vet4Pet.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <!-- ── Bottom Navigation ─────────────────────────────────────────── -->
+    <style name="Vet4Pet.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_nav_icon_color</item>
+        <item name="itemTextColor">@color/bottom_nav_icon_color</item>
+    </style>
+
+    <!-- ── Shape overlays ────────────────────────────────────────────── -->
     <style name="ShapeAppearanceOverlay.Circle" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

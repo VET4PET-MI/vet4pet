@@ -10,7 +10,7 @@
     android:focusable="true"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeColor="@color/slate_200"
     app:strokeWidth="1dp">
 
     <LinearLayout

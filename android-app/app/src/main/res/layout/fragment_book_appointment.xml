@@ -187,7 +187,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_pick_date"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Vet4Pet.Button.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/book_pick_date"
@@ -354,7 +354,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/book_notes_hint"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                    style="@style/Vet4Pet.TextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_notes"
                         android:layout_width="match_parent"
@@ -383,7 +383,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_prev"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Vet4Pet.Button.Outlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/book_prev"
@@ -403,7 +403,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next"
-            style="@style/Widget.Material3.Button"
+            style="@style/Vet4Pet.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/brand"

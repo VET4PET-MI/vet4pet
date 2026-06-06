@@ -13,7 +13,7 @@
 
         <!-- Pet name -->
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+            style="@style/Vet4Pet.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -28,7 +28,7 @@
 
         <!-- Owner name -->
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+            style="@style/Vet4Pet.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -50,23 +50,23 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_appt_date"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Vet4Pet.Button.Outlined"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="6dp"
                 app:icon="@drawable/ic_nav_appointments"
                 app:iconGravity="textStart"
-                app:cornerRadius="10dp" />
+                app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_appt_time"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Vet4Pet.Button.Outlined"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
-                app:cornerRadius="10dp" />
+                app:cornerRadius="12dp" />
 
         </LinearLayout>
 
@@ -120,7 +120,7 @@
 
         <!-- Notes -->
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            style="@style/Vet4Pet.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/book_notes_hint">

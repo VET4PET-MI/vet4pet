@@ -80,7 +80,7 @@
             <!-- ── Vet Name ────────────────────────────────────────────── -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_vet_name"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Vet4Pet.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -99,7 +99,7 @@
             <!-- ── Date ───────────────────────────────────────────────── -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_date"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Vet4Pet.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -128,7 +128,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_attach_file"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Vet4Pet.Button.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/action_attach_file"
@@ -152,7 +152,7 @@
             <!-- ── Findings ────────────────────────────────────────────── -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_findings"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Vet4Pet.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -193,7 +193,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
-            style="@style/Widget.Material3.Button"
+            style="@style/Vet4Pet.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

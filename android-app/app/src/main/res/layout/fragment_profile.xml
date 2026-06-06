@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="16dp"
+        android:paddingHorizontal="20dp"
         android:paddingTop="28dp"
         android:paddingBottom="40dp">
 
@@ -76,7 +77,7 @@
             android:visibility="gone"
             app:cardCornerRadius="14dp"
             app:cardElevation="1dp"
-            app:strokeColor="?attr/colorOutlineVariant"
+            app:strokeColor="@color/slate_200"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -94,7 +95,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:padding="8dp"
-                    android:background="@drawable/bg_avatar"
+                    android:background="@drawable/bg_icon_container"
                     android:src="@drawable/ic_nav_appointments"
                     app:tint="@color/brand_dark"
                     tools:ignore="ContentDescription"
@@ -131,7 +132,7 @@
             android:focusable="true"
             app:cardCornerRadius="14dp"
             app:cardElevation="1dp"
-            app:strokeColor="?attr/colorOutlineVariant"
+            app:strokeColor="@color/slate_200"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -149,7 +150,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:padding="8dp"
-                    android:background="@drawable/bg_avatar"
+                    android:background="@drawable/bg_icon_container"
                     android:src="@drawable/ic_notifications"
                     app:tint="@color/brand_dark"
                     tools:ignore="ContentDescription"
@@ -209,7 +210,7 @@
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="1dp"
-            app:strokeColor="?attr/colorOutlineVariant"
+            app:strokeColor="@color/slate_200"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -230,7 +231,7 @@
                 <!-- Name -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_name"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Vet4Pet.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -247,7 +248,7 @@
                 <!-- ── Owner-only: National ID ── -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_national_id"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Vet4Pet.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -268,7 +269,7 @@
                 <!-- Clinic name -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_clinic"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Vet4Pet.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -286,7 +287,7 @@
                 <!-- Address -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_address"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Vet4Pet.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -304,7 +305,7 @@
                 <!-- Phone -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layout_phone"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Vet4Pet.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
@@ -331,13 +332,13 @@
                 <!-- Set location button (vet only) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_set_location"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Vet4Pet.Button.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/profile_set_location"
                     app:icon="@drawable/ic_location"
                     app:iconGravity="textStart"
-                    app:cornerRadius="10dp"
+                    app:cornerRadius="12dp"
                     android:visibility="gone" />
 
                 <TextView
@@ -357,17 +358,17 @@
         <!-- ══ Save button ════════════════════════════════════════════════════ -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
-            style="@style/Widget.Material3.Button"
+            style="@style/Vet4Pet.Button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginBottom="12dp"
             android:text="@string/profile_save"
-            app:cornerRadius="14dp" />
+            app:cornerRadius="12dp" />
 
         <!-- ══ Logout button ══════════════════════════════════════════════════ -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_logout"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Vet4Pet.Button.Outlined"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:text="@string/action_logout"
@@ -376,7 +377,7 @@
             app:iconTint="?attr/colorError"
             app:iconGravity="textStart"
             app:strokeColor="?attr/colorError"
-            app:cornerRadius="14dp" />
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 

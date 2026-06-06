@@ -129,7 +129,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btn_banner_decline"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Vet4Pet.Button.Tonal"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -137,18 +137,18 @@
                                 android:text="@string/consult_decline"
                                 app:backgroundTint="#B71C1C"
                                 android:textColor="@android:color/white"
-                                app:cornerRadius="10dp" />
+                                app:cornerRadius="12dp" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btn_banner_accept"
-                                style="@style/Widget.Material3.Button"
+                                style="@style/Vet4Pet.Button"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/consult_join_call"
                                 app:backgroundTint="@android:color/white"
                                 android:textColor="#E53935"
-                                app:cornerRadius="10dp"
+                                app:cornerRadius="12dp"
                                 app:icon="@drawable/ic_video_call"
                                 app:iconTint="#E53935" />
 
@@ -209,13 +209,13 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_join_active"
-                            style="@style/Widget.Material3.Button"
+                            style="@style/Vet4Pet.Button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/consult_join_call"
                             app:backgroundTint="@android:color/white"
                             android:textColor="#43A047"
-                            app:cornerRadius="10dp"
+                            app:cornerRadius="12dp"
                             app:icon="@drawable/ic_video_call"
                             app:iconTint="#43A047" />
 
@@ -284,7 +284,7 @@
                         android:layout_marginStart="6dp"
                         app:cardCornerRadius="14dp"
                         app:cardElevation="0dp"
-                        app:strokeColor="?attr/colorOutlineVariant"
+                        app:strokeColor="@color/slate_200"
                         app:strokeWidth="1dp">
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:orientation="vertical" android:padding="12dp" android:gravity="center">
