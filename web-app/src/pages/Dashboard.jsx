@@ -101,7 +101,7 @@ function VetDashboard() {
     { label: t('dashboard.statTodayAppts'),      value: stats.todayAppts,      icon: Calendar,      bg: 'bg-sky-50',     text: 'text-sky-700' },
     { label: t('dashboard.statPendingConsults'), value: stats.pendingConsults, icon: Video,         bg: 'bg-amber-50',   text: 'text-amber-700' },
     { label: t('dashboard.statUnreadMsgs'),      value: stats.unreadMsgs,      icon: MessageSquare, bg: 'bg-slate-100',  text: 'text-slate-700' },
-    { label: t('dashboard.statTotalPatients'),   value: stats.totalPatients,   icon: Users,         bg: 'bg-emerald-50', text: 'text-emerald-700' },
+    { label: t('dashboard.statTotalPatients'),   value: stats.totalPatients,   icon: Users,         bg: 'bg-emerald-50', text: 'text-emerald-700', path: '/patients' },
   ]
 
   return (
@@ -126,15 +126,22 @@ function VetDashboard() {
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {statCards.map(({ label, value, icon: Icon, bg, text }) => (
-            <div key={label} className={`${bg} rounded-2xl border border-white p-4 shadow-sm`}>
-              <div className="flex items-center justify-between mb-2 rtl:flex-row-reverse">
-                <Icon className={`w-5 h-5 ${text}`} />
-                <span className={`text-2xl font-bold ${text}`}>{value}</span>
+          {statCards.map(({ label, value, icon: Icon, bg, text, path }) => {
+            const clickable = Boolean(path)
+            return (
+              <div
+                key={label}
+                onClick={clickable ? () => navigate(path) : undefined}
+                className={`${bg} rounded-2xl border border-white p-4 shadow-sm ${clickable ? 'cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5' : ''}`}
+              >
+                <div className="flex items-center justify-between mb-2 rtl:flex-row-reverse">
+                  <Icon className={`w-5 h-5 ${text}`} />
+                  <span className={`text-2xl font-bold ${text}`}>{value}</span>
+                </div>
+                <p className="text-xs text-slate-600 font-medium rtl:text-right">{label}</p>
               </div>
-              <p className="text-xs text-slate-600 font-medium rtl:text-right">{label}</p>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* Search card */}

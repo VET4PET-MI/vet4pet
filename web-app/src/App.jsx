@@ -10,6 +10,7 @@ import Consultations    from './pages/Consultations'
 import VetScheduleSettings from './pages/VetScheduleSettings'
 import Settings         from './pages/Settings'
 import OwnerMyPets      from './pages/OwnerMyPets'
+import Patients         from './pages/Patients'
 import OwnerAppointments from './pages/OwnerAppointments'
 import BookAppointment  from './pages/BookAppointment'
 import EmergencyVets    from './pages/EmergencyVets'
@@ -48,6 +49,7 @@ export default function App() {
       <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
 
       {/* Vet-only routes */}
+      <Route path="/patients" element={<RoleRoute role="vet"><Patients /></RoleRoute>} />
       <Route path="/schedule" element={<RoleRoute role="vet"><Schedule /></RoleRoute>} />
       <Route path="/vet-schedule-settings" element={<RoleRoute role="vet"><VetScheduleSettings /></RoleRoute>} />
 

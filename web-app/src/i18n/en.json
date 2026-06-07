@@ -263,6 +263,15 @@
       "messageSub": "Send a message to your clinic"
     }
   },
+  "patientsList": {
+    "title": "Patients",
+    "subtitle": "All pets registered at the clinic",
+    "searchPlaceholder": "Search by pet name…",
+    "count_one": "{{count}} patient",
+    "count_other": "{{count}} patients",
+    "empty": "No patients registered yet",
+    "noMatch": "No patients match your search"
+  },
   "petProfile": {
     "title": "Pet Profile",
     "loading": "Loading profile…",

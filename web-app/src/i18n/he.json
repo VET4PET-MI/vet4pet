@@ -263,6 +263,15 @@
       "messageSub": "שליחת הודעה למרפאה"
     }
   },
+  "patientsList": {
+    "title": "מטופלים",
+    "subtitle": "כל החיות הרשומות במרפאה",
+    "searchPlaceholder": "חיפוש לפי שם חיה…",
+    "count_one": "מטופל אחד",
+    "count_other": "{{count}} מטופלים",
+    "empty": "אין מטופלים רשומים עדיין",
+    "noMatch": "לא נמצאו מטופלים שתואמים לחיפוש"
+  },
   "petProfile": {
     "title": "פרופיל חיה",
     "loading": "טוען פרופיל…",
