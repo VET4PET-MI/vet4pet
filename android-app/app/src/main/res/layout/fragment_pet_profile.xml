@@ -217,6 +217,75 @@
                         tools:text="Male" />
                 </LinearLayout>
 
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/slate_100" />
+
+                <!-- Weight -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:paddingVertical="12dp"
+                    android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/health_weight"
+                        android:textSize="13sp" android:textColor="@color/ink_muted" />
+                    <TextView android:id="@+id/tv_detail_weight"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="14sp" android:textColor="@color/ink" android:textStyle="bold"
+                        tools:text="4.5 kg" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Health summary card (vaccination) -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_health"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/surface">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="8dp">
+
+                <!-- Last vaccine -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:paddingVertical="12dp"
+                    android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/health_last_vaccine"
+                        android:textSize="13sp" android:textColor="@color/ink_muted" />
+                    <TextView android:id="@+id/tv_last_vaccine"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="14sp" android:textColor="@color/ink" android:textStyle="bold"
+                        tools:text="2025-01-15" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/slate_100" />
+
+                <!-- Next due -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:paddingVertical="12dp"
+                    android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/health_next_vaccine"
+                        android:textSize="13sp" android:textColor="@color/ink_muted" />
+                    <TextView android:id="@+id/tv_next_vaccine"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="14sp" android:textColor="@color/brand" android:textStyle="bold"
+                        tools:text="2026-01-15" />
+                </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

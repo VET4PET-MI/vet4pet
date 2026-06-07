@@ -74,10 +74,10 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updatePet(id: String, name: String, species: String, breed: String?, age: Int?,
-                  gender: String, onDone: (Boolean) -> Unit) {
+                  gender: String, weight: Double?, onDone: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {
-                api.updatePet(id, UpdatePetRequest(name, species, breed?.takeIf { it.isNotBlank() }, age, gender))
+                api.updatePet(id, UpdatePetRequest(name, species, breed?.takeIf { it.isNotBlank() }, age, gender, weight))
                 loadPets()
                 onDone(true)
             } catch (e: Exception) {
@@ -171,6 +171,22 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadNextPage() {
         if (_hasMore.value == true) loadRecords(currentPetId, types = currentTypes)
+    }
+
+    // ── Vaccination ───────────────────────────────────────────────────────
+
+    private val _lastVaccination = MutableLiveData<MedicalRecord?>(null)
+    val lastVaccination: LiveData<MedicalRecord?> = _lastVaccination
+
+    fun loadVaccination(petId: String) {
+        viewModelScope.launch {
+            try {
+                val page = api.getRecordsByPet(petId, 1, 0, "VACCINATION")
+                _lastVaccination.value = page.items.firstOrNull()?.toDomain()
+            } catch (e: Exception) {
+                _lastVaccination.value = null
+            }
+        }
     }
 
     fun addRecord(

@@ -1,15 +1,10 @@
 package com.vet4pet.app.ui.fragments
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +15,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.vet4pet.app.R
 import com.vet4pet.app.databinding.FragmentEmergencyVetsBinding
 import com.vet4pet.app.ui.adapters.EmergencyVetAdapter
@@ -34,6 +32,7 @@ class EmergencyVetsFragment : Fragment() {
 
     private var currentLat: Double? = null
     private var currentLng: Double? = null
+    private var cancellationSource = CancellationTokenSource()
 
     private val requestPermission = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -89,7 +88,6 @@ class EmergencyVetsFragment : Fragment() {
             }
         }
 
-        // Load immediately without location (shows all vets with coordinates)
         viewModel.loadVets()
     }
 
@@ -110,66 +108,37 @@ class EmergencyVetsFragment : Fragment() {
         binding.btnLocate.text      = getString(R.string.emergency_locating)
         binding.tvLocationError.isVisible = false
 
-        val lm = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        cancellationSource.cancel()
+        cancellationSource = CancellationTokenSource()
 
-        val listener = object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                lm.removeUpdates(this)
-                currentLat = location.latitude
-                currentLng = location.longitude
-                onLocationObtained(location)
-            }
-            @Deprecated("Deprecated in API 29")
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-        }
-
+        val fusedClient = LocationServices.getFusedLocationProviderClient(requireContext())
         try {
-            // Try GPS first, fall back to network
-            val provider = when {
-                lm.isProviderEnabled(LocationManager.GPS_PROVIDER)     -> LocationManager.GPS_PROVIDER
-                lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
-                else -> null
-            }
-            if (provider == null) {
+            fusedClient.getCurrentLocation(
+                Priority.PRIORITY_BALANCED_POWER_ACCURACY,
+                cancellationSource.token
+            ).addOnSuccessListener { location ->
+                if (_binding == null) return@addOnSuccessListener
                 resetLocateButton()
-                showLocationError(getString(R.string.emergency_location_unavailable))
-                return
-            }
-
-            // Use last known location if recent enough (< 60 seconds)
-            val last = lm.getLastKnownLocation(provider)
-            if (last != null && System.currentTimeMillis() - last.time < 60_000) {
-                lm.removeUpdates(listener)
-                currentLat = last.latitude
-                currentLng = last.longitude
-                onLocationObtained(last)
-                return
-            }
-
-            lm.requestLocationUpdates(provider, 0L, 0f, listener, Looper.getMainLooper())
-
-            // Timeout after 10s
-            binding.root.postDelayed({
-                lm.removeUpdates(listener)
-                if (currentLat == null) {
-                    resetLocateButton()
+                if (location != null) {
+                    currentLat = location.latitude
+                    currentLng = location.longitude
+                    binding.tvLocationError.isVisible   = false
+                    binding.layoutNoLocation.isVisible  = false
+                    binding.layoutHasLocation.isVisible = true
+                    binding.tvCoords.text = "%.4f, %.4f".format(location.latitude, location.longitude)
+                    viewModel.loadVets(location.latitude, location.longitude, binding.switchOnCall.isChecked)
+                } else {
                     showLocationError(getString(R.string.emergency_location_timeout))
                 }
-            }, 10_000)
-
+            }.addOnFailureListener {
+                if (_binding == null) return@addOnFailureListener
+                resetLocateButton()
+                showLocationError(getString(R.string.emergency_location_unavailable))
+            }
         } catch (e: SecurityException) {
             resetLocateButton()
             showLocationError(getString(R.string.emergency_location_denied))
         }
-    }
-
-    private fun onLocationObtained(location: Location) {
-        resetLocateButton()
-        binding.tvLocationError.isVisible   = false
-        binding.layoutNoLocation.isVisible  = false
-        binding.layoutHasLocation.isVisible = true
-        binding.tvCoords.text = "%.4f, %.4f".format(location.latitude, location.longitude)
-        viewModel.loadVets(location.latitude, location.longitude, binding.switchOnCall.isChecked)
     }
 
     private fun resetLocateButton() {
@@ -183,6 +152,7 @@ class EmergencyVetsFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        cancellationSource.cancel()
         super.onDestroyView()
         _binding = null
     }

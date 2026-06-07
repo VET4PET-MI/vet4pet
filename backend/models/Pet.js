@@ -8,6 +8,7 @@ const petSchema = new mongoose.Schema(
     age:      { type: Number },
     gender:   { type: String },
     ownerId:         { type: String },
+    weight:          { type: Number, default: null },
     profileImageUrl: { type: String, default: null },
   },
   { timestamps: true }

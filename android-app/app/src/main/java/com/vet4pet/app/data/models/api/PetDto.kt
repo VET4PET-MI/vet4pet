@@ -13,6 +13,7 @@ data class PetDto(
     val age: Int?,
     val gender: String?,
     val ownerId: String?,
+    val weight: Double?,
     val profileImageUrl: String?,
     val createdAt: String?
 ) {
@@ -22,14 +23,13 @@ data class PetDto(
         name       = name,
         species    = species ?: "Unknown",
         breed      = breed,
-        // Approximate dateOfBirth from age in years
         dateOfBirth = age?.takeIf { it >= 0 }?.let {
             System.currentTimeMillis() - (it * 365.25 * 24 * 3600 * 1000L).toLong()
         },
         gender     = Gender.entries.firstOrNull {
             it.name.equals(gender, ignoreCase = true)
         } ?: Gender.UNKNOWN,
-        weight     = null,
+        weight     = weight,
         profileImageUrl = profileImageUrl,
         createdAt  = createdAt?.let { runCatching { Instant.parse(it).toEpochMilli() }.getOrDefault(0L) } ?: 0L
     )
@@ -48,5 +48,6 @@ data class UpdatePetRequest(
     val species: String,
     val breed: String?,
     val age: Int?,
-    val gender: String
+    val gender: String,
+    val weight: Double? = null
 )

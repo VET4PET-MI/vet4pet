@@ -73,6 +73,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="@string/pet_gender_hint"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
             <AutoCompleteTextView
@@ -80,6 +81,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Weight (kg) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/pet_weight_hint"
+            style="@style/Vet4Pet.TextInputLayout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_pet_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:imeOptions="actionDone" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

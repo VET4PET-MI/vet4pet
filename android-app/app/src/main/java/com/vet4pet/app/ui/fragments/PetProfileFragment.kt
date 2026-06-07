@@ -25,10 +25,14 @@ import com.vet4pet.app.databinding.FragmentPetProfileBinding
 import com.vet4pet.app.ui.viewmodels.PetsViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
 import com.vet4pet.app.util.speciesStringRes
+import com.vet4pet.app.data.local.PetHealthCache
+import com.vet4pet.app.data.models.MedicalRecord
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class PetProfileFragment : Fragment() {
 
@@ -42,6 +46,7 @@ class PetProfileFragment : Fragment() {
     private var petBreed    = ""
     private var petGender   = "UNKNOWN"
     private var petDob      = 0L
+    private var petWeight: Double? = null
     private var petPhotoUrl = ""
 
     private val speciesApiValues = listOf("Dog", "Cat", "Bird", "Rabbit", "Hamster", "Fish", "Reptile", "Other")
@@ -107,13 +112,23 @@ class PetProfileFragment : Fragment() {
                 petBreed    = updated.breed ?: ""
                 petGender   = updated.gender.name
                 petDob      = updated.dateOfBirth ?: 0L
+                petWeight   = updated.weight
                 petPhotoUrl = updated.profileImageUrl ?: ""
                 renderDetails()
             }
         }
 
+        viewModel.lastVaccination.observe(viewLifecycleOwner) { record ->
+            if (_binding == null) return@observe
+            renderVaccination(record)
+            if (record != null) {
+                PetHealthCache(requireContext()).setLastVaccination(petId, petName, record.date)
+            }
+        }
+
         renderDetails()
         viewModel.loadPets()
+        viewModel.loadVaccination(petId)
     }
 
     private fun renderDetails() {
@@ -131,6 +146,8 @@ class PetProfileFragment : Fragment() {
         binding.tvDetailBreed.text    = petBreed.takeIf { it.isNotBlank() } ?: getString(R.string.age_unknown)
         binding.tvDetailAge.text      = if (petDob > 0) formatAge(petDob) else getString(R.string.age_unknown)
         binding.tvDetailGender.text   = genderLabel
+        binding.tvDetailWeight.text   = petWeight?.let { getString(R.string.pet_weight_format, it) }
+            ?: getString(R.string.age_unknown)
 
         if (petPhotoUrl.isNotBlank()) {
             binding.imgPetPhoto.load(petPhotoUrl) {
@@ -200,6 +217,7 @@ class PetProfileFragment : Fragment() {
         val etBreed   = dialogView.findViewById<TextInputEditText>(R.id.et_pet_breed)
         val etAge     = dialogView.findViewById<TextInputEditText>(R.id.et_pet_age)
         val acGender  = dialogView.findViewById<AutoCompleteTextView>(R.id.ac_gender)
+        val etWeight  = dialogView.findViewById<TextInputEditText>(R.id.et_pet_weight)
 
         acSpecies.setAdapter(
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, speciesLabels)
@@ -225,6 +243,7 @@ class PetProfileFragment : Fragment() {
         }
         val gIdx = genders.indexOfFirst { it.equals(petGender, ignoreCase = true) }
         if (gIdx >= 0) acGender.setText(genderLabels[gIdx], false)
+        petWeight?.let { etWeight.setText(it.toString()) }
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.edit_pet_title)
@@ -243,12 +262,13 @@ class PetProfileFragment : Fragment() {
                 val age    = etAge.text?.toString()?.toIntOrNull()
                 val gLabel = acGender.text?.toString()?.trim()
                 val gender = genders.getOrNull(genderLabels.indexOf(gLabel)) ?: "UNKNOWN"
+                val weight = etWeight.text?.toString()?.toDoubleOrNull()
 
                 if (name.isBlank()) {
                     Toast.makeText(requireContext(), R.string.pet_name_required, Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
-                viewModel.updatePet(petId, name, sp, breed, age, gender) { success ->
+                viewModel.updatePet(petId, name, sp, breed, age, gender, weight) { success ->
                     if (!success) Toast.makeText(requireContext(), R.string.error_save_failed, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -259,6 +279,24 @@ class PetProfileFragment : Fragment() {
             WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
         )
+    }
+
+    private fun renderVaccination(record: MedicalRecord?) {
+        val df = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+        if (record == null) {
+            val none = getString(R.string.health_no_vaccine)
+            binding.tvLastVaccine.text = none
+            binding.tvNextVaccine.text = none
+            binding.tvNextVaccine.setTextColor(requireContext().getColor(R.color.ink_muted))
+            return
+        }
+        val lastDate = Instant.ofEpochMilli(record.date).atZone(ZoneId.systemDefault()).toLocalDate()
+        val nextDate = lastDate.plusYears(1)
+        binding.tvLastVaccine.text = lastDate.format(df)
+        binding.tvNextVaccine.text = nextDate.format(df)
+        val overdueColor = requireContext().getColor(android.R.color.holo_red_light)
+        val okColor      = requireContext().getColor(R.color.brand)
+        binding.tvNextVaccine.setTextColor(if (nextDate.isBefore(LocalDate.now())) overdueColor else okColor)
     }
 
     private fun formatAge(epochMs: Long): String {

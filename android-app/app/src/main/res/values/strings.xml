@@ -113,6 +113,14 @@
     <string name="pet_breed_hint">Breed (optional)</string>
     <string name="pet_age_hint">Age (years)</string>
     <string name="pet_gender_hint">Gender</string>
+    <string name="pet_weight_hint">Weight (kg)</string>
+    <string name="pet_weight_format">%.1f kg</string>
+    <string name="health_last_vaccine">Last vaccine</string>
+    <string name="health_next_vaccine">Next due</string>
+    <string name="health_no_vaccine">No vaccination on record</string>
+    <string name="health_weight">Weight</string>
+    <string name="vacc_reminder_title">Vaccination reminder</string>
+    <string name="vacc_reminder_body">%s may be due for their annual vaccination</string>
     <string name="pet_name_required">Pet name is required</string>
     <string name="pet_species_required">Please select a species from the list</string>
     <!-- Medical records -->

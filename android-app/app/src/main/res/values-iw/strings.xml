@@ -114,6 +114,14 @@
     <string name="pet_breed_hint">גזע (אופציונלי)</string>
     <string name="pet_age_hint">גיל (שנים)</string>
     <string name="pet_gender_hint">מגדר</string>
+    <string name="pet_weight_hint">משקל (ק"ג)</string>
+    <string name="pet_weight_format">%.1f ק"ג</string>
+    <string name="health_last_vaccine">חיסון אחרון</string>
+    <string name="health_next_vaccine">מועד הבא</string>
+    <string name="health_no_vaccine">אין רישום חיסון</string>
+    <string name="health_weight">משקל</string>
+    <string name="vacc_reminder_title">תזכורת חיסון</string>
+    <string name="vacc_reminder_body">%s עשוי/ה להיות זקוק/ה לחיסון שנתי</string>
     <string name="pet_name_required">שם החיה נדרש</string>
     <string name="pet_species_required">אנא בחר מין מהרשימה</string>
 
