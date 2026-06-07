@@ -70,7 +70,10 @@ export default function AppLayout({ title, subtitle, actions, children }) {
       {/* ── Sidebar ────────────────────────────────────────────────────── */}
       <aside className={[
         'fixed top-0 start-0 h-full w-64 bg-white border-e border-slate-200 z-30 flex flex-col transition-transform duration-300',
-        open ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full',
+        // Slide animation only on mobile (max-lg); on desktop the sidebar is
+        // always static & visible. Scoping to max-lg keeps the rtl: variant from
+        // out-specificity-ing lg:translate-x-0 and hiding the desktop sidebar.
+        open ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-full max-lg:rtl:translate-x-full',
         'lg:static lg:translate-x-0',
       ].join(' ')}>
 
