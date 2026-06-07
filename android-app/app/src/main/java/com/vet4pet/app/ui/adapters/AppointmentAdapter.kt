@@ -19,7 +19,7 @@ sealed class ApptListItem {
 }
 
 class AppointmentAdapter(
-    private val onCancel: (Appointment) -> Unit
+    private val onItemClick: (Appointment) -> Unit
 ) : ListAdapter<ApptListItem, RecyclerView.ViewHolder>(DiffCallback) {
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
@@ -101,13 +101,7 @@ class AppointmentAdapter(
             val alpha = if (appt.status == "cancelled" || appt.status == "completed") 0.4f else 1f
             itemView.alpha = alpha
 
-            // Long-press to cancel (only booked/confirmed)
-            itemView.setOnLongClickListener {
-                if (appt.status == "booked" || appt.status == "confirmed") {
-                    onCancel(appt)
-                    true
-                } else false
-            }
+            itemView.setOnClickListener { onItemClick(appt) }
         }
     }
 

@@ -56,6 +56,8 @@
     <string name="appointments_empty">No appointments yet. Tap + to book one.</string>
     <string name="appts_upcoming">Upcoming</string>
     <string name="appts_past">Past &amp; Cancelled</string>
+    <string name="appt_details">Appointment Details</string>
+    <string name="action_close">Close</string>
     <string name="cancel_appointment_title">Cancel Appointment</string>
     <string name="cancel_appointment_message">Are you sure you want to cancel this appointment?</string>
     <string name="action_confirm_cancel">Yes, Cancel</string>

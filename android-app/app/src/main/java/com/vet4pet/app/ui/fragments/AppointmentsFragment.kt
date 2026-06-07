@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vet4pet.app.R
+import com.vet4pet.app.data.models.Appointment
+import com.vet4pet.app.ui.adapters.toTypeStringRes
 import java.time.LocalDate
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.databinding.FragmentAppointmentsBinding
@@ -32,18 +34,7 @@ class AppointmentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = AppointmentAdapter { appt ->
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.cancel_appointment_title)
-                .setMessage(R.string.cancel_appointment_message)
-                .setNegativeButton(R.string.action_cancel, null)
-                .setPositiveButton(R.string.action_confirm_cancel) { _, _ ->
-                    viewModel.cancelAppointment(appt.id) { success ->
-                        if (!success) showError(getString(R.string.error_save_failed))
-                    }
-                }
-                .show()
-        }
+        val adapter = AppointmentAdapter { appt -> showAppointmentDialog(appt) }
 
         binding.rvAppointments.adapter = adapter
 
@@ -90,6 +81,41 @@ class AppointmentsFragment : Fragment() {
                 past.forEach { add(ApptListItem.Item(it)) }
             }
         }
+    }
+
+    private fun showAppointmentDialog(appt: Appointment) {
+        val typeLabel = getString(appt.type.toTypeStringRes())
+        val details = buildString {
+            appendLine("${getString(R.string.book_review_pet)}: ${appt.petName}")
+            appendLine("${getString(R.string.book_type_label)}: $typeLabel")
+            appendLine("${getString(R.string.book_review_date)}: ${appt.date}")
+            appendLine("${getString(R.string.book_review_time)}: ${appt.time}")
+            if (appt.vetName.isNotBlank()) appendLine("${getString(R.string.book_review_vet)}: Dr. ${appt.vetName}")
+            if (appt.notes.isNotBlank()) append("Notes: ${appt.notes}")
+        }.trimEnd()
+
+        val canCancel = appt.status == "booked" || appt.status == "confirmed"
+        val builder = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.appt_details)
+            .setMessage(details)
+            .setPositiveButton(R.string.action_close, null)
+
+        if (canCancel) {
+            builder.setNegativeButton(R.string.cancel_appointment_title) { _, _ ->
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.cancel_appointment_title)
+                    .setMessage(R.string.cancel_appointment_message)
+                    .setNegativeButton(R.string.action_cancel, null)
+                    .setPositiveButton(R.string.action_confirm_cancel) { _, _ ->
+                        viewModel.cancelAppointment(appt.id) { success ->
+                            if (!success) showError(getString(R.string.error_save_failed))
+                        }
+                    }
+                    .show()
+            }
+        }
+
+        builder.show()
     }
 
     private fun showError(msg: String) {
