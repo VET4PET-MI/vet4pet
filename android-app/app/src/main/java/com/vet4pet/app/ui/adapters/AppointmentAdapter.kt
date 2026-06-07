@@ -50,6 +50,8 @@ class AppointmentAdapter(
 
     inner class ItemVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        private var lastClickMs = 0L
+
         private val tvMonth:   TextView = itemView.findViewById(R.id.tv_month)
         private val tvDay:     TextView = itemView.findViewById(R.id.tv_day)
         private val tvTime:    TextView = itemView.findViewById(R.id.tv_time)
@@ -101,7 +103,13 @@ class AppointmentAdapter(
             val alpha = if (appt.status == "cancelled" || appt.status == "completed") 0.4f else 1f
             itemView.alpha = alpha
 
-            itemView.setOnClickListener { onItemClick(appt) }
+            itemView.setOnClickListener {
+                val now = System.currentTimeMillis()
+                if (now - lastClickMs > 600L) {
+                    lastClickMs = now
+                    onItemClick(appt)
+                }
+            }
         }
     }
 

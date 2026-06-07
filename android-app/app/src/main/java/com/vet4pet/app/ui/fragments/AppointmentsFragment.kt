@@ -13,6 +13,8 @@ import com.vet4pet.app.R
 import com.vet4pet.app.data.models.Appointment
 import com.vet4pet.app.ui.adapters.toTypeStringRes
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.databinding.FragmentAppointmentsBinding
 import com.vet4pet.app.ui.adapters.ApptListItem
@@ -57,13 +59,25 @@ class AppointmentsFragment : Fragment() {
         }
 
         viewModel.loadAppointments()
+
+        // Reload list when returning from reschedule screen
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Boolean>("rescheduled")
+            ?.observe(viewLifecycleOwner) { rescheduled ->
+                if (rescheduled == true) {
+                    findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>("rescheduled")
+                    viewModel.loadAppointments()
+                }
+            }
     }
 
     private fun buildSectionedList(appts: List<com.vet4pet.app.data.models.Appointment>): List<ApptListItem> {
-        val today = LocalDate.now()
-        fun isPast(a: com.vet4pet.app.data.models.Appointment) =
-            a.status == "cancelled" || a.status == "completed" ||
-            runCatching { LocalDate.parse(a.date) }.getOrNull()?.isBefore(today) == true
+        fun isPast(a: com.vet4pet.app.data.models.Appointment): Boolean {
+            if (a.status == "cancelled" || a.status == "completed") return true
+            return runCatching {
+                LocalDateTime.of(LocalDate.parse(a.date), LocalTime.parse(a.time))
+            }.getOrNull()?.isBefore(LocalDateTime.now()) ?: false
+        }
 
         val (pastList, upcomingList) = appts.partition { isPast(it) }
         val upcoming = upcomingList.sortedWith(compareBy({ it.date }, { it.time }))
@@ -101,6 +115,13 @@ class AppointmentsFragment : Fragment() {
             .setPositiveButton(R.string.action_close, null)
 
         if (canCancel) {
+            builder.setNeutralButton(R.string.reschedule_action) { _, _ ->
+                val bundle = Bundle().apply { putParcelable("appointment", appt) }
+                findNavController().navigate(
+                    R.id.action_appointmentsFragment_to_rescheduleAppointmentFragment,
+                    bundle
+                )
+            }
             builder.setNegativeButton(R.string.cancel_appointment_title) { _, _ ->
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.cancel_appointment_title)

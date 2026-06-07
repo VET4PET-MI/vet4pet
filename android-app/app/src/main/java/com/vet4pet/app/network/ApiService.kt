@@ -111,6 +111,12 @@ interface ApiService {
     @PATCH("api/appointments/{id}/cancel")
     suspend fun cancelAppointment(@Path("id") id: String): AppointmentDto
 
+    @PATCH("api/appointments/{id}/reschedule")
+    suspend fun rescheduleAppointment(
+        @Path("id") id: String,
+        @Body body: Map<String, String>
+    ): AppointmentDto
+
     @GET("api/appointments/available-slots")
     suspend fun getAvailableSlots(
         @Query("date") date: String,

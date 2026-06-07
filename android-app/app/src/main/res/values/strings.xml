@@ -58,6 +58,11 @@
     <string name="appts_past">Past &amp; Cancelled</string>
     <string name="appt_details">Appointment Details</string>
     <string name="action_close">Close</string>
+    <string name="reschedule_title">Reschedule Appointment</string>
+    <string name="reschedule_pick_date">Pick a new date</string>
+    <string name="reschedule_confirm">Confirm Reschedule</string>
+    <string name="reschedule_action">Reschedule</string>
+    <string name="reschedule_success">Appointment rescheduled!</string>
     <string name="cancel_appointment_title">Cancel Appointment</string>
     <string name="cancel_appointment_message">Are you sure you want to cancel this appointment?</string>
     <string name="action_confirm_cancel">Yes, Cancel</string>

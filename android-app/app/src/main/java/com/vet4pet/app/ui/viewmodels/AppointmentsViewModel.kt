@@ -56,6 +56,18 @@ class AppointmentsViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun rescheduleAppointment(id: String, date: String, time: String, onDone: (Boolean, String?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                api.rescheduleAppointment(id, mapOf("date" to date, "time" to time))
+                loadAppointments()
+                onDone(true, null)
+            } catch (e: Exception) {
+                onDone(false, e.toUserMessage())
+            }
+        }
+    }
+
     // ── Booking wizard ────────────────────────────────────────────────────
 
     private val _vets = MutableLiveData<UiState<List<VetDto>>>(UiState.Idle)

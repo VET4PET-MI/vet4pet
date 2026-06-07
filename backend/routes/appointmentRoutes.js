@@ -10,6 +10,7 @@ router.get('/',             controller.getAppointments);        // both; owner-s
 router.get('/:id',          controller.getAppointmentById);     // both
 router.post('/',            controller.createAppointment);      // both; role-aware in controller
 router.put('/:id',          requireRole('vet'), controller.updateAppointment);
-router.patch('/:id/cancel', controller.cancelAppointment);      // both; ownership check in controller
+router.patch('/:id/cancel',     controller.cancelAppointment);      // both; ownership check in controller
+router.patch('/:id/reschedule', controller.rescheduleAppointment);  // both; ownership check in controller
 
 module.exports = router;

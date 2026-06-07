@@ -224,6 +224,38 @@ async function cancelAppointment(req, res) {
   }
 }
 
+async function rescheduleAppointment(req, res) {
+  try {
+    const appt = await Appointment.findById(req.params.id);
+    if (!appt) return res.status(404).json({ message: 'Appointment not found.' });
+
+    if (req.user.role === 'owner' && String(appt.ownerId) !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden.' });
+    }
+
+    const { date, time } = req.body;
+    if (!date || !time) {
+      return res.status(400).json({ message: 'date and time are required.' });
+    }
+
+    const { date: todayIL, minutes: nowMins } = nowInIsrael();
+    const apptDate = String(date).slice(0, 10);
+    const apptMins = timeToMins(time);
+    if (apptDate < todayIL || (apptDate === todayIL && apptMins <= nowMins)) {
+      return res.status(400).json({ message: 'Cannot reschedule to a past time.' });
+    }
+
+    appt.date = date;
+    appt.time = time;
+    await appt.save();
+
+    res.json(appt);
+  } catch (err) {
+    console.error('[Appointment] rescheduleAppointment error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
+}
+
 // ── getAvailableSlots ──────────────────────────────────────────────────────────
 //
 // Respects VetSchedule if vetId is supplied. Falls back to 08:00-18:00 Mon-Fri.
@@ -293,5 +325,6 @@ module.exports = {
   createAppointment,
   updateAppointment,
   cancelAppointment,
+  rescheduleAppointment,
   getAvailableSlots,
 };

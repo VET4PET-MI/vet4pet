@@ -80,7 +80,16 @@
         <action
             android:id="@+id/action_appointmentsFragment_to_bookAppointmentFragment"
             app:destination="@id/bookAppointmentFragment" />
+        <action
+            android:id="@+id/action_appointmentsFragment_to_rescheduleAppointmentFragment"
+            app:destination="@id/rescheduleAppointmentFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/rescheduleAppointmentFragment"
+        android:name="com.vet4pet.app.ui.fragments.RescheduleAppointmentFragment"
+        android:label="@string/reschedule_title"
+        tools:layout="@layout/fragment_reschedule_appointment" />
 
     <fragment
         android:id="@+id/bookAppointmentFragment"
