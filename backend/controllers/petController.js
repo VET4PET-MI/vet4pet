@@ -59,11 +59,33 @@ async function addPet(req, res) {
 
 async function updatePet(req, res) {
   try {
-    const pet = await Pet.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const pet = await Pet.findById(req.params.id);
     if (!pet) return res.status(404).json({ message: 'Pet not found' });
-    res.json(pet);
+    if (req.user.role === 'owner' && pet.ownerId !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden.' });
+    }
+    const updated = await Pet.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    res.json(updated);
   } catch (err) {
     console.error('[Pet] updatePet error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
+}
+
+async function uploadPetPhoto(req, res) {
+  try {
+    const pet = await Pet.findById(req.params.id);
+    if (!pet) return res.status(404).json({ message: 'Pet not found' });
+    if (req.user.role === 'owner' && pet.ownerId !== req.user.id) {
+      return res.status(403).json({ message: 'Forbidden.' });
+    }
+    if (!req.file) return res.status(400).json({ message: 'No file received.' });
+    pet.profileImageUrl = req.file.path;
+    await pet.save();
+    console.log('[Pet] photo uploaded:', pet._id, req.file.path);
+    res.json(pet);
+  } catch (err) {
+    console.error('[Pet] uploadPetPhoto error:', err.message);
     res.status(500).json({ message: err.message });
   }
 }
@@ -98,4 +120,4 @@ async function updatePetImage(req, res) {
   }
 }
 
-module.exports = { getPets, getPetById, addPet, updatePet, deletePet, updatePetImage };
+module.exports = { getPets, getPetById, addPet, updatePet, deletePet, updatePetImage, uploadPetPhoto };

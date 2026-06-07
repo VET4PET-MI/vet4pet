@@ -73,6 +73,13 @@ interface ApiService {
         @Body body: Map<String, String?>
     ): PetDto
 
+    @Multipart
+    @POST("api/pets/{id}/photo")
+    suspend fun uploadPetPhoto(
+        @Path("id") id: String,
+        @Part file: MultipartBody.Part
+    ): PetDto
+
     // ── Medical Records ───────────────────────────────────────────────────
     @GET("api/records/pet/{petId}")
     suspend fun getRecordsByPet(

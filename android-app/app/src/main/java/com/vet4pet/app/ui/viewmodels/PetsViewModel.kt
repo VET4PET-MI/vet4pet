@@ -100,9 +100,8 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
                     "file", file.name,
                     file.asRequestBody(mime.toMediaTypeOrNull())
                 )
-                val uploadResp = api.uploadFile(part)
+                api.uploadPetPhoto(petId, part)
                 file.delete()
-                api.updatePetImage(petId, mapOf("profileImageUrl" to uploadResp.url))
                 loadPets()
                 onDone(true, null)
             } catch (e: Exception) {
