@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.R as MaterialR
 import com.vet4pet.app.R
 import com.vet4pet.app.data.enums.EventType
 import com.vet4pet.app.data.models.MedicalRecord
@@ -107,49 +108,49 @@ private fun EventType.toDisplayInfo(): TypeDisplayInfo = when (this) {
     EventType.VISIT_SUMMARY -> TypeDisplayInfo(
         iconRes = R.drawable.ic_medical_cross,
         labelRes = R.string.record_type_visit,
-        containerAttr = com.google.android.material.R.attr.colorPrimaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnPrimaryContainer
+        containerAttr = MaterialR.attr.colorPrimaryContainer,
+        onContainerAttr = MaterialR.attr.colorOnPrimaryContainer
     )
     EventType.VACCINATION -> TypeDisplayInfo(
         iconRes = R.drawable.ic_nav_appointments,
         labelRes = R.string.record_type_vaccination,
-        containerAttr = com.google.android.material.R.attr.colorTertiaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnTertiaryContainer
+        containerAttr = MaterialR.attr.colorTertiaryContainer,
+        onContainerAttr = MaterialR.attr.colorOnTertiaryContainer
     )
     EventType.LAB_RESULT -> TypeDisplayInfo(
         iconRes = R.drawable.ic_quick_records,
         labelRes = R.string.record_type_lab,
-        containerAttr = com.google.android.material.R.attr.colorSecondaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnSecondaryContainer
+        containerAttr = MaterialR.attr.colorSecondaryContainer,
+        onContainerAttr = MaterialR.attr.colorOnSecondaryContainer
     )
     EventType.XRAY -> TypeDisplayInfo(
         iconRes = R.drawable.ic_quick_records,
         labelRes = R.string.record_type_xray,
-        containerAttr = com.google.android.material.R.attr.colorSecondaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnSecondaryContainer
+        containerAttr = MaterialR.attr.colorSecondaryContainer,
+        onContainerAttr = MaterialR.attr.colorOnSecondaryContainer
     )
     EventType.BLOOD_TEST -> TypeDisplayInfo(
         iconRes = R.drawable.ic_quick_records,
         labelRes = R.string.record_type_blood_test,
-        containerAttr = com.google.android.material.R.attr.colorErrorContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnErrorContainer
+        containerAttr = MaterialR.attr.colorErrorContainer,
+        onContainerAttr = MaterialR.attr.colorOnErrorContainer
     )
     EventType.CONSULTATION -> TypeDisplayInfo(
         iconRes = R.drawable.ic_quick_consult,
         labelRes = R.string.record_type_consultation,
-        containerAttr = com.google.android.material.R.attr.colorTertiaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnTertiaryContainer
+        containerAttr = MaterialR.attr.colorTertiaryContainer,
+        onContainerAttr = MaterialR.attr.colorOnTertiaryContainer
     )
     EventType.PRESCRIPTION -> TypeDisplayInfo(
         iconRes = R.drawable.ic_medical_cross,
         labelRes = R.string.record_type_prescription,
-        containerAttr = com.google.android.material.R.attr.colorSecondaryContainer,
-        onContainerAttr = com.google.android.material.R.attr.colorOnSecondaryContainer
+        containerAttr = MaterialR.attr.colorSecondaryContainer,
+        onContainerAttr = MaterialR.attr.colorOnSecondaryContainer
     )
     EventType.OTHER -> TypeDisplayInfo(
         iconRes = R.drawable.ic_medical_cross,
         labelRes = R.string.record_type_other,
-        containerAttr = com.google.android.material.R.attr.colorSurfaceVariant,
-        onContainerAttr = com.google.android.material.R.attr.colorOnSurfaceVariant
+        containerAttr = MaterialR.attr.colorSurfaceVariant,
+        onContainerAttr = MaterialR.attr.colorOnSurfaceVariant
     )
 }

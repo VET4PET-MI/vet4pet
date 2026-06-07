@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.R as MaterialR
 import com.vet4pet.app.R
 import com.vet4pet.app.data.enums.EventType
 import com.vet4pet.app.data.models.MedicalRecord
@@ -133,42 +134,42 @@ private data class DetailTypeInfo(
 private fun EventType.toDetailInfo(): DetailTypeInfo = when (this) {
     EventType.VISIT_SUMMARY -> DetailTypeInfo(
         R.drawable.ic_medical_cross, R.string.record_type_visit,
-        com.google.android.material.R.attr.colorPrimaryContainer,
-        com.google.android.material.R.attr.colorOnPrimaryContainer
+        MaterialR.attr.colorPrimaryContainer,
+        MaterialR.attr.colorOnPrimaryContainer
     )
     EventType.VACCINATION -> DetailTypeInfo(
         R.drawable.ic_nav_appointments, R.string.record_type_vaccination,
-        com.google.android.material.R.attr.colorTertiaryContainer,
-        com.google.android.material.R.attr.colorOnTertiaryContainer
+        MaterialR.attr.colorTertiaryContainer,
+        MaterialR.attr.colorOnTertiaryContainer
     )
     EventType.LAB_RESULT -> DetailTypeInfo(
         R.drawable.ic_quick_records, R.string.record_type_lab,
-        com.google.android.material.R.attr.colorSecondaryContainer,
-        com.google.android.material.R.attr.colorOnSecondaryContainer
+        MaterialR.attr.colorSecondaryContainer,
+        MaterialR.attr.colorOnSecondaryContainer
     )
     EventType.XRAY -> DetailTypeInfo(
         R.drawable.ic_quick_records, R.string.record_type_xray,
-        com.google.android.material.R.attr.colorSecondaryContainer,
-        com.google.android.material.R.attr.colorOnSecondaryContainer
+        MaterialR.attr.colorSecondaryContainer,
+        MaterialR.attr.colorOnSecondaryContainer
     )
     EventType.BLOOD_TEST -> DetailTypeInfo(
         R.drawable.ic_quick_records, R.string.record_type_blood_test,
-        com.google.android.material.R.attr.colorErrorContainer,
-        com.google.android.material.R.attr.colorOnErrorContainer
+        MaterialR.attr.colorErrorContainer,
+        MaterialR.attr.colorOnErrorContainer
     )
     EventType.CONSULTATION -> DetailTypeInfo(
         R.drawable.ic_quick_consult, R.string.record_type_consultation,
-        com.google.android.material.R.attr.colorTertiaryContainer,
-        com.google.android.material.R.attr.colorOnTertiaryContainer
+        MaterialR.attr.colorTertiaryContainer,
+        MaterialR.attr.colorOnTertiaryContainer
     )
     EventType.PRESCRIPTION -> DetailTypeInfo(
         R.drawable.ic_medical_cross, R.string.record_type_prescription,
-        com.google.android.material.R.attr.colorSecondaryContainer,
-        com.google.android.material.R.attr.colorOnSecondaryContainer
+        MaterialR.attr.colorSecondaryContainer,
+        MaterialR.attr.colorOnSecondaryContainer
     )
     EventType.OTHER -> DetailTypeInfo(
         R.drawable.ic_medical_cross, R.string.record_type_other,
-        com.google.android.material.R.attr.colorSurfaceVariant,
-        com.google.android.material.R.attr.colorOnSurfaceVariant
+        MaterialR.attr.colorSurfaceVariant,
+        MaterialR.attr.colorOnSurfaceVariant
     )
 }
