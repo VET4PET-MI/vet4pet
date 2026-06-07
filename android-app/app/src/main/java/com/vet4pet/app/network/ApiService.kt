@@ -125,6 +125,9 @@ interface ApiService {
     @PATCH("api/users/me")
     suspend fun updateMe(@Body request: UpdateProfileRequest): UserProfileDto
 
+    @PUT("api/users/me/fcm-token")
+    suspend fun updateFcmToken(@Body body: Map<String, String>): Map<String, Boolean>
+
     // ── Vets ──────────────────────────────────────────────────────────────
     @GET("api/users/vets")
     suspend fun getVets(): List<VetDto>

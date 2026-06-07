@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema(
     lat:        { type: Number, default: null },
     lng:        { type: Number, default: null },
     isOnCall:   { type: Boolean, default: false },
+    fcmToken:   { type: String, default: null },
   },
   { timestamps: true }
 );

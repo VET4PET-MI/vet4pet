@@ -1,4 +1,6 @@
 const Notification = require('../models/Notification');
+const User         = require('../models/User');
+const { sendPush } = require('../utils/fcm');
 
 async function list(req, res) {
   try {
@@ -58,7 +60,12 @@ async function remove(req, res) {
 async function create({ recipientId, type, params = {}, link = null }) {
   if (!recipientId) return null;
   try {
-    return await Notification.create({ recipientId, type, params, link });
+    const notification = await Notification.create({ recipientId, type, params, link });
+    // Fire-and-forget push notification
+    User.findById(recipientId).select('fcmToken').then(user => {
+      if (user?.fcmToken) sendPush(user.fcmToken, type, params, link);
+    }).catch(() => {});
+    return notification;
   } catch (err) {
     console.error('[Notification] create failed:', err.message);
     return null;

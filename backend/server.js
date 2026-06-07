@@ -7,6 +7,7 @@ const connectDB       = require('./config/db');
 const { requireAuth } = require('./middleware/auth');
 
 dotenv.config();
+require('./utils/fcm').initFirebase();
 
 // Ensure uploads directory exists on startup
 const uploadsDir = path.join(__dirname, 'uploads');

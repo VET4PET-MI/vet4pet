@@ -93,4 +93,15 @@ async function getMe(req, res) {
   }
 }
 
-module.exports = { getVets, getNearbyVets, updateMe, getMe };
+async function updateFcmToken(req, res) {
+  try {
+    const { fcmToken } = req.body;
+    await User.findByIdAndUpdate(req.user.id, { fcmToken: fcmToken || null });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[User] updateFcmToken error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { getVets, getNearbyVets, updateMe, getMe, updateFcmToken };

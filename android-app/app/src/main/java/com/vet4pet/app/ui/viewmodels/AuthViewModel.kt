@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.messaging.FirebaseMessaging
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.data.models.LoginRequest
 import com.vet4pet.app.data.models.RegisterRequest
@@ -39,6 +40,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val response = api.login(LoginRequest(email.trim(), password))
                 session.saveSession(response.token, response.user)
+                uploadFcmToken()
                 _state.value = AuthState.Success
             } catch (e: HttpException) {
                 val msg = e.response()?.errorBody()?.string()
@@ -86,6 +88,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val normalizedId = if (role == "owner") IsraeliIdValidator.validate(nationalId) else null
                 val response = api.register(RegisterRequest(name.trim(), email.trim(), password, role, normalizedId))
                 session.saveSession(response.token, response.user)
+                uploadFcmToken()
                 _state.value = AuthState.Success
             } catch (e: HttpException) {
                 val msg = e.response()?.errorBody()?.string()
@@ -101,6 +104,15 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun resetState() { _state.value = AuthState.Idle }
+
+    private fun uploadFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            viewModelScope.launch {
+                try { api.updateFcmToken(mapOf("fcmToken" to token)) }
+                catch (_: Exception) { /* non-critical */ }
+            }
+        }
+    }
 
     private fun parseErrorMessage(body: String): String? =
         Regex("\"message\"\\s*:\\s*\"([^\"]+)\"").find(body)?.groupValues?.get(1)
