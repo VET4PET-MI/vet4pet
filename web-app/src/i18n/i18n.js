@@ -7,7 +7,10 @@ import en from './en.json'
 const RTL_LANGS = ['he', 'ar']
 
 function applyDirection(lang) {
-  const dir = RTL_LANGS.includes(lang) ? 'rtl' : 'ltr'
+  // lang may include a region subtag (e.g. 'he-IL' from a phone's navigator),
+  // so match on the base language, consistent with the startsWith('he') checks
+  // used elsewhere in the app.
+  const dir = RTL_LANGS.some((l) => lang?.startsWith(l)) ? 'rtl' : 'ltr'
   document.documentElement.lang = lang
   document.documentElement.dir  = dir
 }
