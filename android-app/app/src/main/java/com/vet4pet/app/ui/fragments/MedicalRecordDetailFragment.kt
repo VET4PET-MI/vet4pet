@@ -161,6 +161,11 @@ private fun EventType.toDetailInfo(): DetailTypeInfo = when (this) {
         com.google.android.material.R.attr.colorTertiaryContainer,
         com.google.android.material.R.attr.colorOnTertiaryContainer
     )
+    EventType.PRESCRIPTION -> DetailTypeInfo(
+        R.drawable.ic_medical_cross, R.string.record_type_prescription,
+        com.google.android.material.R.attr.colorSecondaryContainer,
+        com.google.android.material.R.attr.colorOnSecondaryContainer
+    )
     EventType.OTHER -> DetailTypeInfo(
         R.drawable.ic_medical_cross, R.string.record_type_other,
         com.google.android.material.R.attr.colorSurfaceVariant,

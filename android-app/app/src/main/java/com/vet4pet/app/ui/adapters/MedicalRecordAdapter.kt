@@ -140,6 +140,12 @@ private fun EventType.toDisplayInfo(): TypeDisplayInfo = when (this) {
         containerAttr = com.google.android.material.R.attr.colorTertiaryContainer,
         onContainerAttr = com.google.android.material.R.attr.colorOnTertiaryContainer
     )
+    EventType.PRESCRIPTION -> TypeDisplayInfo(
+        iconRes = R.drawable.ic_medical_cross,
+        labelRes = R.string.record_type_prescription,
+        containerAttr = com.google.android.material.R.attr.colorSecondaryContainer,
+        onContainerAttr = com.google.android.material.R.attr.colorOnSecondaryContainer
+    )
     EventType.OTHER -> TypeDisplayInfo(
         iconRes = R.drawable.ic_medical_cross,
         labelRes = R.string.record_type_other,

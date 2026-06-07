@@ -7,5 +7,6 @@ enum class EventType {
     XRAY,
     BLOOD_TEST,
     CONSULTATION,
+    PRESCRIPTION,
     OTHER
 }

@@ -185,5 +185,6 @@ private fun EventType.labelRes(): Int = when (this) {
     EventType.XRAY          -> R.string.record_type_xray
     EventType.BLOOD_TEST    -> R.string.record_type_blood_test
     EventType.CONSULTATION  -> R.string.record_type_consultation
+    EventType.PRESCRIPTION  -> R.string.record_type_prescription
     EventType.OTHER         -> R.string.record_type_other
 }

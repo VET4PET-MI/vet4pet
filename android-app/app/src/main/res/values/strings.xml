@@ -49,6 +49,7 @@
     <string name="record_type_lab">Lab Result</string>
     <string name="record_type_vaccination">Vaccination</string>
     <string name="record_type_consultation">Consultation</string>
+    <string name="record_type_prescription">Prescription</string>
     <string name="record_type_other">Other</string>
     <string name="label_attachment">attachment</string>
     <string name="label_one_attachment">1 attachment</string>

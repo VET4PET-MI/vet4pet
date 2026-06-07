@@ -57,6 +57,7 @@
     <string name="record_type_lab">תוצאת מעבדה</string>
     <string name="record_type_vaccination">חיסון</string>
     <string name="record_type_consultation">ייעוץ</string>
+    <string name="record_type_prescription">מרשם</string>
     <string name="record_type_other">אחר</string>
     <string name="label_attachment">קובץ מצורף</string>
     <string name="label_one_attachment">קובץ מצורף אחד</string>
