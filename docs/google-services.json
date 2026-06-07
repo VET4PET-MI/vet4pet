@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "264236881819",
+    "project_id": "vet4pet",
+    "storage_bucket": "vet4pet.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264236881819:android:bf636608cfd77b339e333e",
+        "android_client_info": {
+          "package_name": "com.vet4pet.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0boYtbGCSM58qOH2B4210oUukSxZcqb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
