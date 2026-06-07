@@ -89,23 +89,33 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
     fun uploadAndSavePetPhoto(
         petId: String,
         fileUri: android.net.Uri,
-        onDone: (success: Boolean, error: String?) -> Unit
+        onDone: (success: Boolean, newUrl: String?, error: String?) -> Unit
     ) {
         viewModelScope.launch {
             try {
                 val ctx  = getApplication<Application>()
                 val file = uriToTempFile(ctx, fileUri)
-                val mime = ctx.contentResolver.getType(fileUri) ?: "image/jpeg"
+                val rawMime = ctx.contentResolver.getType(fileUri) ?: "image/jpeg"
+                val mime = if (rawMime == "image/jpg") "image/jpeg" else rawMime
                 val part = okhttp3.MultipartBody.Part.createFormData(
                     "file", file.name,
                     file.asRequestBody(mime.toMediaTypeOrNull())
                 )
-                api.uploadPetPhoto(petId, part)
+                val updatedPet = api.uploadPetPhoto(petId, part)
                 file.delete()
                 loadPets()
-                onDone(true, null)
+                onDone(true, updatedPet.profileImageUrl, null)
             } catch (e: Exception) {
-                onDone(false, e.toUserMessage())
+                val msg = if (e is HttpException) {
+                    try {
+                        val body = e.response()?.errorBody()?.string()
+                        val json = org.json.JSONObject(body ?: "")
+                        json.getString("message")
+                    } catch (_: Exception) {
+                        "Server error (${e.code()})"
+                    }
+                } else e.toUserMessage()
+                onDone(false, null, msg)
             }
         }
     }

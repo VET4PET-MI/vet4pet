@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
@@ -77,7 +79,10 @@ class PetProfileFragment : Fragment() {
 
         binding.btnBack.setOnClickListener { findNavController().navigateUp() }
         binding.btnEditPet.setOnClickListener { showEditDialog() }
-        binding.framePhoto.setOnClickListener { pickImage.launch("image/*") }
+        binding.framePhoto.setOnClickListener {
+            if (petPhotoUrl.isNotBlank()) showFullPhoto() else pickImage.launch("image/*")
+        }
+        binding.badgeCamera.setOnClickListener { pickImage.launch("image/*") }
 
         binding.btnViewHistory.setOnClickListener {
             findNavController().navigate(
@@ -134,7 +139,7 @@ class PetProfileFragment : Fragment() {
                 error(R.drawable.ic_nav_pets)
             }
             binding.imgPetPhoto.setPadding(0, 0, 0, 0)
-            binding.imgPetPhoto.clearColorFilter()
+            binding.imgPetPhoto.imageTintList = null
             binding.imgPetPhoto.backgroundTintList = null
         } else {
             binding.imgPetPhoto.setImageResource(R.drawable.ic_nav_pets)
@@ -151,9 +156,11 @@ class PetProfileFragment : Fragment() {
 
     private fun uploadPhoto(uri: Uri) {
         Snackbar.make(binding.root, R.string.pet_photo_uploading, Snackbar.LENGTH_LONG).show()
-        viewModel.uploadAndSavePetPhoto(petId, uri) { success, error ->
+        viewModel.uploadAndSavePetPhoto(petId, uri) { success, newUrl, error ->
             if (_binding == null) return@uploadAndSavePetPhoto
             if (success) {
+                petPhotoUrl = newUrl ?: petPhotoUrl
+                renderDetails()
                 Snackbar.make(binding.root, R.string.pet_photo_saved, Snackbar.LENGTH_SHORT).show()
             } else {
                 Snackbar.make(
@@ -163,6 +170,25 @@ class PetProfileFragment : Fragment() {
                 ).show()
             }
         }
+    }
+
+    private fun showFullPhoto() {
+        if (petPhotoUrl.isBlank()) return
+        val dp16 = (16 * resources.displayMetrics.density).toInt()
+        val imageView = ImageView(requireContext()).apply {
+            adjustViewBounds = true
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            setPadding(dp16, dp16, dp16, dp16)
+        }
+        imageView.load(petPhotoUrl) {
+            placeholder(R.drawable.ic_nav_pets)
+            error(R.drawable.ic_nav_pets)
+        }
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(petName)
+            .setView(imageView)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 
     private fun showEditDialog() {
@@ -200,7 +226,7 @@ class PetProfileFragment : Fragment() {
         val gIdx = genders.indexOfFirst { it.equals(petGender, ignoreCase = true) }
         if (gIdx >= 0) acGender.setText(genderLabels[gIdx], false)
 
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.edit_pet_title)
             .setView(dialogView)
             .setNegativeButton(R.string.action_cancel, null)
@@ -227,6 +253,12 @@ class PetProfileFragment : Fragment() {
                 }
             }
             .show()
+        dialog.setCanceledOnTouchOutside(false)
+        @Suppress("DEPRECATION")
+        dialog.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+        )
     }
 
     private fun formatAge(epochMs: Long): String {

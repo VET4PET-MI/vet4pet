@@ -9,8 +9,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const ALLOWED_EXT  = /\.(pdf|jpg|jpeg|png|gif|webp)$/i;
-const ALLOWED_MIME = /^(application\/pdf|image\/(jpeg|png|gif|webp))$/;
+const ALLOWED_EXT  = /\.(pdf|jpg|jpeg|png|gif|webp|heic|heif)$/i;
+const ALLOWED_MIME = /^(application\/pdf|image\/(jpeg|jpg|png|gif|webp|heic|heif))$/;
 
 const storage = new CloudinaryStorage({
   cloudinary,

@@ -43,6 +43,10 @@ class PetAdapter(
         private val framePhoto:  View              = itemView.findViewById(R.id.frame_pet_photo)
         private val badgeCamera: MaterialCardView  = itemView.findViewById(R.id.badge_camera)
 
+        // Save the tint from XML so we can restore it for the placeholder state
+        private val defaultImageTint = imgPhoto.imageTintList
+        private val defaultBgTint    = imgPhoto.backgroundTintList
+
         fun bind(pet: Pet) {
             tvName.text  = pet.name
             tvBreed.text = pet.breed?.takeIf { it.isNotBlank() }
@@ -61,15 +65,14 @@ class PetAdapter(
                     error(R.drawable.ic_nav_pets)
                 }
                 imgPhoto.setPadding(0, 0, 0, 0)
-                imgPhoto.clearColorFilter()
+                imgPhoto.imageTintList    = null
                 imgPhoto.backgroundTintList = null
             } else {
                 imgPhoto.setImageResource(R.drawable.ic_nav_pets)
-                imgPhoto.setPadding(40, 40, 40, 40)
-                imgPhoto.backgroundTintList =
-                    itemView.context.getColorStateList(
-                        com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary_container
-                    )
+                val dp16 = (16 * itemView.context.resources.displayMetrics.density).toInt()
+                imgPhoto.setPadding(dp16, dp16, dp16, dp16)
+                imgPhoto.imageTintList    = defaultImageTint
+                imgPhoto.backgroundTintList = defaultBgTint
             }
 
             // Camera badge (only when onPhotoClick is wired)

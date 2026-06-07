@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
@@ -141,7 +142,7 @@ class PetsListFragment : Fragment() {
         val genderLabels = listOf(getString(R.string.gender_male), getString(R.string.gender_female), getString(R.string.gender_unknown))
         acGender.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, genderLabels))
 
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.add_pet_title)
             .setView(dialogView)
             .setNegativeButton(R.string.action_cancel, null)
@@ -165,6 +166,12 @@ class PetsListFragment : Fragment() {
                 }
             }
             .show()
+        dialog.setCanceledOnTouchOutside(false)
+        @Suppress("DEPRECATION")
+        dialog.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN or
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+        )
     }
 
     override fun onDestroyView() {
