@@ -103,8 +103,13 @@ class RescheduleAppointmentFragment : Fragment() {
     private fun observeSlots() {
         viewModel.slotsState.observe(viewLifecycleOwner) { state ->
             binding.progressSlots.isVisible    = state is UiState.Loading
-            binding.tvNoSlots.isVisible        = state is UiState.Success && (state.data as List<*>).isEmpty()
+            binding.tvNoSlots.isVisible        = (state is UiState.Success && (state.data as List<*>).isEmpty()) || state is UiState.Error
             binding.chipGroupSlots.isVisible   = state is UiState.Success && (state.data as List<*>).isNotEmpty()
+            when (state) {
+                is UiState.Error   -> binding.tvNoSlots.text = state.message
+                is UiState.Success -> binding.tvNoSlots.text = getString(R.string.book_no_slots)
+                else -> {}
+            }
 
             if (state is UiState.Success) {
                 binding.chipGroupSlots.removeAllViews()
