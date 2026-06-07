@@ -69,8 +69,8 @@ export default function AppLayout({ title, subtitle, actions, children }) {
 
       {/* ── Sidebar ────────────────────────────────────────────────────── */}
       <aside className={[
-        'fixed top-0 left-0 h-full w-64 bg-white border-e border-slate-200 z-30 flex flex-col transition-transform duration-300',
-        open ? 'translate-x-0' : '-translate-x-full',
+        'fixed top-0 start-0 h-full w-64 bg-white border-e border-slate-200 z-30 flex flex-col transition-transform duration-300',
+        open ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full',
         'lg:static lg:translate-x-0',
       ].join(' ')}>
 
