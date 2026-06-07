@@ -306,6 +306,7 @@
     <string name="consult_notes_hint">תאר את הבעיה (אופציונלי)</string>
     <string name="consult_loading_pets">טוען חיות מחמד…</string>
     <string name="consult_no_pets">לא נמצאו חיות מחמד. הוסף חיה תחילה.</string>
+    <string name="video_call_permissions_denied">נדרשת גישה למצלמה ולמיקרופון לשיחות וידאו.</string>
 
     <!-- Home screen -->
     <string name="home_action_consultations">ייעוצי וידאו</string>

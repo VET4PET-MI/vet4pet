@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         R.id.medicalRecordDetailFragment,
         R.id.addMedicalRecordFragment,
         R.id.notificationsFragment,
-        R.id.vetScheduleFragment
+        R.id.vetScheduleFragment,
+        R.id.videoCallFragment
     )
 
     private val requestNotificationPermission =

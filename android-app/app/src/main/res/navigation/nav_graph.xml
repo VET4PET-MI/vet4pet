@@ -131,7 +131,21 @@
         android:id="@+id/consultationsFragment"
         android:name="com.vet4pet.app.ui.fragments.ConsultationsFragment"
         android:label="@string/nav_consultations"
-        tools:layout="@layout/fragment_consultations" />
+        tools:layout="@layout/fragment_consultations">
+        <action
+            android:id="@+id/action_consultationsFragment_to_videoCallFragment"
+            app:destination="@id/videoCallFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/videoCallFragment"
+        android:name="com.vet4pet.app.ui.fragments.VideoCallFragment"
+        android:label="@string/consult_join_call"
+        tools:layout="@layout/fragment_video_call">
+        <argument
+            android:name="callUrl"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/messagesFragment"

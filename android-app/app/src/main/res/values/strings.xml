@@ -298,6 +298,7 @@
     <string name="consult_notes_hint">Describe the concern (optional)</string>
     <string name="consult_loading_pets">Loading your pets…</string>
     <string name="consult_no_pets">No pets found. Add a pet first.</string>
+    <string name="video_call_permissions_denied">Camera and microphone access are required for video calls.</string>
 
     <!-- Home screen -->
     <string name="home_action_consultations">Video Consultations</string>
