@@ -75,6 +75,9 @@ class AddMedicalRecordFragment : Fragment() {
         setupDatePicker()
         setupValidation()
 
+        // Pre-filled fields don't fire TextWatchers, so force a button-state check
+        if (isEditMode) updateSaveButton()
+
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
 
         binding.btnAttachFile.setOnClickListener {
