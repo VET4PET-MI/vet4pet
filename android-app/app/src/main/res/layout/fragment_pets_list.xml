@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.PetsListFragment">
 
-    <!-- ─────────────────────────────────────────────────────────────────────
-         Search bar + list — padded at bottom so FAB never covers last item
-         ───────────────────────────────────────────────────────────────────── -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,9 +13,7 @@
         android:paddingBottom="88dp"
         android:clipToPadding="false">
 
-        <!-- ══════════════════════════════════════════════════════════════════
-             SEARCH BAR
-             ══════════════════════════════════════════════════════════════════ -->
+        <!-- ══ OWNER: single search bar ══ -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/search_input_layout"
             style="@style/Vet4Pet.TextInputLayout"
@@ -45,6 +40,74 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- ══ VET: national-ID + pet-name search ══ -->
+        <LinearLayout
+            android:id="@+id/vet_search_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_national_id"
+                style="@style/Vet4Pet.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/hint_vet_national_id"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="?attr/colorOnSurfaceVariant"
+                app:boxCornerRadiusTopStart="28dp"
+                app:boxCornerRadiusTopEnd="28dp"
+                app:boxCornerRadiusBottomStart="28dp"
+                app:boxCornerRadiusBottomEnd="28dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_national_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:maxLength="9" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_pet_name_vet"
+                style="@style/Vet4Pet.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/hint_vet_pet_name"
+                app:boxCornerRadiusTopStart="28dp"
+                app:boxCornerRadiusTopEnd="28dp"
+                app:boxCornerRadiusBottomStart="28dp"
+                app:boxCornerRadiusBottomEnd="28dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_pet_name_vet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_vet_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="12dp"
+                android:text="@string/btn_search" />
+
+        </LinearLayout>
+
         <!-- Loading + empty state -->
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/progress_pets"
@@ -64,9 +127,6 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone" />
 
-        <!-- ══════════════════════════════════════════════════════════════════
-             PET LIST
-             ══════════════════════════════════════════════════════════════════ -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_pets"
             android:layout_width="match_parent"
@@ -81,9 +141,6 @@
 
     </LinearLayout>
 
-    <!-- ══════════════════════════════════════════════════════════════════════
-         FAB — pinned to bottom-end, always visible above list content
-         ══════════════════════════════════════════════════════════════════════ -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add_pet"
         android:layout_width="wrap_content"

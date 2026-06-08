@@ -81,14 +81,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val searchResults: LiveData<UiState<List<PetDto>>?> = _searchResults
 
     fun searchVetPets(nationalId: String?, name: String?) {
-        if (nationalId.isNullOrBlank() && name.isNullOrBlank()) return
+        if (nationalId.isNullOrBlank()) return
         _searchResults.value = UiState.Loading
         viewModelScope.launch {
             runCatching {
-                api.getPets(
-                    nationalId = nationalId?.trim()?.takeIf { it.isNotBlank() },
-                    name       = name?.trim()?.takeIf { it.isNotBlank() }
-                )
+                api.getPets(nationalId = nationalId.trim())
             }.onSuccess { _searchResults.value = UiState.Success(it) }
              .onFailure { _searchResults.value = UiState.Error(it.message ?: "Error") }
         }

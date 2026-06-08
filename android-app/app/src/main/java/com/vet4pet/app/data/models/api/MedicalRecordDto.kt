@@ -50,6 +50,15 @@ data class AddRecordRequest(
     val originalFileName: String? = null
 )
 
+data class UpdateRecordRequest(
+    val date: String,          // ISO 8601
+    val vetName: String,
+    val type: String,
+    val findings: String,
+    val fileUrl: String? = null,
+    val originalFileName: String? = null
+)
+
 data class UploadResponse(
     val url: String,
     val originalName: String,

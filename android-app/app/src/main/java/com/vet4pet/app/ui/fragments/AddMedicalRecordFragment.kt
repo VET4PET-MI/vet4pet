@@ -10,16 +10,16 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.BundleCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.vet4pet.app.R
 import com.vet4pet.app.data.enums.EventType
+import com.vet4pet.app.data.models.MedicalRecord
 import com.vet4pet.app.databinding.FragmentAddMedicalRecordBinding
 import com.vet4pet.app.ui.viewmodels.PetsViewModel
 import java.time.Instant
@@ -35,13 +35,13 @@ class AddMedicalRecordFragment : Fragment() {
 
     private var selectedDateMs: Long = MaterialDatePicker.todayInUtcMilliseconds()
     private var selectedFileUri: Uri? = null
+    private var existingRecord: MedicalRecord? = null
 
     private val pickFileLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { uri ->
         if (uri != null) {
             selectedFileUri = uri
-            // Persist read permission across process restarts
             requireContext().contentResolver.takePersistableUriPermission(
                 uri, android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
@@ -61,8 +61,15 @@ class AddMedicalRecordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val petId = arguments?.getString("petId") ?: return
+        existingRecord = BundleCompat.getParcelable(requireArguments(), "record", MedicalRecord::class.java)
+        val isEditMode = existingRecord != null
 
-        binding.etDate.setText(formatDate(selectedDateMs))
+        if (isEditMode) {
+            binding.tvFormTitle.setText(R.string.title_edit_medical_record)
+            prefillForEdit(existingRecord!!)
+        } else {
+            binding.etDate.setText(formatDate(selectedDateMs))
+        }
 
         setupTypeDropdown()
         setupDatePicker()
@@ -80,7 +87,26 @@ class AddMedicalRecordFragment : Fragment() {
             ))
         }
 
-        binding.btnSave.setOnClickListener { submitRecord(petId) }
+        binding.btnSave.setOnClickListener {
+            if (isEditMode) submitEdit(petId, existingRecord!!)
+            else submitRecord(petId)
+        }
+    }
+
+    private fun prefillForEdit(record: MedicalRecord) {
+        selectedDateMs = record.date
+        binding.etDate.setText(formatDate(record.date))
+        binding.etVetName.setText(record.vetName)
+        binding.etFindings.setText(record.findings)
+
+        val typeLabel = EventType.entries.firstOrNull { it == record.type }
+            ?.let { getString(it.labelRes()) } ?: ""
+        binding.acRecordType.setText(typeLabel, false)
+
+        if (!record.fileUrl.isNullOrBlank()) {
+            binding.tvSelectedFile.text = getString(R.string.action_change_file)
+            binding.tvSelectedFile.isVisible = true
+        }
     }
 
     private fun submitRecord(petId: String) {
@@ -105,6 +131,43 @@ class AddMedicalRecordFragment : Fragment() {
             binding.btnSave.isEnabled     = true
             binding.progressSave.isVisible = false
             if (success) {
+                findNavController().popBackStack()
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    error ?: getString(R.string.error_save_failed),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun submitEdit(petId: String, record: MedicalRecord) {
+        val vetName  = binding.etVetName.text?.toString()?.trim().orEmpty()
+        val findings = binding.etFindings.text?.toString()?.trim().orEmpty()
+        val typeLabel = binding.acRecordType.text?.toString()?.trim().orEmpty()
+        val typeEnum = EventType.entries.firstOrNull {
+            getString(it.labelRes()) == typeLabel
+        } ?: return
+
+        binding.btnSave.isEnabled = false
+        binding.progressSave.isVisible = true
+
+        viewModel.updateRecord(
+            recordId        = record.id,
+            petId           = petId,
+            vetName         = vetName,
+            type            = typeEnum.name,
+            findings        = findings,
+            dateMs          = selectedDateMs,
+            fileUri         = selectedFileUri,
+            existingFileUrl = record.fileUrl
+        ) { success, error ->
+            binding.btnSave.isEnabled     = true
+            binding.progressSave.isVisible = false
+            if (success) {
+                // Pop both the edit screen and the detail screen back to history list
+                findNavController().popBackStack()
                 findNavController().popBackStack()
             } else {
                 Snackbar.make(

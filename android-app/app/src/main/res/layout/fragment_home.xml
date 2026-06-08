@@ -294,10 +294,11 @@
                     android:textColor="?attr/colorOnSurface" />
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_search_id"
                     style="@style/Vet4Pet.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="10dp"
                     android:hint="@string/home_search_id_hint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -306,22 +307,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="number"
                         android:maxLength="9"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Vet4Pet.TextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:hint="@string/home_search_name_hint">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_search_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:imeOptions="actionSearch" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton

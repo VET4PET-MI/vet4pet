@@ -86,13 +86,21 @@ class HomeFragment : Fragment() {
         // ── Vet patient search ────────────────────────────────────────────────
         if (isVet) {
             binding.btnSearch.setOnClickListener {
-                val id   = binding.etSearchId.text?.toString()
-                val name = binding.etSearchName.text?.toString()
-                viewModel.searchVetPets(id, name)
+                val id = binding.etSearchId.text?.toString()?.trim() ?: ""
+                if (id.isBlank()) {
+                    binding.tilSearchId.error = getString(R.string.error_national_id_required)
+                    return@setOnClickListener
+                }
+                binding.tilSearchId.error = null
+                viewModel.searchVetPets(id, null)
+            }
+            binding.etSearchId.setOnEditorActionListener { _, _, _ ->
+                binding.btnSearch.performClick()
+                true
             }
             binding.btnClearSearch.setOnClickListener {
                 binding.etSearchId.text?.clear()
-                binding.etSearchName.text?.clear()
+                binding.tilSearchId.error = null
                 viewModel.clearSearch()
                 binding.layoutSearchResults.isVisible = false
             }

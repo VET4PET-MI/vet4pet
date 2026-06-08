@@ -11,6 +11,7 @@ import com.vet4pet.app.data.models.api.VetDto
 import com.vet4pet.app.data.models.api.AddPetRequest
 import com.vet4pet.app.data.models.api.UpdatePetRequest
 import com.vet4pet.app.data.models.api.AddRecordRequest
+import com.vet4pet.app.data.models.api.UpdateRecordRequest
 import com.vet4pet.app.data.models.api.MedicalRecordDto
 import com.vet4pet.app.data.models.api.PagedRecordsDto
 import com.vet4pet.app.data.models.api.PetDto
@@ -91,6 +92,12 @@ interface ApiService {
 
     @POST("api/records")
     suspend fun addRecord(@Body request: AddRecordRequest): MedicalRecordDto
+
+    @PUT("api/records/{id}")
+    suspend fun updateRecord(
+        @Path("id") id: String,
+        @Body request: UpdateRecordRequest
+    ): MedicalRecordDto
 
     // ── Appointments ──────────────────────────────────────────────────────
     @GET("api/appointments")

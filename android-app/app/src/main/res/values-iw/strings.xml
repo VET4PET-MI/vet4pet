@@ -11,6 +11,12 @@
     <string name="nav_emergency">וטרינרים לחירום</string>
 
     <string name="hint_search_pets">חפש חיות מחמד…</string>
+    <string name="hint_vet_national_id">תעודת זהות של הבעלים (חובה)</string>
+    <string name="hint_vet_pet_name">שם החיה (אופציונלי)</string>
+    <string name="btn_search">חפש</string>
+    <string name="error_national_id_required">תעודת זהות היא שדה חובה</string>
+    <string name="vet_search_prompt">הכנס את תעודת הזהות של הבעלים כדי לאתר את החיות שלו</string>
+    <string name="vet_no_results">לא נמצאו חיות עבור תעודת הזהות הזו</string>
     <string name="fab_add_pet">הוסף חיה</string>
     <string name="title_appointments">התורים שלי</string>
     <string name="fab_book_appointment">קבע תור</string>
@@ -34,6 +40,8 @@
 
     <!-- Add medical record screen -->
     <string name="title_add_medical_record">הוסף רשומה</string>
+    <string name="title_edit_medical_record">ערוך רשומה</string>
+    <string name="action_edit_record">ערוך</string>
     <string name="hint_vet_name">שם הווטרינר</string>
     <string name="hint_record_type">סוג הרשומה</string>
     <string name="hint_date">תאריך</string>
@@ -312,8 +320,7 @@
     <!-- Home screen -->
     <string name="home_action_consultations">ייעוצי וידאו</string>
     <string name="home_search_title">חיפוש מטופל</string>
-    <string name="home_search_id_hint">תעודת זהות של בעלים (אופציונלי)</string>
-    <string name="home_search_name_hint">שם חיה (אופציונלי)</string>
+    <string name="home_search_id_hint">תעודת זהות של הבעלים (חובה)</string>
     <string name="home_search_btn">חפש</string>
     <string name="home_search_clear">נקה ✕</string>
     <string name="home_search_results">%1$d תוצאות</string>

@@ -194,6 +194,9 @@
         <argument
             android:name="record"
             app:argType="com.vet4pet.app.data.models.MedicalRecord" />
+        <action
+            android:id="@+id/action_medicalRecordDetailFragment_to_addMedicalRecordFragment"
+            app:destination="@id/addMedicalRecordFragment" />
     </fragment>
 
     <fragment
@@ -204,6 +207,11 @@
         <argument
             android:name="petId"
             app:argType="string" />
+        <argument
+            android:name="record"
+            app:argType="com.vet4pet.app.data.models.MedicalRecord"
+            android:defaultValue="@null"
+            app:nullable="true" />
     </fragment>
 
 </navigation>

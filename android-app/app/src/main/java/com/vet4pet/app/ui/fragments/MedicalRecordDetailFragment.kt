@@ -9,9 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.BundleCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.vet4pet.app.data.local.SessionManager
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.google.android.material.color.MaterialColors
@@ -41,6 +43,18 @@ class MedicalRecordDetailFragment : Fragment() {
         val record = BundleCompat.getParcelable(requireArguments(), "record", MedicalRecord::class.java)!!
 
         binding.btnBack.setOnClickListener { findNavController().popBackStack() }
+
+        val isVet = SessionManager(requireContext()).getUser()?.role == "vet"
+        binding.btnEditRecord.isVisible = isVet
+        binding.btnEditRecord.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_medicalRecordDetailFragment_to_addMedicalRecordFragment,
+                bundleOf(
+                    "petId"  to record.petId,
+                    "record" to record
+                )
+            )
+        }
 
         bindType(record.type)
         bindDate(record.date)

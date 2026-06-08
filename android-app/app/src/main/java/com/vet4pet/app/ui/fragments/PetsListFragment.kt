@@ -42,6 +42,7 @@ class PetsListFragment : Fragment() {
         val session = SessionManager(requireContext())
         val role    = session.getUser()?.role ?: "owner"
         val isOwner = role == "owner"
+        val isVet   = role == "vet"
 
         val adapter = PetAdapter(
             onItemClick = { pet ->
@@ -64,47 +65,87 @@ class PetsListFragment : Fragment() {
         binding.rvPets.adapter = adapter
 
         binding.fabAddPet.isVisible = isOwner
-        binding.fabAddPet.setOnClickListener { showAddPetDialog() }
 
-        // Search
-        binding.etSearch.addTextChangedListener(object : android.text.TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: android.text.Editable?) {
-                val query = s?.toString()?.trim() ?: ""
-                val state = viewModel.petsState.value
-                if (state is UiState.Success) {
-                    val filtered = if (query.isBlank()) state.data
-                    else state.data.filter {
+        if (isVet) {
+            // Vets use the dedicated national-ID search — hide the owner search bar
+            binding.searchInputLayout.isVisible = false
+            binding.vetSearchContainer.isVisible = true
+
+            // Show prompt instead of empty-pets text until the vet searches
+            binding.tvEmptyPets.text = getString(R.string.vet_search_prompt)
+            binding.tvEmptyPets.isVisible = true
+
+            binding.btnVetSearch.setOnClickListener { performVetSearch() }
+            binding.etPetNameVet.setOnEditorActionListener { _, _, _ ->
+                performVetSearch()
+                true
+            }
+        } else {
+            binding.fabAddPet.setOnClickListener { showAddPetDialog() }
+
+            // Owner: local filter on already-loaded list
+            binding.etSearch.addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    val query = s?.toString()?.trim() ?: ""
+                    val state = viewModel.petsState.value
+                    if (state is UiState.Success) {
+                        val filtered = if (query.isBlank()) state.data
+                        else state.data.filter {
+                            it.name.contains(query, ignoreCase = true) ||
+                            it.species.contains(query, ignoreCase = true) ||
+                            it.breed?.contains(query, ignoreCase = true) == true
+                        }
+                        adapter.submitList(filtered)
+                    }
+                }
+            })
+
+            viewModel.loadPets()
+        }
+
+        viewModel.petsState.observe(viewLifecycleOwner) { state ->
+            binding.progressPets.isVisible = state is UiState.Loading
+            if (state is UiState.Success) {
+                val list = state.data as List<Pet>
+                val isEmpty = list.isEmpty()
+                binding.tvEmptyPets.isVisible = isEmpty
+                if (isEmpty) {
+                    binding.tvEmptyPets.text = if (isVet)
+                        getString(R.string.vet_no_results)
+                    else
+                        getString(R.string.pets_empty)
+                }
+                if (isOwner) {
+                    val query = binding.etSearch.text?.toString()?.trim() ?: ""
+                    val filtered = if (query.isBlank()) list
+                    else list.filter {
                         it.name.contains(query, ignoreCase = true) ||
                         it.species.contains(query, ignoreCase = true) ||
                         it.breed?.contains(query, ignoreCase = true) == true
                     }
                     adapter.submitList(filtered)
+                } else {
+                    adapter.submitList(list)
                 }
-            }
-        })
-
-        viewModel.petsState.observe(viewLifecycleOwner) { state ->
-            binding.progressPets.isVisible = state is UiState.Loading
-            binding.tvEmptyPets.isVisible  = state is UiState.Success && (state.data as List<*>).isEmpty()
-            if (state is UiState.Success) {
-                val query = binding.etSearch.text?.toString()?.trim() ?: ""
-                val filtered = if (query.isBlank()) state.data
-                else state.data.filter {
-                    it.name.contains(query, ignoreCase = true) ||
-                    it.species.contains(query, ignoreCase = true) ||
-                    it.breed?.contains(query, ignoreCase = true) == true
-                }
-                adapter.submitList(filtered)
             }
             if (state is UiState.Error) {
                 binding.tvEmptyPets.isVisible = true
                 binding.tvEmptyPets.text = state.message
             }
         }
+    }
 
-        viewModel.loadPets()
+    private fun performVetSearch() {
+        val nationalId = binding.etNationalId.text?.toString()?.trim() ?: ""
+        if (nationalId.isBlank()) {
+            binding.tilNationalId.error = getString(R.string.error_national_id_required)
+            return
+        }
+        binding.tilNationalId.error = null
+        val petName = binding.etPetNameVet.text?.toString()?.trim()
+        viewModel.searchPets(nationalId, petName)
     }
 
     // API values sent to server are always English; labels shown to user are translated

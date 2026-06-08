@@ -81,6 +81,7 @@ async function getAppointments(req, res) {
     }
     if (status) filter.status = status;
     if (req.user.role === 'owner') filter.ownerId = req.user.id;
+    else if (req.user.role === 'vet') filter.vetId = req.user.id;
     const appointments = await Appointment.find(filter).sort({ time: 1 });
     res.json(appointments);
   } catch (err) {

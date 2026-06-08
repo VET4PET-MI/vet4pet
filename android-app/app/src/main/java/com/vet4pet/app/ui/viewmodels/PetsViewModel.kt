@@ -11,6 +11,7 @@ import com.vet4pet.app.data.models.Pet
 import com.vet4pet.app.data.models.api.AddPetRequest
 import com.vet4pet.app.data.models.api.UpdatePetRequest
 import com.vet4pet.app.data.models.api.AddRecordRequest
+import com.vet4pet.app.data.models.api.UpdateRecordRequest
 import com.vet4pet.app.data.local.db.AppDatabase
 import com.vet4pet.app.data.local.db.toEntity
 import com.vet4pet.app.network.ApiClient
@@ -56,6 +57,70 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: Exception) {
                 if (cached.isEmpty()) _pets.value = UiState.Error(e.toUserMessage())
                 // else: keep showing cached data silently
+            }
+        }
+    }
+
+    fun updateRecord(
+        recordId: String,
+        petId: String,
+        vetName: String,
+        type: String,
+        findings: String,
+        dateMs: Long,
+        fileUri: Uri?,
+        existingFileUrl: String?,
+        onDone: (success: Boolean, error: String?) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val ctx = getApplication<Application>()
+                var uploadedUrl: String? = existingFileUrl
+                var uploadedName: String? = null
+
+                if (fileUri != null) {
+                    val file = uriToTempFile(ctx, fileUri)
+                    val mime = ctx.contentResolver.getType(fileUri) ?: "application/octet-stream"
+                    val part = MultipartBody.Part.createFormData(
+                        "file", file.name,
+                        file.asRequestBody(mime.toMediaTypeOrNull())
+                    )
+                    val resp = api.uploadFile(part)
+                    uploadedUrl  = resp.url
+                    uploadedName = resp.originalName
+                    file.delete()
+                }
+
+                api.updateRecord(
+                    recordId,
+                    UpdateRecordRequest(
+                        date             = Instant.ofEpochMilli(dateMs).toString(),
+                        vetName          = vetName,
+                        type             = type,
+                        findings         = findings,
+                        fileUrl          = uploadedUrl,
+                        originalFileName = uploadedName
+                    )
+                )
+                loadRecords(petId, refresh = true)
+                onDone(true, null)
+            } catch (e: Exception) {
+                onDone(false, e.toUserMessage())
+            }
+        }
+    }
+
+    fun searchPets(nationalId: String, name: String?) {
+        viewModelScope.launch {
+            _pets.value = UiState.Loading
+            try {
+                val fresh = api.getPets(
+                    nationalId = nationalId,
+                    name = name?.takeIf { it.isNotBlank() }
+                ).map { it.toDomain() }
+                _pets.value = UiState.Success(fresh)
+            } catch (e: Exception) {
+                _pets.value = UiState.Error(e.toUserMessage())
             }
         }
     }

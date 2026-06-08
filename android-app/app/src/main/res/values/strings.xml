@@ -5,6 +5,12 @@
     <string name="nav_appointments">Appointments</string>
     <string name="nav_profile">Profile</string>
     <string name="hint_search_pets">Search your pets…</string>
+    <string name="hint_vet_national_id">Owner National ID (required)</string>
+    <string name="hint_vet_pet_name">Pet name (optional)</string>
+    <string name="btn_search">Search</string>
+    <string name="error_national_id_required">National ID is required</string>
+    <string name="vet_search_prompt">Enter the owner\'s national ID to find their pets</string>
+    <string name="vet_no_results">No pets found for this national ID</string>
     <string name="fab_add_pet">Add Pet</string>
     <string name="title_appointments">My Appointments</string>
     <string name="fab_book_appointment">Book Appointment</string>
@@ -27,6 +33,8 @@
     <string name="logout_confirm_message">Are you sure you want to log out?</string>
     <!-- Add medical record screen -->
     <string name="title_add_medical_record">Add Record</string>
+    <string name="title_edit_medical_record">Edit Record</string>
+    <string name="action_edit_record">Edit</string>
     <string name="hint_vet_name">Vet Name</string>
     <string name="hint_record_type">Record Type</string>
     <string name="hint_date">Date</string>
@@ -304,8 +312,7 @@
     <!-- Home screen -->
     <string name="home_action_consultations">Video Consultations</string>
     <string name="home_search_title">Find Patient</string>
-    <string name="home_search_id_hint">Owner National ID (optional)</string>
-    <string name="home_search_name_hint">Pet name (optional)</string>
+    <string name="home_search_id_hint">Owner National ID (required)</string>
     <string name="home_search_btn">Search</string>
     <string name="home_search_clear">Clear ✕</string>
     <string name="home_search_results">%1$d result(s)</string>
