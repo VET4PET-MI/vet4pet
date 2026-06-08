@@ -36,8 +36,9 @@ async function createConsultation(req, res) {
       payload.ownerName = payload.ownerName || req.user.name;
     }
     const consultation = await Consultation.create(payload);
-    // Auto-generate Jitsi Meet URL using the MongoDB _id
-    consultation.joinUrl = `https://meet.jit.si/Vet4Pet-${consultation._id}`;
+    // Auto-generate Jitsi Meet URL using a random token (avoids exposing MongoDB _id)
+    const { randomUUID } = require('crypto');
+    consultation.joinUrl = `https://meet.jit.si/Vet4Pet-${randomUUID()}`;
     await consultation.save();
     console.log('[Consultation] created:', consultation._id, 'owner:', consultation.ownerId);
 

@@ -36,13 +36,26 @@ class AppointmentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val role    = SessionManager(requireContext()).getUser()?.role ?: "owner"
+        val isOwner = role == "owner"
+
+        // Vets get a dedicated calendar view — redirect immediately so the bottom nav still works
+        if (!isOwner) {
+            findNavController().navigate(
+                R.id.vetCalendarFragment,
+                null,
+                androidx.navigation.NavOptions.Builder()
+                    .setPopUpTo(R.id.appointmentsFragment, true)
+                    .build()
+            )
+            return
+        }
+
         val adapter = AppointmentAdapter { appt -> showAppointmentDialog(appt) }
 
         binding.rvAppointments.adapter = adapter
 
-        // Only owners can book appointments via the wizard; vets book from their calendar
-        val isOwner = SessionManager(requireContext()).getUser()?.role == "owner"
-        binding.fabBookAppointment.isVisible = isOwner
+        binding.fabBookAppointment.isVisible = true
         binding.fabBookAppointment.setOnClickListener {
             findNavController().navigate(R.id.action_appointmentsFragment_to_bookAppointmentFragment)
         }

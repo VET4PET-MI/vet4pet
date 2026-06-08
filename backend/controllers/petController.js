@@ -91,8 +91,10 @@ async function uploadPetPhoto(req, res) {
 
 async function deletePet(req, res) {
   try {
-    const pet = await Pet.findByIdAndDelete(req.params.id);
+    const pet = await Pet.findById(req.params.id);
     if (!pet) return res.status(404).json({ message: 'Pet not found' });
+    if (pet.ownerId !== req.user.id) return res.status(403).json({ message: 'Forbidden.' });
+    await pet.deleteOne();
     console.log('[Pet] deleted:', req.params.id);
     res.status(204).send();
   } catch (err) {

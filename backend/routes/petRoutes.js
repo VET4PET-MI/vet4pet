@@ -18,6 +18,6 @@ router.post('/:id/photo', (req, res, next) => {
     next();
   });
 }, controller.uploadPetPhoto);
-router.delete('/:id',        requireRole('vet'), controller.deletePet);
+router.delete('/:id',        requireRole('owner'), controller.deletePet);
 
 module.exports = router;
