@@ -100,7 +100,7 @@ function AddPetModal({ onClose, onAdded }) {
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('ownerMyPets.cancel')}</button>
             <button type="submit" disabled={saving}
-              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg">
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
               {t('ownerMyPets.savePet')}
             </button>
@@ -132,7 +132,7 @@ export default function OwnerMyPets() {
       subtitle={t('ownerMyPets.subtitle')}
       actions={
         <button onClick={() => setAdd(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
+          className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
           <Plus className="w-4 h-4" /> {t('ownerMyPets.addPet')}
         </button>
       }
@@ -148,7 +148,7 @@ export default function OwnerMyPets() {
             <p className="font-semibold text-slate-700">{t('ownerMyPets.noPetsTitle')}</p>
             <p className="text-sm text-slate-400 mt-1 mb-6">{t('ownerMyPets.noPetsHint')}</p>
             <button onClick={() => setAdd(true)}
-              className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
+              className="px-5 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
               {t('ownerMyPets.addFirstBtn')}
             </button>
           </div>

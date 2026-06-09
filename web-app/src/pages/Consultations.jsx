@@ -162,7 +162,7 @@ function OwnerRequestModal({ user, onClose, onCreated }) {
           <div className="flex gap-3 pt-1">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('consultationsPage.cancel')}</button>
             <button type="submit" disabled={saving || loading || (pets.length === 0)}
-              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <PhoneCall className="w-4 h-4" />}
               {t('consultationsPage.requestCall')}
             </button>
@@ -221,7 +221,7 @@ function SimulateModal({ onClose, onCreated }) {
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl">{t('consultationsPage.cancel')}</button>
             <button type="submit" disabled={saving}
-              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2">
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl flex items-center justify-center gap-2">
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <PhoneCall className="w-4 h-4" />}
               {t('consultationsPage.simulate')}
             </button>
@@ -359,11 +359,11 @@ export default function Consultations() {
       actions={
         isOwner
           ? <button onClick={() => setRequest(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
               <Plus className="w-4 h-4" /> {t('consultationsPage.requestBtn')}
             </button>
           : <button onClick={() => setRequest(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
               <Plus className="w-4 h-4" /> {t('consultationsPage.simulateBtn')}
             </button>
       }

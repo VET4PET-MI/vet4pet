@@ -120,7 +120,7 @@ export default function VetScheduleSettings() {
             <button
               type="submit"
               disabled={saving || form.workingDays.length === 0}
-              className="w-full bg-brand hover:bg-brand-dark disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-accent hover:bg-accent-dark disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
               {saving  ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('vetScheduleSettings.saving')}</>
                : saved ? <><Check className="w-4 h-4" /> {t('vetScheduleSettings.saved')}</>

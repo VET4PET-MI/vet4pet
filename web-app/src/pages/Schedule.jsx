@@ -226,7 +226,7 @@ function ApptModal({ initial, selectedDay, presetTime, onClose, onSaved, onCance
               {t('schedule.close')}
             </button>
             <button type="submit" disabled={submitting}
-              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('schedule.saving')}</> : (isEdit ? t('schedule.update') : t('schedule.book'))}
             </button>
           </div>
@@ -341,7 +341,7 @@ export default function Schedule() {
             <Settings className="w-4 h-4" /> {t('schedule.availability')}
           </button>
           <button onClick={() => openBook(null)}
-            className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
+            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
             <Plus className="w-4 h-4" /> {t('schedule.bookAppointment')}
           </button>
         </div>

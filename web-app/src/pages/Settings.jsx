@@ -131,7 +131,7 @@ function VetClinicSection() {
         {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
 
         <button type="submit" disabled={saving}
-          className="w-full bg-brand hover:bg-brand-dark disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+          className="w-full bg-accent hover:bg-accent-dark disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
           {saving  ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('emergency.vetSettings.saving')}</>
            : saved ? <><Check className="w-4 h-4" /> {t('emergency.vetSettings.saved')}</>
            : <><Save className="w-4 h-4" /> {t('emergency.vetSettings.save')}</>}
@@ -210,7 +210,7 @@ function OwnerIdSection() {
         {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-3 py-2">{error}</p>}
 
         <button type="submit" disabled={saving}
-          className="w-full bg-brand hover:bg-brand-dark disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
+          className="w-full bg-accent hover:bg-accent-dark disabled:opacity-60 text-white font-semibold py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2">
           {saving  ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('emergency.vetSettings.saving')}</>
            : saved ? <><Check className="w-4 h-4" /> {t('settings.ownerIdSaved')}</>
            : <><IdCard className="w-4 h-4" /> {t('settings.ownerIdSave')}</>}

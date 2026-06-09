@@ -3,18 +3,23 @@
 @theme {
   --font-sans: "Heebo", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  /* Brand — sky blue, aligned with favicon */
-  --color-brand:       #2BA8F5;
-  --color-brand-dark:  #0E86CC;
-  --color-brand-deep:  #0A4E7A;
-  --color-brand-soft:  #E0F2FE;
-  --color-brand-tint:  #F0F9FF;
+  /* Brand — turquoise, conveys medical trust */
+  --color-brand:       #1FA6C9;
+  --color-brand-dark:  #0E7C8B;
+  --color-brand-deep:  #0A4A57;
+  --color-brand-soft:  #E2F4F8;
+  --color-brand-tint:  #EAF7FB;
 
-  /* Neutrals */
-  --color-bg:          #F8FAFC;
+  /* Accent — warm coral, the emotional / call-to-action color */
+  --color-accent:      #FB7C68;
+  --color-accent-dark: #E8604B;
+  --color-accent-soft: #FCE9E4;
+
+  /* Neutrals — warm cream background, deep teal ink */
+  --color-bg:          #FAF4E8;
   --color-surface:     #FFFFFF;
-  --color-ink:         #0F172A;
-  --color-ink-muted:   #64748B;
+  --color-ink:         #163A47;
+  --color-ink-muted:   #5A6B71;
 }
 
 html, body {

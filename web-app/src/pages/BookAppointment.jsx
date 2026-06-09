@@ -149,7 +149,7 @@ export default function BookAppointment() {
                 <div className="text-4xl mb-3">🐾</div>
                 <p className="font-medium text-slate-600">{t('bookAppointment.noPetsTitle')}</p>
                 <button onClick={() => navigate('/my-pets')}
-                  className="mt-4 px-5 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-colors">
+                  className="mt-4 px-5 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-colors">
                   {t('bookAppointment.addPetFirst')}
                 </button>
               </div>
@@ -183,7 +183,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(2)}
               disabled={!selectedPet}
-              className="w-full mt-4 bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full mt-4 bg-accent hover:bg-accent-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -244,7 +244,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(3)}
               disabled={!selectedVet}
-              className="w-full mt-4 bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full mt-4 bg-accent hover:bg-accent-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -317,7 +317,7 @@ export default function BookAppointment() {
             <button
               onClick={() => setStep(4)}
               disabled={!selectedSlot}
-              className="w-full bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
+              className="w-full bg-accent hover:bg-accent-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors"
             >
               {t('bookAppointment.next')} <ChevronRight className="w-4 h-4 rtl:rotate-180" />
             </button>
@@ -376,7 +376,7 @@ export default function BookAppointment() {
             <button
               onClick={handleBook}
               disabled={loading}
-              className="w-full bg-brand hover:bg-brand-dark disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
+              className="w-full bg-accent hover:bg-accent-dark disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors shadow-sm"
             >
               {loading
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('bookAppointment.booking')}</>

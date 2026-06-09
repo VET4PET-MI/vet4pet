@@ -85,7 +85,7 @@ export default function EmergencyVets() {
               <button
                 onClick={locate}
                 disabled={locating}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors rtl:flex-row-reverse"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold rounded-xl transition-colors rtl:flex-row-reverse"
               >
                 {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
                 {locating ? t('emergency.locating') : t('emergency.findMyLocation')}

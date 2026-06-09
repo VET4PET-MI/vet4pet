@@ -87,7 +87,7 @@ function ComposeModal({ onClose, onSent }) {
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending}
-              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {t('messages.send')}
             </button>
@@ -178,7 +178,7 @@ function MessageClinicModal({ onClose, onSent }) {
           <div className="flex gap-3">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition">{t('messages.cancel')}</button>
             <button type="submit" disabled={sending || loading || !vetId}
-              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
               {t('messages.sendMessage')}
             </button>
@@ -262,11 +262,11 @@ export default function Messages() {
 
   const emptyStateAction = isOwner
     ? <button onClick={() => setCompose(true)}
-        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
+        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
         <Stethoscope className="w-4 h-4" /> {t('messages.messageClinic')}
       </button>
     : <button onClick={() => setCompose(true)}
-        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
+        className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse">
         <Plus className="w-4 h-4" /> {t('messages.compose')}
       </button>
 
@@ -276,11 +276,11 @@ export default function Messages() {
       actions={
         isOwner
           ? <button onClick={() => setCompose(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
               <Stethoscope className="w-4 h-4" /> {t('messages.messageClinic')}
             </button>
           : <button onClick={() => setCompose(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
+              className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm rtl:flex-row-reverse">
               <Plus className="w-4 h-4" /> {t('messages.compose')}
             </button>
       }
@@ -415,7 +415,7 @@ export default function Messages() {
                   className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand max-h-24"
                 />
                 <button type="submit" disabled={sending || !draft.trim()}
-                  className="shrink-0 p-2.5 bg-brand hover:bg-brand-dark disabled:opacity-50 text-white rounded-xl transition-colors">
+                  className="shrink-0 p-2.5 bg-accent hover:bg-accent-dark disabled:opacity-50 text-white rounded-xl transition-colors">
                   {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </form>

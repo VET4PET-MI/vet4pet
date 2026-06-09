@@ -15,3 +15,6 @@ Thumbs.db
 
 # Uploaded files (runtime artefacts, not source)
 backend/uploads/
+
+# Superpowers brainstorm scratch files
+.superpowers/

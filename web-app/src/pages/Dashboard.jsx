@@ -101,7 +101,7 @@ function VetDashboard() {
     { label: t('dashboard.statTodayAppts'),      value: stats.todayAppts,      icon: Calendar,      bg: 'bg-sky-50',     text: 'text-sky-700' },
     { label: t('dashboard.statPendingConsults'), value: stats.pendingConsults, icon: Video,         bg: 'bg-amber-50',   text: 'text-amber-700' },
     { label: t('dashboard.statUnreadMsgs'),      value: stats.unreadMsgs,      icon: MessageSquare, bg: 'bg-slate-100',  text: 'text-slate-700' },
-    { label: t('dashboard.statTotalPatients'),   value: stats.totalPatients,   icon: Users,         bg: 'bg-emerald-50', text: 'text-emerald-700', path: '/patients' },
+    { label: t('dashboard.statTotalPatients'),   value: stats.totalPatients,   icon: Users,         bg: 'bg-accent-soft', text: 'text-accent-dark', path: '/patients' },
   ]
 
   return (
@@ -109,17 +109,17 @@ function VetDashboard() {
       <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
 
         {/* Hero greeting */}
-        <div className="relative overflow-hidden rounded-3xl bg-brand-tint p-8 shadow-sm ring-1 ring-brand/15">
-          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-brand-soft/60 blur-3xl" />
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand to-brand-dark p-8 shadow-md">
+          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-accent/25 blur-3xl" />
           <div className="relative flex items-center justify-between gap-4 rtl:flex-row-reverse">
             <div className="rtl:text-right">
-              <h1 className="text-brand-deep text-3xl font-bold tracking-tight">
+              <h1 className="text-white text-3xl font-bold tracking-tight">
                 {t('nav.greetingVet', { name: firstName })}
               </h1>
-              <p className="text-ink-muted text-sm mt-2 font-medium">{t('dashboard.vetHeroSub')}</p>
+              <p className="text-white/80 text-sm mt-2 font-medium">{t('dashboard.vetHeroSub')}</p>
             </div>
-            <div className="hidden sm:flex w-16 h-16 bg-white/60 backdrop-blur-sm rounded-2xl items-center justify-center shrink-0 shadow-sm ring-1 ring-brand/10">
-              <Stethoscope className="w-8 h-8 text-brand-dark" />
+            <div className="hidden sm:flex w-16 h-16 bg-white/15 backdrop-blur-sm rounded-2xl items-center justify-center shrink-0 ring-1 ring-white/20">
+              <Stethoscope className="w-8 h-8 text-white" />
             </div>
           </div>
         </div>
@@ -179,7 +179,7 @@ function VetDashboard() {
             <button
               type="submit"
               disabled={loading || (!nationalId.trim() && !name.trim())}
-              className="w-full bg-brand hover:bg-brand-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+              className="w-full bg-accent hover:bg-accent-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               {loading ? t('dashboard.searching') : t('dashboard.searchButton')}
@@ -266,14 +266,14 @@ function OwnerHome() {
       <div className="max-w-2xl mx-auto px-6 py-8 space-y-6">
 
         {/* Hero greeting card */}
-        <div className="relative overflow-hidden rounded-3xl bg-brand-tint p-8 shadow-sm ring-1 ring-brand/15">
-          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-brand-soft/60 blur-3xl" />
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand to-brand-dark p-8 shadow-md">
+          <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-accent/25 blur-3xl" />
           <div className="relative flex items-center justify-between gap-4 rtl:flex-row-reverse">
             <div className="rtl:text-right">
-              <h1 className="text-brand-deep text-3xl font-bold tracking-tight">
+              <h1 className="text-white text-3xl font-bold tracking-tight">
                 {t(user?.role === 'owner' ? 'nav.greetingOwner' : 'nav.greetingVet', { name: firstName })}
               </h1>
-              <p className="text-ink-muted text-sm mt-2 font-medium">{t('dashboard.ownerSubGreeting')}</p>
+              <p className="text-white/80 text-sm mt-2 font-medium">{t('dashboard.ownerSubGreeting')}</p>
             </div>
             <div className="hidden sm:block text-6xl shrink-0">🐾</div>
           </div>
@@ -293,7 +293,7 @@ function OwnerHome() {
               className={[
                 'w-full flex items-center gap-4 px-6 py-5 rounded-2xl transition-all shadow-sm text-start rtl:flex-row-reverse',
                 primary
-                  ? 'bg-brand hover:bg-brand-dark text-white shadow-md hover:shadow-lg'
+                  ? 'bg-accent hover:bg-accent-dark text-white shadow-md hover:shadow-lg'
                   : 'bg-white hover:bg-brand-tint text-slate-800 border border-slate-200 hover:border-brand/40',
               ].join(' ')}
             >

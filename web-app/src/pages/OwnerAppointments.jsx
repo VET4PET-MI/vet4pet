@@ -104,7 +104,7 @@ export default function OwnerAppointments() {
       subtitle={t('ownerAppointments.subtitle')}
       actions={
         <button onClick={() => navigate('/book-appointment')}
-          className="flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
+          className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse">
           <Plus className="w-4 h-4" /> {t('ownerAppointments.bookAppointment')}
         </button>
       }
@@ -120,7 +120,7 @@ export default function OwnerAppointments() {
             <p className="font-semibold text-slate-700">{t('ownerAppointments.noTitle')}</p>
             <p className="text-sm text-slate-400 mt-1 mb-6">{t('ownerAppointments.noHint')}</p>
             <button onClick={() => navigate('/book-appointment')}
-              className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
+              className="px-5 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg">
               {t('ownerAppointments.bookNow')}
             </button>
           </div>

@@ -378,7 +378,7 @@ function AddRecordModal({ petId, user, defaultType = 'VISIT_SUMMARY', onClose, o
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 bg-brand hover:bg-brand-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
             >
               {submitting
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.saving')}</>
@@ -500,7 +500,7 @@ export default function PetProfile({ readOnly = false }) {
           {!readOnly && (
             <button
               onClick={() => setModal(true)}
-              className="ms-auto flex items-center gap-2 px-4 py-2 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 rtl:flex-row-reverse"
+              className="ms-auto flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 rtl:flex-row-reverse"
             >
               <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
             </button>
@@ -593,7 +593,7 @@ export default function PetProfile({ readOnly = false }) {
               {!readOnly && (
                 <button
                   onClick={() => setModal(true)}
-                  className="px-5 py-2.5 bg-brand hover:bg-brand-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
+                  className="px-5 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
                 >
                   {tab === 'medical' ? t('petProfile.addFirstRecord') : t('petProfile.addFirstDoc')}
                 </button>
