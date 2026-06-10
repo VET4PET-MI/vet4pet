@@ -188,9 +188,9 @@ function SimulateModal({ onClose, onCreated }) {
   }
 
   const fields = [
-    { key: 'ownerName', label: t('consultationsPage.simulateOwnerName'),  placeholder: t('consultationsPage.simulateOwnerNamePh'),           required: true },
     { key: 'ownerId',   label: t('consultationsPage.simulateOwnerId'),    placeholder: t('consultationsPage.simulateOwnerIdPh'),             required: true },
     { key: 'petName',   label: t('consultationsPage.simulatePetName'),    placeholder: t('consultationsPage.simulatePetNamePh'),             required: true },
+    { key: 'ownerName', label: t('consultationsPage.simulateOwnerName'),  placeholder: t('consultationsPage.simulateOwnerNamePh'),           required: true },
     { key: 'notes',     label: t('consultationsPage.simulateNotes'),      placeholder: t('consultationsPage.simulateNotesPh') },
   ]
 
