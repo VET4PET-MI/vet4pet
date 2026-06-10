@@ -62,9 +62,16 @@ async function updatePet(req, res) {
   try {
     const pet = await Pet.findById(req.params.id);
     if (!pet) return res.status(404).json({ message: 'Pet not found' });
-    if (req.user.role === 'owner' && pet.ownerId !== req.user.id) {
-      return res.status(403).json({ message: 'Forbidden.' });
+
+    if (req.user.role === 'owner') {
+      // Owners may edit only their own pet, and only its name.
+      if (pet.ownerId !== req.user.id) return res.status(403).json({ message: 'Forbidden.' });
+      if (typeof req.body.name === 'string' && req.body.name.trim()) pet.name = req.body.name.trim();
+      await pet.save();
+      return res.json(pet);
     }
+
+    // Vets may edit every field.
     const updated = await Pet.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     res.json(updated);
   } catch (err) {

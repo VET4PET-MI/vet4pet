@@ -411,10 +411,146 @@ function RecordModal({ petId, user, record, defaultType = 'VISIT_SUMMARY', onClo
   )
 }
 
+function EditPetModal({ pet, readOnly, onClose, onSaved }) {
+  const { t } = useTranslation()
+  const [form, setForm] = useState({
+    name:            pet.name ?? '',
+    species:         pet.species ?? '',
+    breed:           pet.breed ?? '',
+    age:             pet.age ?? '',
+    gender:          pet.gender ?? '',
+    weight:          pet.weight ?? '',
+    nextVaccination: pet.nextVaccination ? pet.nextVaccination.slice(0, 10) : '',
+  })
+  const [saving, setSaving] = useState(false)
+  const [error, setError]   = useState(null)
+
+  function set(k, v) { setForm(f => ({ ...f, [k]: v })) }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setSaving(true); setError(null)
+    try {
+      // Owners may only change the name; vets may change everything.
+      const payload = readOnly
+        ? { name: form.name }
+        : {
+            name:            form.name,
+            species:         form.species,
+            breed:           form.breed,
+            age:             form.age === '' ? null : Number(form.age),
+            gender:          form.gender,
+            weight:          form.weight === '' ? null : Number(form.weight),
+            nextVaccination: form.nextVaccination || null,
+          }
+      await api.put(`/api/pets/${pet._id}`, payload)
+      onSaved()
+    } catch (err) {
+      setError(err.response?.data?.message ?? t('petProfile.saveFail'))
+    } finally { setSaving(false) }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[92vh] flex flex-col border border-slate-200 overflow-hidden">
+        <div className="relative bg-brand-tint px-6 py-5 border-b border-brand/15 shrink-0">
+          <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-brand-soft/60 blur-2xl pointer-events-none" />
+          <div className="relative flex items-center justify-between rtl:flex-row-reverse">
+            <div className="flex items-center gap-3 rtl:flex-row-reverse">
+              <div className="w-10 h-10 bg-brand rounded-xl flex items-center justify-center shadow-md shrink-0">
+                <Pencil className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-lg font-bold text-brand-deep">{t('petProfile.editPetTitle')}</h2>
+            </div>
+            <button type="button" onClick={onClose} className="p-2 text-slate-500 hover:bg-white/60 rounded-xl transition shrink-0">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.petName')} <span className="text-red-400">*</span></label>
+              <input value={form.name} onChange={e => set('name', e.target.value)} required
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand rtl:text-right" />
+            </div>
+
+            {!readOnly && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.species')}</label>
+                    <select value={form.species} onChange={e => set('species', e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+                      <option value="">{t('ownerMyPets.selectPlaceholder')}</option>
+                      <option value="Dog">{t('ownerMyPets.speciesDog')}</option>
+                      <option value="Cat">{t('ownerMyPets.speciesCat')}</option>
+                      <option value="Bird">{t('ownerMyPets.speciesBird')}</option>
+                      <option value="Rabbit">{t('ownerMyPets.speciesRabbit')}</option>
+                      <option value="Other">{t('ownerMyPets.speciesOther')}</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.gender')}</label>
+                    <select value={form.gender} onChange={e => set('gender', e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+                      <option value="">{t('ownerMyPets.selectPlaceholder')}</option>
+                      <option value="Male">{t('ownerMyPets.male')}</option>
+                      <option value="Female">{t('ownerMyPets.female')}</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.breed')}</label>
+                    <input value={form.breed} onChange={e => set('breed', e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand rtl:text-right" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('ownerMyPets.age')}</label>
+                    <input type="number" min="0" max="40" value={form.age} onChange={e => set('age', e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('petProfile.weightLabel')}</label>
+                    <input type="number" min="0" step="0.1" value={form.weight} onChange={e => set('weight', e.target.value)}
+                      placeholder={t('petProfile.kg')}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('petProfile.vaccinationLabel')}</label>
+                    <input type="date" value={form.nextVaccination} onChange={e => set('nextVaccination', e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {error && <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>}
+          </div>
+
+          <div className="flex gap-3 px-6 py-4 border-t border-slate-100 shrink-0">
+            <button type="button" onClick={onClose} className="flex-1 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+              {t('petProfile.cancel')}
+            </button>
+            <button type="submit" disabled={saving}
+              className="flex-1 bg-accent hover:bg-accent-dark disabled:opacity-60 text-white text-sm font-semibold py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+              {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.saving')}</> : t('petProfile.saveChanges')}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 const SPECIES_EMOJI = { dog: '🐕', cat: '🐈', bird: '🦜', rabbit: '🐇' }
 
 export default function PetProfile({ readOnly = false }) {
-  const { t }     = useTranslation()
+  const { t, i18n } = useTranslation()
   const { id }    = useParams()
   const navigate  = useNavigate()
   const { user }  = useAuth()
@@ -432,6 +568,7 @@ export default function PetProfile({ readOnly = false }) {
   const [error, setError]     = useState(null)
   const [recordsError, setRecordsError] = useState(null)
   const [recordModal, setRecordModal] = useState(null) // null=closed | {record:null}=add | {record}=edit
+  const [editPet, setEditPet] = useState(false)
   const [tab, setTab] = useState('medical') // 'medical' | 'docs'
 
   useEffect(() => { fetchPet() }, [id])
@@ -482,6 +619,11 @@ export default function PetProfile({ readOnly = false }) {
     fetchRecords(true)
   }
 
+  async function handlePetSaved() {
+    setEditPet(false)
+    fetchPet()
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center">
@@ -502,6 +644,10 @@ export default function PetProfile({ readOnly = false }) {
   }
 
   const emoji = SPECIES_EMOJI[pet.species?.toLowerCase()] ?? '🐾'
+  const locale = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
+  const vaccStr = pet.nextVaccination
+    ? new Date(pet.nextVaccination).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })
+    : null
 
   return (
     <div className="min-h-screen bg-bg">
@@ -517,14 +663,22 @@ export default function PetProfile({ readOnly = false }) {
           <span className="text-slate-300 select-none">/</span>
           <span className="text-slate-800 font-semibold text-sm truncate">{pet.name}</span>
 
-          {!readOnly && (
+          <div className="ms-auto flex items-center gap-2 shrink-0">
             <button
-              onClick={() => setRecordModal({ record: null })}
-              className="ms-auto flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 rtl:flex-row-reverse"
+              onClick={() => setEditPet(true)}
+              className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 hover:border-brand/40 hover:bg-brand-soft text-slate-600 hover:text-brand-dark text-sm font-medium rounded-xl transition-colors rtl:flex-row-reverse"
             >
-              <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
+              <Pencil className="w-4 h-4" /> {readOnly ? t('petProfile.editName') : t('petProfile.editDetails')}
             </button>
-          )}
+            {!readOnly && (
+              <button
+                onClick={() => setRecordModal({ record: null })}
+                className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg rtl:flex-row-reverse"
+              >
+                <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -547,6 +701,8 @@ export default function PetProfile({ readOnly = false }) {
                   [t('petProfile.breedLabel'),   localizeBreed(pet.breed, t)],
                   [t('petProfile.ageLabel'),     pet.age != null ? t('petProfile.ageValue', { n: pet.age }) : null],
                   [t('petProfile.genderLabel'),  localizeGender(pet.gender, t)],
+                  [t('petProfile.weightLabel'),  pet.weight != null ? `${pet.weight} ${t('petProfile.kg')}` : null],
+                  [t('petProfile.vaccinationLabel'), vaccStr],
                 ].map(([label, val]) => val ? (
                   <span key={label} className="inline-flex items-center gap-1.5 text-xs font-medium text-ink/80 bg-white/70 backdrop-blur-sm px-3 py-1.5 rounded-full ring-1 ring-brand/10">
                     <span className="text-brand-dark font-semibold">{label}:</span> {val}
@@ -664,6 +820,15 @@ export default function PetProfile({ readOnly = false }) {
           defaultType={tab === 'docs' ? 'PRESCRIPTION' : 'VISIT_SUMMARY'}
           onClose={() => setRecordModal(null)}
           onSaved={handleSaved}
+        />
+      )}
+
+      {editPet && (
+        <EditPetModal
+          pet={pet}
+          readOnly={readOnly}
+          onClose={() => setEditPet(false)}
+          onSaved={handlePetSaved}
         />
       )}
     </div>
