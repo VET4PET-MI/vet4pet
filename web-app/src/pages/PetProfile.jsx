@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft, Plus, X, Upload, Download, ExternalLink,
-  FileText, Loader2, Trash2, ChevronDown, ChevronUp,
+  FileText, Loader2, Trash2, ChevronDown, ChevronUp, Pencil,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import api, { API_BASE } from '../api'
@@ -80,7 +80,7 @@ function FileAttachment({ fileUrl, originalFileName }) {
   )
 }
 
-function RecordCard({ record }) {
+function RecordCard({ record, onEdit }) {
   const { t, i18n } = useTranslation()
   const [expanded, setExpanded] = useState(false)
   const meta       = RECORD_TYPE_DEFS.find(x => x.value === record.type) ?? RECORD_TYPE_DEFS[5]
@@ -102,7 +102,17 @@ function RecordCard({ record }) {
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${meta.color}`}>
               <span>{meta.icon}</span>{label}
             </span>
-            <span className="text-xs text-slate-400 font-medium">{dateStr}</span>
+            <div className="flex items-center gap-2 rtl:flex-row-reverse">
+              <span className="text-xs text-slate-400 font-medium">{dateStr}</span>
+              {onEdit && (
+                <button
+                  onClick={() => onEdit(record)}
+                  className="flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-brand-dark transition-colors"
+                >
+                  <Pencil className="w-3.5 h-3.5" /> {t('petProfile.edit')}
+                </button>
+              )}
+            </div>
           </div>
 
           {record.vetName && (
@@ -204,10 +214,15 @@ function DropZone({ file, onFile, onRemove }) {
   )
 }
 
-function AddRecordModal({ petId, user, defaultType = 'VISIT_SUMMARY', onClose, onSaved }) {
+function RecordModal({ petId, user, record, defaultType = 'VISIT_SUMMARY', onClose, onSaved }) {
   const { t } = useTranslation()
+  const isEdit = Boolean(record)
   const today = new Date().toISOString().slice(0, 10)
-  const [form, setForm]         = useState({ type: defaultType, date: today, vetName: user?.name ?? '', findings: '' })
+  const [form, setForm]         = useState(
+    record
+      ? { type: record.type, date: (record.date || today).slice(0, 10), vetName: record.vetName ?? '', findings: record.findings ?? '' }
+      : { type: defaultType, date: today, vetName: user?.name ?? '', findings: '' }
+  )
   const [file, setFile]         = useState(null)
   const [submitting, setSub]    = useState(false)
   const [progress, setProgress] = useState(0)
@@ -237,14 +252,19 @@ function AddRecordModal({ petId, user, defaultType = 'VISIT_SUMMARY', onClose, o
         originalFileName = data.originalName
       }
 
-      await api.post('/api/records', {
+      const payload = {
         petId,
         date:     form.date || today,
         vetName:  form.vetName,
         type:     form.type,
         findings: form.findings,
         ...(fileUrl && { fileUrl, originalFileName }),
-      })
+      }
+      if (isEdit) {
+        await api.put(`/api/records/${record._id}`, payload)
+      } else {
+        await api.post('/api/records', payload)
+      }
 
       onSaved()
     } catch (err) {
@@ -268,8 +288,8 @@ function AddRecordModal({ petId, user, defaultType = 'VISIT_SUMMARY', onClose, o
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div className="rtl:text-right">
-                <h2 className="text-lg font-bold text-brand-deep">{t('petProfile.addModalTitle')}</h2>
-                <p className="text-xs text-ink-muted mt-0.5">{t('petProfile.addModalSub')}</p>
+                <h2 className="text-lg font-bold text-brand-deep">{isEdit ? t('petProfile.editRecordTitle') : t('petProfile.addModalTitle')}</h2>
+                <p className="text-xs text-ink-muted mt-0.5">{isEdit ? t('petProfile.editRecordSub') : t('petProfile.addModalSub')}</p>
               </div>
             </div>
             <button type="button" onClick={onClose}
@@ -382,7 +402,7 @@ function AddRecordModal({ petId, user, defaultType = 'VISIT_SUMMARY', onClose, o
             >
               {submitting
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> {t('petProfile.saving')}</>
-                : t('petProfile.saveRecord')}
+                : (isEdit ? t('petProfile.saveChanges') : t('petProfile.saveRecord'))}
             </button>
           </div>
         </form>
@@ -411,7 +431,7 @@ export default function PetProfile({ readOnly = false }) {
   const [recordsLoading, setRecordsLoading] = useState(true)
   const [error, setError]     = useState(null)
   const [recordsError, setRecordsError] = useState(null)
-  const [showModal, setModal] = useState(false)
+  const [recordModal, setRecordModal] = useState(null) // null=closed | {record:null}=add | {record}=edit
   const [tab, setTab] = useState('medical') // 'medical' | 'docs'
 
   useEffect(() => { fetchPet() }, [id])
@@ -458,7 +478,7 @@ export default function PetProfile({ readOnly = false }) {
   }
 
   async function handleSaved() {
-    setModal(false)
+    setRecordModal(null)
     fetchRecords(true)
   }
 
@@ -499,7 +519,7 @@ export default function PetProfile({ readOnly = false }) {
 
           {!readOnly && (
             <button
-              onClick={() => setModal(true)}
+              onClick={() => setRecordModal({ record: null })}
               className="ms-auto flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 rtl:flex-row-reverse"
             >
               <Plus className="w-4 h-4" /> {t('petProfile.addRecord')}
@@ -592,7 +612,7 @@ export default function PetProfile({ readOnly = false }) {
               </p>
               {!readOnly && (
                 <button
-                  onClick={() => setModal(true)}
+                  onClick={() => setRecordModal({ record: null })}
                   className="px-5 py-2.5 bg-accent hover:bg-accent-dark text-white text-sm font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
                 >
                   {tab === 'medical' ? t('petProfile.addFirstRecord') : t('petProfile.addFirstDoc')}
@@ -602,7 +622,11 @@ export default function PetProfile({ readOnly = false }) {
           ) : (
             <div>
               {records.map(record => (
-                <RecordCard key={record._id} record={record} />
+                <RecordCard
+                  key={record._id}
+                  record={record}
+                  onEdit={readOnly ? undefined : r => setRecordModal({ record: r })}
+                />
               ))}
 
               {hasMore && (
@@ -632,12 +656,13 @@ export default function PetProfile({ readOnly = false }) {
         </section>
       </div>
 
-      {!readOnly && showModal && (
-        <AddRecordModal
+      {!readOnly && recordModal && (
+        <RecordModal
           petId={pet._id}
           user={user}
+          record={recordModal.record}
           defaultType={tab === 'docs' ? 'PRESCRIPTION' : 'VISIT_SUMMARY'}
-          onClose={() => setModal(false)}
+          onClose={() => setRecordModal(null)}
           onSaved={handleSaved}
         />
       )}
