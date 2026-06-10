@@ -113,7 +113,7 @@ function VetDashboard() {
         {/* Hero greeting */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand to-brand-dark p-8 shadow-md">
           <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-accent/25 blur-3xl" />
-          <div className="relative flex items-center justify-between gap-4 rtl:flex-row-reverse">
+          <div className="relative flex items-center justify-between gap-4">
             <div className="rtl:text-right">
               <h1 className="text-white text-3xl font-bold tracking-tight">
                 {t('nav.greetingVet', { name: firstName })}
@@ -270,7 +270,7 @@ function OwnerHome() {
         {/* Hero greeting card */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand to-brand-dark p-8 shadow-md">
           <div className="absolute -top-10 -end-10 w-48 h-48 rounded-full bg-accent/25 blur-3xl" />
-          <div className="relative flex items-center justify-between gap-4 rtl:flex-row-reverse">
+          <div className="relative flex items-center justify-between gap-4">
             <div className="rtl:text-right">
               <h1 className="text-white text-3xl font-bold tracking-tight">
                 {t(user?.role === 'owner' ? 'nav.greetingOwner' : 'nav.greetingVet', { name: firstName })}
