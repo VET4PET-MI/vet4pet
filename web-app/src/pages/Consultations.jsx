@@ -463,9 +463,7 @@ export default function Consultations() {
           <ExternalLink className="w-5 h-5 text-brand shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-brand-dark">{t('consultationsPage.poweredBy')}</p>
-            <p className="text-xs text-brand mt-0.5">
-              {t('consultationsPage.poweredByHint')}<span className="font-mono">meet.jit.si/Vet4Pet-[ID]</span>{t('consultationsPage.poweredByHint2')}
-            </p>
+            <p className="text-xs text-brand mt-0.5">{t('consultationsPage.poweredByHint')}</p>
           </div>
         </div>
       </div>
