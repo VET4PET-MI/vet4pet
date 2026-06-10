@@ -252,6 +252,7 @@
     "statPendingConsults": "שיחות בהמתנה",
     "statUnreadMsgs": "הודעות חדשות",
     "statTotalPatients": "סה\"כ מטופלים",
+    "statPatientsToday": "מטופלים היום",
     "ownerActions": {
       "bookTitle": "קביעת תור",
       "bookSub": "תור עם הווטרינר שלך",
@@ -265,12 +266,8 @@
   },
   "patientsList": {
     "title": "מטופלים",
-    "subtitle": "כל החיות הרשומות במרפאה",
-    "searchPlaceholder": "חיפוש לפי שם חיה…",
-    "count_one": "מטופל אחד",
-    "count_other": "{{count}} מטופלים",
-    "empty": "אין מטופלים רשומים עדיין",
-    "noMatch": "לא נמצאו מטופלים שתואמים לחיפוש"
+    "subtitle": "חיפוש מטופל לפי תעודת זהות של הבעלים",
+    "privacyHint": "מטעמי חיסיון רפואי, חיפוש מטופל מתבצע לפי תעודת הזהות של הבעלים."
   },
   "petProfile": {
     "title": "פרופיל חיה",

@@ -54,7 +54,7 @@ function VetDashboard() {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState(null)
-  const [stats, setStats]     = useState({ todayAppts: 0, pendingConsults: 0, unreadMsgs: 0, totalPatients: 0 })
+  const [stats, setStats]     = useState({ todayAppts: 0, pendingConsults: 0, unreadMsgs: 0, patientsToday: 0 })
 
   const locale = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
   const today = new Date().toLocaleDateString(locale, {
@@ -69,20 +69,22 @@ function VetDashboard() {
       api.get(`/api/appointments?date=${todayIso}`).catch(() => ({ data: [] })),
       api.get('/api/consultations/pending').catch(() => ({ data: [] })),
       api.get('/api/messages/unread-count').catch(() => ({ data: { count: 0 } })),
-      api.get('/api/pets').catch(() => ({ data: [] })),
-    ]).then(([appts, consults, msgs, pets]) => {
+    ]).then(([appts, consults, msgs]) => {
+      const todayActive = (appts.data || []).filter(a => a.status !== 'cancelled')
       setStats({
-        todayAppts:     (appts.data || []).filter(a => a.status !== 'cancelled').length,
-        pendingConsults:(consults.data || []).length,
-        unreadMsgs:     msgs.data?.count ?? 0,
-        totalPatients:  (pets.data || []).length,
+        todayAppts:      todayActive.length,
+        pendingConsults: (consults.data || []).length,
+        unreadMsgs:      msgs.data?.count ?? 0,
+        // Privacy: we can't count all clinic patients, so show how many distinct
+        // pets the vet is seeing today (derived from their own appointments).
+        patientsToday:   new Set(todayActive.map(a => a.petId).filter(Boolean)).size,
       })
     })
   }, [])
 
   async function handleSearch(e) {
     e.preventDefault()
-    if (!nationalId.trim() && !name.trim()) return
+    if (!nationalId.trim()) return
     setLoading(true); setError(null)
     try {
       const params = {}
@@ -101,7 +103,7 @@ function VetDashboard() {
     { label: t('dashboard.statTodayAppts'),      value: stats.todayAppts,      icon: Calendar,      bg: 'bg-sky-50',     text: 'text-sky-700' },
     { label: t('dashboard.statPendingConsults'), value: stats.pendingConsults, icon: Video,         bg: 'bg-amber-50',   text: 'text-amber-700' },
     { label: t('dashboard.statUnreadMsgs'),      value: stats.unreadMsgs,      icon: MessageSquare, bg: 'bg-slate-100',  text: 'text-slate-700' },
-    { label: t('dashboard.statTotalPatients'),   value: stats.totalPatients,   icon: Users,         bg: 'bg-accent-soft', text: 'text-accent-dark', path: '/patients' },
+    { label: t('dashboard.statPatientsToday'),   value: stats.patientsToday,   icon: Users,         bg: 'bg-accent-soft', text: 'text-accent-dark', path: '/patients' },
   ]
 
   return (
@@ -159,7 +161,7 @@ function VetDashboard() {
           <form onSubmit={handleSearch} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('dashboard.ownerId')}</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">{t('dashboard.ownerId')} <span className="text-red-400">*</span></label>
                 <input
                   type="text" value={nationalId} onChange={e => setNationalId(e.target.value)}
                   inputMode="numeric" maxLength={9}
@@ -178,7 +180,7 @@ function VetDashboard() {
             </div>
             <button
               type="submit"
-              disabled={loading || (!nationalId.trim() && !name.trim())}
+              disabled={loading || !nationalId.trim()}
               className="w-full bg-accent hover:bg-accent-dark disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl text-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}

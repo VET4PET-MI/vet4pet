@@ -10,16 +10,16 @@ async function getPets(req, res) {
     if (req.user.role === 'owner') {
       filter.ownerId = req.user.id;
     } else {
-      // Vet: optional search by owner national ID; with no filters, list all
-      // patients registered at the clinic.
-      if (nationalId) {
-        const normalizedId = isValidIsraeliId(nationalId);
-        const owner = normalizedId
-          ? await User.findOne({ nationalId: normalizedId, role: 'owner' }).select('_id')
-          : null;
-        if (!owner) return res.json([]); // no such owner -> empty result, not an error
-        filter.ownerId = owner._id.toString();
-      }
+      // Vet: national ID is mandatory — pets are found only via the owner's ID
+      // (medical privacy, no browsing the full list); name optionally narrows
+      // within that owner's pets.
+      if (!nationalId) return res.json([]);
+      const normalizedId = isValidIsraeliId(nationalId);
+      const owner = normalizedId
+        ? await User.findOne({ nationalId: normalizedId, role: 'owner' }).select('_id')
+        : null;
+      if (!owner) return res.json([]); // no such owner -> empty result, not an error
+      filter.ownerId = owner._id.toString();
       if (name) filter.name = { $regex: name, $options: 'i' };
     }
 

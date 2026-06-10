@@ -252,6 +252,7 @@
     "statPendingConsults": "Pending consultations",
     "statUnreadMsgs": "Unread messages",
     "statTotalPatients": "Total patients",
+    "statPatientsToday": "Patients today",
     "ownerActions": {
       "bookTitle": "Book an Appointment",
       "bookSub": "Schedule a visit with your vet",
@@ -265,12 +266,8 @@
   },
   "patientsList": {
     "title": "Patients",
-    "subtitle": "All pets registered at the clinic",
-    "searchPlaceholder": "Search by pet name…",
-    "count_one": "{{count}} patient",
-    "count_other": "{{count}} patients",
-    "empty": "No patients registered yet",
-    "noMatch": "No patients match your search"
+    "subtitle": "Find a patient by the owner's national ID",
+    "privacyHint": "For medical privacy, look up a patient by the owner's national ID."
   },
   "petProfile": {
     "title": "Pet Profile",
