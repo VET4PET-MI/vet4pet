@@ -189,8 +189,8 @@ function SimulateModal({ onClose, onCreated }) {
 
   const fields = [
     { key: 'ownerName', label: t('consultationsPage.simulateOwnerName'),  placeholder: t('consultationsPage.simulateOwnerNamePh'),           required: true },
-    { key: 'ownerId',   label: t('consultationsPage.simulateOwnerId'),    placeholder: t('consultationsPage.simulateOwnerIdPh') },
-    { key: 'petName',   label: t('consultationsPage.simulatePetName'),    placeholder: t('consultationsPage.simulatePetNamePh') },
+    { key: 'ownerId',   label: t('consultationsPage.simulateOwnerId'),    placeholder: t('consultationsPage.simulateOwnerIdPh'),             required: true },
+    { key: 'petName',   label: t('consultationsPage.simulatePetName'),    placeholder: t('consultationsPage.simulatePetNamePh'),             required: true },
     { key: 'notes',     label: t('consultationsPage.simulateNotes'),      placeholder: t('consultationsPage.simulateNotesPh') },
   ]
 
@@ -212,7 +212,7 @@ function SimulateModal({ onClose, onCreated }) {
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           {fields.map(({ key, label, placeholder, required }) => (
             <div key={key}>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}{required && <span className="text-red-400"> *</span>}</label>
               <input value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                 placeholder={placeholder} required={required}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-brand" />
