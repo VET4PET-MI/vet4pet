@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { PawPrint, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import { API_BASE } from '../api'
@@ -86,9 +86,7 @@ export default function Register() {
 
         {/* Logo */}
         <div className="flex flex-col items-center mb-6 bg-white/70 border border-brand/15 rounded-3xl py-6 px-4 backdrop-blur-md shadow-sm">
-          <div className="w-16 h-16 bg-brand rounded-2xl flex items-center justify-center shadow-xl mb-4">
-            <PawPrint className="w-8 h-8 text-white" />
-          </div>
+          <img src="/vet4pet_icon.png" alt="VET4PET" className="w-16 h-16 rounded-2xl shadow-xl mb-4 object-contain" />
           <h1 className="text-2xl font-bold text-ink tracking-wide">{t('common.appName')}</h1>
           <p className="text-ink-muted text-sm mt-1">{t('auth.createAccount')}</p>
         </div>

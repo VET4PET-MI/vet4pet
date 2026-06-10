@@ -79,9 +79,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
 
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-slate-100 shrink-0 rtl:flex-row-reverse">
-          <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center shadow-md shrink-0">
-            <PawPrint className="w-5 h-5 text-white" />
-          </div>
+          <img src="/vet4pet_icon.png" alt="VET4PET" className="w-9 h-9 rounded-xl shadow-md shrink-0 object-contain" />
           <div className="min-w-0 flex-1 rtl:text-right">
             <p className="text-slate-800 font-bold text-sm tracking-wide">VET4PET</p>
             <p className="text-slate-400 text-xs">{portalLabel}</p>
