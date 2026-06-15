@@ -60,6 +60,17 @@ async function updateMe(req, res) {
     const update = {};
     for (const k of allowed) if (k in req.body) update[k] = req.body[k];
 
+    // email change: format check + uniqueness
+    if ('email' in req.body) {
+      const email = (req.body.email || '').trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ message: 'Invalid email format.' });
+      }
+      const clash = await User.findOne({ email, _id: { $ne: req.user.id } }).select('_id');
+      if (clash) return res.status(409).json({ message: 'Email already in use.' });
+      update.email = email;
+    }
+
     // nationalId needs validation + uniqueness, so handle it separately.
     if ('nationalId' in req.body) {
       const normalizedId = isValidIsraeliId(req.body.nationalId);

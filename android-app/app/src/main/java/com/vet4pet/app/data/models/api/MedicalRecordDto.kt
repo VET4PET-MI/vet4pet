@@ -12,6 +12,7 @@ data class MedicalRecordDto(
     val vetName: String?,
     val type: String?,
     val findings: String?,
+    val prescription: String?,
     val fileUrl: String?,
     val originalFileName: String?,
     val createdAt: String?
@@ -27,7 +28,7 @@ data class MedicalRecordDto(
         } ?: EventType.OTHER,
         findings     = findings ?: "",
         diagnosis    = null,
-        prescription = null,
+        prescription = prescription,
         fileUrl      = fileUrl,
         attachments  = emptyList(),
         createdAt    = createdAt?.let { runCatching { Instant.parse(it).toEpochMilli() }.getOrDefault(0L) } ?: 0L
@@ -46,6 +47,7 @@ data class AddRecordRequest(
     val vetName: String,
     val type: String,
     val findings: String,
+    val prescription: String? = null,
     val fileUrl: String? = null,
     val originalFileName: String? = null
 )
@@ -55,6 +57,7 @@ data class UpdateRecordRequest(
     val vetName: String,
     val type: String,
     val findings: String,
+    val prescription: String? = null,
     val fileUrl: String? = null,
     val originalFileName: String? = null
 )

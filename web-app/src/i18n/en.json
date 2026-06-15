@@ -347,6 +347,11 @@
     "block": "Block",
     "cancel": "Cancel",
     "available": "+ Available · click to block",
+    "blockDay": "Block Full Day",
+    "unblockDay": "Unblock Day",
+    "dayBlocked": "Day Blocked",
+    "blockDayReasonPh": "Reason: holiday, conference, sick… (optional)",
+    "blockDayConfirm": "Block Day",
     "serverError": "Server error {{status}} — restart the backend.",
     "serverUnreachable": "Cannot reach the server — make sure the backend is running on port 5000.",
     "types": {

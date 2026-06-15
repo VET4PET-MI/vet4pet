@@ -3,8 +3,8 @@ package com.vet4pet.app.util
 object IsraeliIdValidator {
     /** Returns the normalized 9-digit ID string, or null if the input is invalid. */
     fun validate(input: String): String? {
-        val raw = input.trim()
-        if (!raw.matches(Regex("\\d{1,9}"))) return null
+        val raw = input.trim().filter { it.isDigit() }   // strip dashes/spaces from phone keyboard
+        if (raw.isEmpty() || raw.length > 9) return null
         val id = raw.padStart(9, '0')
         var sum = 0
         for (i in 0..8) {

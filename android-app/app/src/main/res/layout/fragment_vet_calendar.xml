@@ -36,6 +36,16 @@
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface" />
 
+        <ImageButton
+            android:id="@+id/btn_working_hours"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_settings"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/calendar_working_hours_btn"
+            app:tint="?attr/colorOnSurfaceVariant" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_book_new"
             style="@style/Vet4Pet.Button"
@@ -127,6 +137,7 @@
             android:paddingVertical="3dp"
             tools:text="3 appointments" />
 
+
     </LinearLayout>
 
     <!-- ══ Loading ════════════════════════════════════════════════════════ -->
@@ -137,6 +148,20 @@
         android:indeterminate="true"
         android:visibility="gone"
         app:trackCornerRadius="4dp" />
+
+    <!-- ══ Day-off banner ══════════════════════════════════════════════════ -->
+    <TextView
+        android:id="@+id/tv_day_off"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="16dp"
+        android:text="@string/schedule_day_off"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:gravity="center"
+        android:background="@drawable/bg_badge_primary"
+        android:visibility="gone" />
 
     <!-- ══ Time grid ═════════════════════════════════════════════════════ -->
     <androidx.recyclerview.widget.RecyclerView

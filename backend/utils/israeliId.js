@@ -2,8 +2,8 @@
 // weighted-checksum algorithm. Returns the normalized 9-digit string,
 // or null if the input is not a valid ID.
 function isValidIsraeliId(input) {
-  const raw = String(input ?? '').trim();
-  if (!/^\d{1,9}$/.test(raw)) return null;
+  const raw = String(input ?? '').trim().replace(/\D/g, '');
+  if (!raw || raw.length > 9) return null;
 
   const id = raw.padStart(9, '0');
   let sum = 0;

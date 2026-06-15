@@ -106,6 +106,11 @@ class AddMedicalRecordFragment : Fragment() {
             ?.let { getString(it.labelRes()) } ?: ""
         binding.acRecordType.setText(typeLabel, false)
 
+        if (record.type == EventType.PRESCRIPTION) {
+            binding.tilPrescription.isVisible = true
+            binding.etPrescription.setText(record.prescription ?: "")
+        }
+
         if (!record.fileUrl.isNullOrBlank()) {
             binding.tvSelectedFile.text = getString(R.string.action_change_file)
             binding.tvSelectedFile.isVisible = true
@@ -113,10 +118,11 @@ class AddMedicalRecordFragment : Fragment() {
     }
 
     private fun submitRecord(petId: String) {
-        val vetName  = binding.etVetName.text?.toString()?.trim().orEmpty()
-        val findings = binding.etFindings.text?.toString()?.trim().orEmpty()
-        val typeLabel = binding.acRecordType.text?.toString()?.trim().orEmpty()
-        val typeEnum = EventType.entries.firstOrNull {
+        val vetName      = binding.etVetName.text?.toString()?.trim().orEmpty()
+        val findings     = binding.etFindings.text?.toString()?.trim().orEmpty()
+        val prescription = binding.etPrescription.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
+        val typeLabel    = binding.acRecordType.text?.toString()?.trim().orEmpty()
+        val typeEnum     = EventType.entries.firstOrNull {
             getString(it.labelRes()) == typeLabel
         } ?: return
 
@@ -124,12 +130,13 @@ class AddMedicalRecordFragment : Fragment() {
         binding.progressSave.isVisible = true
 
         viewModel.addRecord(
-            petId    = petId,
-            vetName  = vetName,
-            type     = typeEnum.name,
-            findings = findings,
-            dateMs   = selectedDateMs,
-            fileUri  = selectedFileUri
+            petId        = petId,
+            vetName      = vetName,
+            type         = typeEnum.name,
+            findings     = findings,
+            prescription = prescription,
+            dateMs       = selectedDateMs,
+            fileUri      = selectedFileUri
         ) { success, error ->
             binding.btnSave.isEnabled     = true
             binding.progressSave.isVisible = false
@@ -146,10 +153,11 @@ class AddMedicalRecordFragment : Fragment() {
     }
 
     private fun submitEdit(petId: String, record: MedicalRecord) {
-        val vetName  = binding.etVetName.text?.toString()?.trim().orEmpty()
-        val findings = binding.etFindings.text?.toString()?.trim().orEmpty()
-        val typeLabel = binding.acRecordType.text?.toString()?.trim().orEmpty()
-        val typeEnum = EventType.entries.firstOrNull {
+        val vetName      = binding.etVetName.text?.toString()?.trim().orEmpty()
+        val findings     = binding.etFindings.text?.toString()?.trim().orEmpty()
+        val prescription = binding.etPrescription.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
+        val typeLabel    = binding.acRecordType.text?.toString()?.trim().orEmpty()
+        val typeEnum     = EventType.entries.firstOrNull {
             getString(it.labelRes()) == typeLabel
         } ?: return
 
@@ -162,6 +170,7 @@ class AddMedicalRecordFragment : Fragment() {
             vetName         = vetName,
             type            = typeEnum.name,
             findings        = findings,
+            prescription    = prescription,
             dateMs          = selectedDateMs,
             fileUri         = selectedFileUri,
             existingFileUrl = record.fileUrl
@@ -187,6 +196,13 @@ class AddMedicalRecordFragment : Fragment() {
         binding.acRecordType.setAdapter(
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, labels)
         )
+        binding.acRecordType.setOnItemClickListener { _, _, _, _ ->
+            val typeLabel = binding.acRecordType.text?.toString()?.trim() ?: ""
+            val isPrescription = EventType.entries.firstOrNull {
+                getString(it.labelRes()) == typeLabel
+            } == EventType.PRESCRIPTION
+            binding.tilPrescription.isVisible = isPrescription
+        }
     }
 
     private fun setupDatePicker() {

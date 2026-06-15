@@ -10,6 +10,7 @@ import com.vet4pet.app.data.models.api.CreateAppointmentRequest
 import com.vet4pet.app.data.models.api.CreateTimeBlockRequest
 import com.vet4pet.app.data.models.api.TimeBlockDto
 import com.vet4pet.app.data.models.api.UpdateAppointmentRequest
+import com.vet4pet.app.data.models.api.VetScheduleDto
 import com.vet4pet.app.network.ApiClient
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -24,6 +25,16 @@ class VetCalendarViewModel(application: Application) : AndroidViewModel(applicat
 
     private val _blocks = MutableLiveData<List<TimeBlockDto>>(emptyList())
     val blocks: LiveData<List<TimeBlockDto>> = _blocks
+
+    private val _schedule = MutableLiveData<VetScheduleDto?>(null)
+    val schedule: LiveData<VetScheduleDto?> = _schedule
+
+    fun loadSchedule() {
+        viewModelScope.launch {
+            runCatching { api.getVetSchedule() }
+                .onSuccess { _schedule.value = it }
+        }
+    }
 
     fun loadDay(date: String) {
         _appointments.value = UiState.Loading
@@ -80,6 +91,21 @@ class VetCalendarViewModel(application: Application) : AndroidViewModel(applicat
     fun deleteBlock(blockId: String, date: String) {
         viewModelScope.launch {
             runCatching { api.deleteTimeBlock(blockId) }
+                .onSuccess { loadDay(date) }
+        }
+    }
+
+    fun blockDay(date: String, startTime: String, endTime: String, reason: String, onDone: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            runCatching { api.createTimeBlock(CreateTimeBlockRequest(date, startTime, endTime, reason)) }
+                .onSuccess { loadDay(date); onDone(true) }
+                .onFailure { onDone(false) }
+        }
+    }
+
+    fun deleteAllBlocks(date: String) {
+        viewModelScope.launch {
+            runCatching { api.deleteAllTimeBlocks(date) }
                 .onSuccess { loadDay(date) }
         }
     }

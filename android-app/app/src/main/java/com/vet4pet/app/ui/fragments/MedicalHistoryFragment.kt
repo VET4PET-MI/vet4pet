@@ -32,8 +32,9 @@ class MedicalHistoryFragment : Fragment() {
     private var petId = ""
 
     companion object {
-        private val MEDICAL_TYPES = "VISIT_SUMMARY,VACCINATION,LAB_RESULT,X_RAY,BLOOD_TEST,CONSULTATION"
-        private val DOCS_TYPES    = "PRESCRIPTION,OTHER"
+        private val MEDICAL_TYPES       = "VISIT_SUMMARY,VACCINATION,LAB_RESULT,X_RAY,BLOOD_TEST,CONSULTATION"
+        private val PRESCRIPTIONS_TYPES = "PRESCRIPTION"
+        private val DOCS_TYPES          = "OTHER"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -69,11 +70,19 @@ class MedicalHistoryFragment : Fragment() {
 
         // ── Tabs ──────────────────────────────────────────────────────────
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_medical))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_prescriptions))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_docs))
 
-        fun currentTypes() = if (binding.tabLayout.selectedTabPosition == 0) MEDICAL_TYPES else DOCS_TYPES
-        fun currentEmptyText() = if (binding.tabLayout.selectedTabPosition == 0)
-            getString(R.string.records_empty) else getString(R.string.records_docs_empty)
+        fun currentTypes() = when (binding.tabLayout.selectedTabPosition) {
+            1    -> PRESCRIPTIONS_TYPES
+            2    -> DOCS_TYPES
+            else -> MEDICAL_TYPES
+        }
+        fun currentEmptyText() = when (binding.tabLayout.selectedTabPosition) {
+            1    -> getString(R.string.records_prescriptions_empty)
+            2    -> getString(R.string.records_docs_empty)
+            else -> getString(R.string.records_empty)
+        }
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -159,7 +168,11 @@ class MedicalHistoryFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         if (petId.isEmpty() || _binding == null) return
-        val types = if (binding.tabLayout.selectedTabPosition == 0) MEDICAL_TYPES else DOCS_TYPES
+        val types = when (binding.tabLayout.selectedTabPosition) {
+            1    -> PRESCRIPTIONS_TYPES
+            2    -> DOCS_TYPES
+            else -> MEDICAL_TYPES
+        }
         viewModel.loadRecords(petId, refresh = true, types = types)
     }
 

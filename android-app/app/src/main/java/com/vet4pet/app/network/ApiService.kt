@@ -192,6 +192,9 @@ interface ApiService {
     @DELETE("api/time-blocks/{id}")
     suspend fun deleteTimeBlock(@Path("id") id: String)
 
+    @DELETE("api/time-blocks")
+    suspend fun deleteAllTimeBlocks(@Query("date") date: String)
+
     // ── Vet Schedule ──────────────────────────────────────────────────────
     @GET("api/vet-schedule")
     suspend fun getVetSchedule(): VetScheduleDto

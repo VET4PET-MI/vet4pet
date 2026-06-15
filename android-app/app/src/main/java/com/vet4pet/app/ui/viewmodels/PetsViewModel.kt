@@ -67,6 +67,7 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
         vetName: String,
         type: String,
         findings: String,
+        prescription: String? = null,
         dateMs: Long,
         fileUri: Uri?,
         existingFileUrl: String?,
@@ -98,6 +99,7 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
                         vetName          = vetName,
                         type             = type,
                         findings         = findings,
+                        prescription     = prescription,
                         fileUrl          = uploadedUrl,
                         originalFileName = uploadedName
                     )
@@ -259,6 +261,7 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
         vetName: String,
         type: String,
         findings: String,
+        prescription: String? = null,
         dateMs: Long,
         fileUri: Uri?,
         onDone: (success: Boolean, error: String?) -> Unit
@@ -289,6 +292,7 @@ class PetsViewModel(application: Application) : AndroidViewModel(application) {
                         vetName          = vetName,
                         type             = type,
                         findings         = findings,
+                        prescription     = prescription,
                         fileUrl          = uploadedUrl,
                         originalFileName = uploadedName
                     )

@@ -61,7 +61,8 @@ class ProfileFragment : Fragment() {
         val isVet   = user.role == "vet"
 
         // Show role-specific fields
-        binding.layoutNationalId.isVisible = !isVet
+        binding.layoutEmail.isVisible      = !isVet
+        binding.layoutOwnerPhone.isVisible = !isVet
         binding.layoutClinic.isVisible     = isVet
         binding.layoutAddress.isVisible    = isVet
         binding.layoutPhone.isVisible      = isVet
@@ -97,6 +98,9 @@ class ProfileFragment : Fragment() {
             binding.cardSchedule.isVisible = true
             binding.rowSchedule.setOnClickListener {
                 findNavController().navigate(R.id.vetCalendarFragment)
+            }
+            binding.rowWorkingHours.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_vetScheduleFragment)
             }
         }
 
@@ -149,7 +153,8 @@ class ProfileFragment : Fragment() {
 
         // Editable fields
         binding.etName.setText(profile.name)
-        binding.etNationalId.setText(profile.nationalId ?: "")
+        binding.etEmail.setText(profile.email)
+        binding.etOwnerPhone.setText(profile.phone ?: "")
         binding.etClinic.setText(profile.clinicName ?: "")
         binding.etAddress.setText(profile.address ?: "")
         binding.etPhone.setText(profile.phone ?: "")
@@ -183,8 +188,9 @@ class ProfileFragment : Fragment() {
             )
         } else {
             UpdateProfileRequest(
-                name       = name,
-                nationalId = binding.etNationalId.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
+                name  = name,
+                email = binding.etEmail.text?.toString()?.trim()?.takeIf { it.isNotBlank() },
+                phone = binding.etOwnerPhone.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
             )
         }
 

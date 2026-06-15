@@ -246,11 +246,14 @@ export default function Schedule() {
   const [showModal, setModal]         = useState(false)
   const [presetTime, setPresetTime]   = useState(null)
   const [editAppt, setEditAppt]       = useState(null)
-  const [timeBlocks, setTimeBlocks]   = useState([])
-  const [blockingSlot, setBlockSlot]  = useState(null)
-  const [blockReason, setBlockReason] = useState('')
-  const [blockSaving, setBlockSaving] = useState(false)
-  const [blockError, setBlockError]   = useState(null)
+  const [timeBlocks, setTimeBlocks]         = useState([])
+  const [blockingSlot, setBlockSlot]        = useState(null)
+  const [blockReason, setBlockReason]       = useState('')
+  const [blockSaving, setBlockSaving]       = useState(false)
+  const [blockError, setBlockError]         = useState(null)
+  const [showDayBlockInput, setShowDayBlockInput] = useState(false)
+  const [dayBlockReason, setDayBlockReason] = useState('')
+  const [dayBlockSaving, setDayBlockSaving] = useState(false)
 
   const locale   = i18n.language?.startsWith('he') ? 'he-IL' : 'en-US'
   const weekDays = getWeekDays(weekStart)
@@ -262,6 +265,8 @@ export default function Schedule() {
     setBlockSlot(null)
     setBlockReason('')
     setBlockError(null)
+    setShowDayBlockInput(false)
+    setDayBlockReason('')
   }, [selectedDay])
 
   async function fetchAppts() {
@@ -315,6 +320,39 @@ export default function Schedule() {
     }
   }
 
+  async function handleBlockDay() {
+    setDayBlockSaving(true)
+    setBlockError(null)
+    try {
+      const { data } = await api.post('/api/time-blocks', {
+        date:      toDateStr(selectedDay),
+        startTime: TIME_SLOTS[0],
+        endTime:   '18:00',
+        reason:    dayBlockReason.trim() || '',
+      })
+      setTimeBlocks(prev => [data, ...prev])
+      setShowDayBlockInput(false)
+      setDayBlockReason('')
+    } catch (err) {
+      const msg = err.response
+        ? (err.response.data?.message ?? t('schedule.serverError', { status: err.response.status }))
+        : t('schedule.serverUnreachable')
+      setBlockError(msg)
+    } finally { setDayBlockSaving(false) }
+  }
+
+  async function handleUnblockDay() {
+    try {
+      await api.delete('/api/time-blocks', { params: { date: toDateStr(selectedDay) } })
+      setTimeBlocks([])
+    } catch (err) {
+      const msg = err.response
+        ? (err.response.data?.message ?? t('schedule.serverError', { status: err.response.status }))
+        : t('schedule.serverUnreachable')
+      setBlockError(msg)
+    }
+  }
+
   function prevWeek() { const d = new Date(weekStart); d.setDate(d.getDate() - 7); setWeekStart(d) }
   function nextWeek() { const d = new Date(weekStart); d.setDate(d.getDate() + 7); setWeekStart(d) }
   function goToday()  { const now = new Date(); setWeekStart(getWeekStart(now)); setSelectedDay(now) }
@@ -327,6 +365,7 @@ export default function Schedule() {
 
   const occupied = getOccupiedSlots(appointments)
   const activeAppts = appointments.filter(a => a.status !== 'cancelled')
+  const isDayBlocked = timeBlocks.some(b => b.startTime <= TIME_SLOTS[0] && b.endTime >= '18:00')
   const dateLabel = selectedDay.toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' })
   const weekLabel = `${weekDays[0].toLocaleDateString(locale, { month: 'short', day: 'numeric' })} – ${weekDays[6].toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })}`
 
@@ -388,13 +427,66 @@ export default function Schedule() {
                 <span className="px-3 py-1 bg-brand-soft text-brand-dark font-medium rounded-full border border-brand/20">
                   {t('schedule.appointments', { count: activeAppts.length })}
                 </span>
-                {timeBlocks.length > 0 && (
-                  <span className="flex items-center gap-1 px-3 py-1 bg-red-50 text-red-600 font-medium rounded-full border border-red-100">
-                    <Lock className="w-3 h-3" /> {t('schedule.blockedCount', { count: timeBlocks.length })}
-                  </span>
+                {isDayBlocked ? (
+                  <>
+                    <span className="flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 font-semibold rounded-full border border-red-200">
+                      <Lock className="w-3 h-3" /> {t('schedule.dayBlocked')}
+                    </span>
+                    <button
+                      onClick={handleUnblockDay}
+                      className="flex items-center gap-1 px-3 py-1.5 bg-white hover:bg-red-50 text-red-600 font-medium rounded-full border border-red-200 transition-colors"
+                    >
+                      <LockOpen className="w-3 h-3" /> {t('schedule.unblockDay')}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {timeBlocks.length > 0 && (
+                      <span className="flex items-center gap-1 px-3 py-1 bg-red-50 text-red-600 font-medium rounded-full border border-red-100">
+                        <Lock className="w-3 h-3" /> {t('schedule.blockedCount', { count: timeBlocks.length })}
+                      </span>
+                    )}
+                    <button
+                      onClick={() => { setShowDayBlockInput(true); setBlockSlot(null) }}
+                      className="flex items-center gap-1 px-3 py-1.5 bg-white hover:bg-red-50 text-red-500 font-medium rounded-full border border-red-200 transition-colors"
+                    >
+                      <Lock className="w-3 h-3" /> {t('schedule.blockDay')}
+                    </button>
+                  </>
                 )}
               </div>
             </div>
+
+            {showDayBlockInput && (
+              <div className="flex items-center gap-2 px-4 py-3 mb-3 bg-amber-50 border border-amber-200 rounded-xl">
+                <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+                <input
+                  autoFocus
+                  value={dayBlockReason}
+                  onChange={e => setDayBlockReason(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') handleBlockDay()
+                    if (e.key === 'Escape') { setShowDayBlockInput(false); setDayBlockReason('') }
+                  }}
+                  placeholder={t('schedule.blockDayReasonPh')}
+                  className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-amber-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 placeholder:text-slate-400"
+                />
+                <button
+                  onClick={handleBlockDay}
+                  disabled={dayBlockSaving}
+                  className="shrink-0 flex items-center gap-1 px-3 py-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-semibold rounded-lg transition-colors"
+                >
+                  {dayBlockSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Lock className="w-3.5 h-3.5" />}
+                  {t('schedule.blockDayConfirm')}
+                </button>
+                <button
+                  onClick={() => { setShowDayBlockInput(false); setDayBlockReason('') }}
+                  className="shrink-0 px-3 py-1.5 text-slate-500 hover:bg-slate-200 text-xs font-medium rounded-lg transition-colors"
+                >
+                  {t('schedule.cancel')}
+                </button>
+              </div>
+            )}
 
             {blockError && (
               <div className="flex items-center gap-3 px-4 py-3 mb-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
@@ -422,7 +514,7 @@ export default function Schedule() {
 
                 {TIME_SLOTS.map(slot => {
                   const appt         = appointments.find(a => a.time === slot && a.status !== 'cancelled')
-                  const block        = timeBlocks.find(b => b.startTime === slot)
+                  const block        = timeBlocks.find(b => slot >= b.startTime && slot < b.endTime)
                   const isBlocking   = blockingSlot === slot
                   if (occupied.has(slot)) return null
 

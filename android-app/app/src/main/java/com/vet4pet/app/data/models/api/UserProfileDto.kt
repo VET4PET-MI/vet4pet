@@ -18,10 +18,11 @@ data class UserProfileDto(
 
 data class UpdateProfileRequest(
     val name: String,
+    val email: String? = null,
+    val phone: String? = null,
     val nationalId: String? = null,
     val clinicName: String? = null,
     val address: String? = null,
-    val phone: String? = null,
     val lat: Double? = null,
     val lng: Double? = null,
     val isOnCall: Boolean? = null

@@ -49,4 +49,17 @@ async function deleteBlock(req, res) {
   }
 }
 
-module.exports = { getBlocks, createBlock, deleteBlock };
+async function deleteAllBlocks(req, res) {
+  try {
+    const { date } = req.query;
+    if (!date) return res.status(400).json({ message: 'date is required.' });
+    const result = await TimeBlock.deleteMany({ vetId: req.user.id, date });
+    console.log('[TimeBlock] deletedAll for date:', date, 'count:', result.deletedCount);
+    res.status(204).send();
+  } catch (err) {
+    console.error('[TimeBlock] deleteAllBlocks error:', err.message);
+    res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { getBlocks, createBlock, deleteBlock, deleteAllBlocks };

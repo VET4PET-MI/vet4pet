@@ -148,10 +148,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
+                    app:cardBackgroundColor="@color/emerald_50"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="@color/slate_200"
-                    app:strokeWidth="1dp">
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                            android:textColor="?attr/colorPrimary"
+                            android:textColor="@color/emerald_700"
                             android:textStyle="bold" />
 
                         <TextView
@@ -193,10 +193,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="4dp"
+                    app:cardBackgroundColor="@color/amber_50"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="@color/slate_200"
-                    app:strokeWidth="1dp">
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -210,7 +210,7 @@
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                            android:textColor="?attr/colorTertiary"
+                            android:textColor="@color/amber_600"
                             android:textStyle="bold" />
 
                         <TextView
@@ -230,10 +230,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
+                    app:cardBackgroundColor="@color/brand_tint"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="@color/slate_200"
-                    app:strokeWidth="1dp">
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -247,7 +247,7 @@
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:textAppearance="?attr/textAppearanceHeadlineMedium"
-                            android:textColor="?attr/colorSecondary"
+                            android:textColor="@color/brand_dark"
                             android:textStyle="bold" />
 
                         <TextView
@@ -305,7 +305,7 @@
                         android:id="@+id/et_search_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
+                        android:inputType="phone"
                         android:maxLength="9"
                         android:singleLine="true"
                         android:imeOptions="actionSearch" />

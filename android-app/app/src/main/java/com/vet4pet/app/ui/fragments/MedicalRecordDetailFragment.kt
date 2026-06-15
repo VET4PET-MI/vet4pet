@@ -60,6 +60,7 @@ class MedicalRecordDetailFragment : Fragment() {
         bindDate(record.date)
         binding.tvDetailVet.text      = record.vetName
         binding.tvDetailFindings.text = record.findings
+        bindPrescription(record.prescription)
         bindAttachment(record.fileUrl)
     }
 
@@ -82,6 +83,13 @@ class MedicalRecordDetailFragment : Fragment() {
             .toLocalDate()
         binding.tvDetailDate.text =
             date.format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault()))
+    }
+
+    private fun bindPrescription(prescription: String?) {
+        val hasPrescription = !prescription.isNullOrBlank()
+        binding.tvPrescriptionHeader.isVisible = hasPrescription
+        binding.cardPrescription.isVisible     = hasPrescription
+        if (hasPrescription) binding.tvDetailPrescription.text = prescription
     }
 
     private fun bindAttachment(fileUrl: String?) {

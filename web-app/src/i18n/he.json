@@ -347,6 +347,11 @@
     "block": "חסימה",
     "cancel": "ביטול",
     "available": "+ פנוי · לחיצה לחסימה",
+    "blockDay": "חסום יום שלם",
+    "unblockDay": "בטל חסימת יום",
+    "dayBlocked": "יום חסום",
+    "blockDayReasonPh": "סיבה: חופשה, כנס, מחלה… (אופציונלי)",
+    "blockDayConfirm": "חסום יום",
     "serverError": "שגיאת שרת {{status}} — הפעילי מחדש את הבקאנד.",
     "serverUnreachable": "אין קשר עם השרת — ודא שהבקאנד רץ על פורט 5000.",
     "types": {

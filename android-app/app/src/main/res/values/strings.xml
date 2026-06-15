@@ -135,8 +135,18 @@
     <!-- Medical records -->
     <string name="records_empty">No records yet.</string>
     <string name="records_docs_empty">No documents yet.</string>
+    <string name="records_prescriptions_empty">No prescriptions yet.</string>
     <string name="tab_medical">Medical History</string>
+    <string name="tab_prescriptions">Prescriptions</string>
     <string name="tab_docs">Documents</string>
+    <!-- Working hours / availability -->
+    <string name="profile_working_hours">Working Hours</string>
+    <string name="calendar_working_hours_btn">Working Hours</string>
+    <string name="schedule_day_off">This is not a working day</string>
+    <!-- Prescriptions -->
+    <string name="hint_prescription">Medication, dosage &amp; instructions</string>
+    <string name="label_prescription">Prescription</string>
+    <string name="prescription_section_title">Prescription Details</string>
     <string name="label_pdf_document">PDF Document</string>
     <string name="action_open_file">Open File</string>
     <string name="action_attach_file">Attach File (PDF / Image)</string>
@@ -243,6 +253,12 @@
     <string name="schedule_blocks_on_date">Blocks on selected date:</string>
     <string name="schedule_no_blocks">No blocks for this date</string>
     <string name="schedule_block_added">Time blocked</string>
+    <string name="schedule_block_day">Block Full Day</string>
+    <string name="schedule_unblock_day">Unblock Day</string>
+    <string name="schedule_block_day_title">Block the full day?</string>
+    <string name="schedule_unblock_day_title">Unblock the entire day?</string>
+    <string name="schedule_unblock_day_message">All time blocks for this day will be removed.</string>
+    <string name="schedule_day_blocked">Day Blocked</string>
 
     <!-- Notifications screen -->
     <string name="notif_empty">No notifications yet</string>
@@ -255,6 +271,7 @@
     <string name="profile_hint_clinic">Clinic name</string>
     <string name="profile_hint_address">Clinic address</string>
     <string name="profile_hint_phone">Phone number</string>
+    <string name="profile_hint_email">Email address</string>
     <string name="profile_on_call_label">Available for emergency (On Call)</string>
     <string name="profile_set_location">Set Current Location as Clinic</string>
     <string name="profile_save">Save Changes</string>

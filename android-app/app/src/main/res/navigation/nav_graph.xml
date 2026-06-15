@@ -101,7 +101,11 @@
         android:id="@+id/profileFragment"
         android:name="com.vet4pet.app.ui.fragments.ProfileFragment"
         android:label="@string/nav_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_vetScheduleFragment"
+            app:destination="@id/vetScheduleFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/vetScheduleFragment"
@@ -113,7 +117,11 @@
         android:id="@+id/vetCalendarFragment"
         android:name="com.vet4pet.app.ui.fragments.VetCalendarFragment"
         android:label="@string/schedule_title"
-        tools:layout="@layout/fragment_vet_calendar" />
+        tools:layout="@layout/fragment_vet_calendar">
+        <action
+            android:id="@+id/action_vetCalendarFragment_to_vetScheduleFragment"
+            app:destination="@id/vetScheduleFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/notificationsFragment"

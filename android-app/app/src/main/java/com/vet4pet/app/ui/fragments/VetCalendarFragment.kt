@@ -28,6 +28,7 @@ import com.vet4pet.app.data.models.api.TimeBlockDto
 import com.vet4pet.app.data.models.api.UpdateAppointmentRequest
 import com.vet4pet.app.data.local.SessionManager
 import com.vet4pet.app.databinding.FragmentVetCalendarBinding
+import androidx.navigation.fragment.findNavController
 import com.vet4pet.app.databinding.ItemScheduleSlotBinding
 import com.vet4pet.app.ui.adapters.toTypeStringRes
 import com.vet4pet.app.ui.viewmodels.UiState
@@ -49,6 +50,11 @@ class VetCalendarFragment : Fragment() {
     private var weekStart    = LocalDate.now().with(DayOfWeek.MONDAY)
     private var selectedDate = LocalDate.now()
     private var vetName      = ""
+
+    // Dynamic working hours (updated when schedule loads)
+    private var workStart    = "08:00"
+    private var workEnd      = "18:00"
+    private var workingDaysSet: Set<Int> = setOf(1, 2, 3, 4, 5) // Mon–Fri by default
 
     companion object {
         val TIME_SLOTS = (0 until 20).map { i ->
@@ -85,7 +91,8 @@ class VetCalendarFragment : Fragment() {
         binding.btnBack.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.btnPrevWeek.setOnClickListener { shiftWeek(-7) }
         binding.btnNextWeek.setOnClickListener { shiftWeek(7) }
-        binding.btnBookNew.setOnClickListener  { openBookDialog(null) }
+        binding.btnBookNew.setOnClickListener      { openBookDialog(null) }
+        binding.btnWorkingHours.setOnClickListener { findNavController().navigate(R.id.action_vetCalendarFragment_to_vetScheduleFragment) }
 
         val adapter = ScheduleAdapter(
             onBookSlot  = { slot -> openBookDialog(slot) },
@@ -103,9 +110,34 @@ class VetCalendarFragment : Fragment() {
             val state = viewModel.appointments.value
             if (state is UiState.Success) rebuildSlots(state.data, adapter)
         }
+        viewModel.schedule.observe(viewLifecycleOwner) { sched ->
+            if (sched != null) {
+                workStart = sched.workStart
+                workEnd   = sched.workEnd
+                workingDaysSet = sched.workingDays.toSet()
+                renderDayChips()
+                val state = viewModel.appointments.value
+                if (state is UiState.Success) rebuildSlots(state.data, adapter)
+            }
+        }
 
         renderDayChips()
+        viewModel.loadSchedule()
         loadSelectedDay()
+    }
+
+    private fun computeTimeSlots(start: String, end: String): List<String> {
+        val (sh, sm) = start.split(":").map { it.toInt() }
+        val (eh, em) = end.split(":").map { it.toInt() }
+        val startMins = sh * 60 + sm
+        val endMins   = eh * 60 + em
+        return (startMins until endMins step 30).map { m -> "%02d:%02d".format(m / 60, m % 60) }
+    }
+
+    private fun isDayWorking(date: LocalDate): Boolean {
+        // ISO DayOfWeek: Mon=1..Sun=7; workingDays: 0=Sun,1=Mon..6=Sat
+        val dayIdx = date.dayOfWeek.value % 7
+        return workingDaysSet.contains(dayIdx)
     }
 
     // ── Week / day navigation ──────────────────────────────────────────
@@ -135,9 +167,11 @@ class VetCalendarFragment : Fragment() {
                 append("\n")
                 append(day.dayOfMonth)
             }
-            val isSelected = day == selectedDate
-            val isToday    = day == LocalDate.now()
+            val isSelected  = day == selectedDate
+            val isToday     = day == LocalDate.now()
+            val isWorkDay   = isDayWorking(day)
             chip.isSelected = isSelected
+            chip.alpha      = if (isWorkDay) 1f else 0.4f
             chip.setBackgroundResource(
                 when {
                     isSelected -> R.drawable.bg_day_chip_selected
@@ -159,26 +193,34 @@ class VetCalendarFragment : Fragment() {
     // ── Build slot list ────────────────────────────────────────────────
 
     private fun rebuildSlots(appts: List<AppointmentDto>, adapter: ScheduleAdapter) {
-        val blocks       = viewModel.blocks.value ?: emptyList()
-        val activeAppts  = appts.filter { it.status != "cancelled" }
+        val blocks      = viewModel.blocks.value ?: emptyList()
+        val activeAppts = appts.filter { it.status != "cancelled" }
+        val slots       = computeTimeSlots(workStart, workEnd)
+        val isWorkingDay = isDayWorking(selectedDate)
+
+        // Show/hide day-off banner
+        binding.tvDayOff.isVisible   = !isWorkingDay
+        binding.rvSchedule.isVisible = isWorkingDay
+
+        if (!isWorkingDay) { adapter.submitList(emptyList()); return }
 
         // Calculate slots occupied by multi-duration appointments (skip rendering)
         val occupied = mutableSetOf<String>()
         activeAppts.forEach { appt ->
-            val startIdx = TIME_SLOTS.indexOf(appt.time)
-            if (startIdx < 0) return@forEach   // time not on 30-min boundary — skip occupation
-            val slots = Math.ceil((appt.duration ?: 30) / 30.0).toInt()
-            for (k in 1 until slots) {
+            val startIdx = slots.indexOf(appt.time)
+            if (startIdx < 0) return@forEach
+            val slotsNeeded = Math.ceil((appt.duration ?: 30) / 30.0).toInt()
+            for (k in 1 until slotsNeeded) {
                 val idx = startIdx + k
-                if (idx in TIME_SLOTS.indices) occupied.add(TIME_SLOTS[idx])
+                if (idx in slots.indices) occupied.add(slots[idx])
             }
         }
 
-        val items = TIME_SLOTS.filterNot { occupied.contains(it) }.map { slot ->
+        val items = slots.filterNot { occupied.contains(it) }.map { slot ->
             ScheduleSlot(
                 time  = slot,
                 appt  = activeAppts.firstOrNull { it.time == slot },
-                block = blocks.firstOrNull { it.startTime == slot }
+                block = blocks.firstOrNull { slot >= it.startTime && slot < it.endTime }
             )
         }
         adapter.submitList(items)
