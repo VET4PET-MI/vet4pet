@@ -21,7 +21,7 @@ export default function AppLayout({ title, subtitle, actions, children }) {
   const isOwner = user?.role === 'owner'
 
   const VET_NAV = [
-    { icon: LayoutDashboard, label: t('nav.dashboard'),     path: '/' },
+    { icon: LayoutDashboard, label: t('nav.home'),          path: '/' },
     { icon: Calendar,        label: t('nav.schedule'),      path: '/schedule' },
     { icon: MessageSquare,   label: t('nav.messages'),      path: '/messages' },
     { icon: Video,           label: t('nav.consultations'), path: '/consultations' },
