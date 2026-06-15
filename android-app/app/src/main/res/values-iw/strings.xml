@@ -27,6 +27,9 @@
     <string name="section_family">משפחה ובעלים משותפים</string>
     <string name="label_co_owner">בעלים משותף</string>
     <string name="label_emergency_contact">איש קשר לחירום</string>
+    <string name="contact_nadav">נדב</string>
+    <string name="contact_sandak_family">משפחת סנדק</string>
+    <string name="contact_kapel_family">משפחת קפל</string>
     <string name="section_settings">הגדרות</string>
     <string name="settings_app">הגדרות אפליקציה</string>
     <string name="settings_notifications">העדפות התראות</string>
@@ -74,6 +77,13 @@
     <string name="appointments_empty">אין תורים עדיין. לחץ + לקביעת תור.</string>
     <string name="appts_upcoming">עתידיים</string>
     <string name="appts_past">עבר ומבוטל</string>
+    <string name="appt_details">פרטי תור</string>
+    <string name="action_close">סגור</string>
+    <string name="reschedule_title">קביעה מחדש</string>
+    <string name="reschedule_pick_date">בחר תאריך חדש</string>
+    <string name="reschedule_confirm">אשר קביעה מחדש</string>
+    <string name="reschedule_action">קבע מחדש</string>
+    <string name="reschedule_success">התור נקבע מחדש!</string>
     <string name="cancel_appointment_title">ביטול תור</string>
     <string name="cancel_appointment_message">האם אתה בטוח שברצונך לבטל את התור?</string>
     <string name="book_title">קביעת תור</string>
@@ -137,8 +147,18 @@
     <!-- Medical records -->
     <string name="records_empty">אין רשומות עדיין.</string>
     <string name="records_docs_empty">אין מסמכים עדיין.</string>
+    <string name="records_prescriptions_empty">אין מרשמים עדיין.</string>
     <string name="tab_medical">היסטוריה רפואית</string>
+    <string name="tab_prescriptions">מרשמים</string>
     <string name="tab_docs">מסמכים</string>
+    <!-- Working hours -->
+    <string name="profile_working_hours">שעות פעילות</string>
+    <string name="calendar_working_hours_btn">שעות פעילות</string>
+    <string name="schedule_day_off">יום זה אינו יום עבודה</string>
+    <!-- Prescriptions -->
+    <string name="hint_prescription">תרופה, מינון והוראות</string>
+    <string name="label_prescription">מרשם</string>
+    <string name="prescription_section_title">פרטי מרשם</string>
     <string name="label_pdf_document">מסמך PDF</string>
     <string name="action_open_file">פתח קובץ</string>
     <string name="action_attach_file">צרף קובץ (PDF / תמונה)</string>
@@ -249,6 +269,12 @@
     <string name="schedule_blocks_on_date">חסימות בתאריך שנבחר:</string>
     <string name="schedule_no_blocks">אין חסימות לתאריך זה</string>
     <string name="schedule_block_added">הזמן נחסם</string>
+    <string name="schedule_block_day">חסום יום שלם</string>
+    <string name="schedule_unblock_day">בטל חסימת יום</string>
+    <string name="schedule_block_day_title">לחסום את היום כולו?</string>
+    <string name="schedule_unblock_day_title">לבטל חסימת היום?</string>
+    <string name="schedule_unblock_day_message">כל חסימות הזמן ביום זה יוסרו.</string>
+    <string name="schedule_day_blocked">היום חסום</string>
 
     <!-- Notifications -->
     <string name="notif_empty">אין התראות עדיין</string>
@@ -257,6 +283,7 @@
     <!-- Profile Edit -->
     <string name="profile_edit_title">עריכת פרופיל</string>
     <string name="profile_hint_national_id">תעודת זהות (9 ספרות)</string>
+    <string name="profile_hint_email">כתובת אימייל</string>
     <string name="profile_hint_name">שם מלא</string>
     <string name="profile_hint_clinic">שם המרפאה</string>
     <string name="profile_hint_address">כתובת המרפאה</string>
