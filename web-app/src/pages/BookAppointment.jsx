@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Loader2, Calendar, Clock, Check, Stethoscope, MapPin } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Loader2, Calendar, Clock, Check, Stethoscope, MapPin, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import api from '../api'
 import AppLayout from '../components/AppLayout'
@@ -70,6 +70,7 @@ export default function BookAppointment() {
   const [step, setStep]         = useState(1)
   const [pets, setPets]         = useState([])
   const [vets, setVets]         = useState([])
+  const [vetSearch, setVetSearch] = useState('')
   const [selectedPet, setPet]   = useState(null)
   const [selectedVet, setVet]   = useState(null)
   const [date, setDate]         = useState(todayStr())
@@ -120,6 +121,11 @@ export default function BookAppointment() {
       setError(err.response?.data?.message ?? t('bookAppointment.bookFail'))
     } finally { setLoading(false) }
   }
+
+  const vetQuery = vetSearch.trim().toLowerCase()
+  const filteredVets = vetQuery
+    ? vets.filter(v => [v.name, v.clinicName, v.address].some(f => f?.toLowerCase().includes(vetQuery)))
+    : vets
 
   if (booked) {
     return (
@@ -206,8 +212,22 @@ export default function BookAppointment() {
                 <p className="text-sm text-slate-400 mt-1">{t('bookAppointment.noVetsHint')}</p>
               </div>
             ) : (
-              <div className="space-y-3">
-                {vets.map(vet => {
+              <>
+                <div className="relative">
+                  <Search className="w-4 h-4 text-slate-400 absolute top-1/2 -translate-y-1/2 start-3.5 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={vetSearch}
+                    onChange={e => setVetSearch(e.target.value)}
+                    placeholder={t('bookAppointment.vetSearchPh')}
+                    className="w-full ps-10 pe-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand transition"
+                  />
+                </div>
+                {filteredVets.length === 0 ? (
+                  <p className="text-center text-sm text-slate-400 py-8">{t('bookAppointment.noVetMatches')}</p>
+                ) : (
+                <div className="space-y-3">
+                {filteredVets.map(vet => {
                   const isSelected = selectedVet?._id === vet._id
                   return (
                     <button
@@ -238,7 +258,9 @@ export default function BookAppointment() {
                     </button>
                   )
                 })}
-              </div>
+                </div>
+                )}
+              </>
             )}
 
             <button

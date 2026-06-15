@@ -534,6 +534,8 @@
     "step3": "Choose Time",
     "step4": "Confirm",
     "whichVet": "Which vet would you like?",
+    "vetSearchPh": "Search by vet name, clinic or address",
+    "noVetMatches": "No vets match your search.",
     "noVets": "No vets available at the moment.",
     "noVetsHint": "Please contact the administrator.",
     "summaryVet": "Vet",
