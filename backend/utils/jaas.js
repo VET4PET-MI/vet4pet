@@ -17,9 +17,12 @@ const TOKEN_TTL_SECONDS = 3 * 60 * 60; // 3 hours
 function config() {
   const { JAAS_APP_ID, JAAS_KID, JAAS_PRIVATE_KEY } = process.env;
   if (!JAAS_APP_ID || !JAAS_KID || !JAAS_PRIVATE_KEY) return null;
+  // JaaS expects the JWT header `kid` as "<AppID>/<KeyID>". Accept either the full value or
+  // just the KeyID (prefix the AppID ourselves) so it's hard to misconfigure.
+  const kid = JAAS_KID.includes('/') ? JAAS_KID : `${JAAS_APP_ID}/${JAAS_KID}`;
   return {
     appId: JAAS_APP_ID,
-    kid: JAAS_KID,
+    kid,
     // Private keys are stored in env with literal "\n"; restore real newlines (as in fcm.js).
     privateKey: JAAS_PRIVATE_KEY.replace(/\\n/g, '\n'),
   };
