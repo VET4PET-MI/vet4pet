@@ -2,6 +2,15 @@ const Consultation   = require('../models/Consultation');
 const User           = require('../models/User');
 const MedicalRecord  = require('../models/MedicalRecord');
 const notifications  = require('./notificationController');
+const jaas           = require('../utils/jaas');
+
+// Serialize a consultation with a join URL tailored to the requesting user: vets join the
+// JaaS room as moderator, owners as guests. Falls back to the stored meet.jit.si URL when
+// JaaS is not configured.
+function serialize(consultation, user) {
+  const obj = consultation.toObject ? consultation.toObject() : consultation;
+  return { ...obj, joinUrl: jaas.joinUrlFor(consultation, user) };
+}
 
 async function getConsultations(req, res) {
   try {
@@ -10,7 +19,7 @@ async function getConsultations(req, res) {
     // Owners only see their own consultations
     if (req.user.role === 'owner') filter.ownerId = req.user.id;
     const list = await Consultation.find(filter).sort({ createdAt: -1 });
-    res.json(list);
+    res.json(list.map(c => serialize(c, req.user)));
   } catch (err) {
     console.error('[Consultation] getConsultations error:', err.message);
     res.status(500).json({ message: err.message });
@@ -20,7 +29,7 @@ async function getConsultations(req, res) {
 async function getPending(req, res) {
   try {
     const list = await Consultation.find({ status: 'pending' }).sort({ createdAt: 1 });
-    res.json(list);
+    res.json(list.map(c => serialize(c, req.user)));
   } catch (err) {
     console.error('[Consultation] getPending error:', err.message);
     res.status(500).json({ message: err.message });
@@ -61,7 +70,7 @@ async function createConsultation(req, res) {
       console.error('[Consultation] notify vets failed:', notifyErr.message);
     }
 
-    res.status(201).json(consultation);
+    res.status(201).json(serialize(consultation, req.user));
   } catch (err) {
     console.error('[Consultation] createConsultation error:', err.message);
     res.status(500).json({ message: err.message });
@@ -118,7 +127,7 @@ async function updateStatus(req, res) {
       }
     }
 
-    res.json(consultation);
+    res.json(serialize(consultation, req.user));
   } catch (err) {
     console.error('[Consultation] updateStatus error:', err.message);
     res.status(500).json({ message: err.message });
