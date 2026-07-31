@@ -138,6 +138,7 @@ class AddMedicalRecordFragment : Fragment() {
             dateMs       = selectedDateMs,
             fileUri      = selectedFileUri
         ) { success, error ->
+            if (_binding == null) return@addRecord
             binding.btnSave.isEnabled     = true
             binding.progressSave.isVisible = false
             if (success) {
@@ -175,6 +176,7 @@ class AddMedicalRecordFragment : Fragment() {
             fileUri         = selectedFileUri,
             existingFileUrl = record.fileUrl
         ) { success, error ->
+            if (_binding == null) return@updateRecord
             binding.btnSave.isEnabled     = true
             binding.progressSave.isVisible = false
             if (success) {

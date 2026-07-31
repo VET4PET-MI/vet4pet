@@ -39,6 +39,11 @@ class ProfileFragment : Fragment() {
     private var pendingLat: Double? = null
     private var pendingLng: Double? = null
 
+    // Location capture handles, cleaned up in onDestroyView to avoid a leak / post-destroy NPE
+    private var locationManager: LocationManager? = null
+    private var locationListener: LocationListener? = null
+    private var locationTimeout: Runnable? = null
+
     private val requestLocation = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -215,9 +220,11 @@ class ProfileFragment : Fragment() {
         binding.btnSetLocation.text      = getString(R.string.emergency_locating)
 
         val lm = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager = lm
         val listener = object : LocationListener {
             override fun onLocationChanged(loc: android.location.Location) {
                 lm.removeUpdates(this)
+                if (_binding == null) return
                 pendingLat = loc.latitude
                 pendingLng = loc.longitude
                 binding.btnSetLocation.isEnabled = true
@@ -230,6 +237,7 @@ class ProfileFragment : Fragment() {
             @Deprecated("Deprecated in API 29")
             override fun onStatusChanged(p: String?, s: Int, e: Bundle?) {}
         }
+        locationListener = listener
 
         try {
             val provider = when {
@@ -249,13 +257,16 @@ class ProfileFragment : Fragment() {
                 return
             }
             lm.requestLocationUpdates(provider, 0L, 0f, listener, Looper.getMainLooper())
-            binding.root.postDelayed({
+            val timeout = Runnable {
                 lm.removeUpdates(listener)
+                if (_binding == null) return@Runnable
                 if (pendingLat == null) {
                     resetLocationButton()
                     showSnack(getString(R.string.emergency_location_timeout))
                 }
-            }, 10_000)
+            }
+            locationTimeout = timeout
+            binding.root.postDelayed(timeout, 10_000)
         } catch (e: SecurityException) {
             resetLocationButton()
             showSnack(getString(R.string.emergency_location_denied))
@@ -271,6 +282,11 @@ class ProfileFragment : Fragment() {
         Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT).show()
 
     override fun onDestroyView() {
+        locationListener?.let { locationManager?.removeUpdates(it) }
+        locationTimeout?.let { _binding?.root?.removeCallbacks(it) }
+        locationManager  = null
+        locationListener = null
+        locationTimeout  = null
         super.onDestroyView()
         _binding = null
     }

@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -21,8 +22,6 @@ import com.vet4pet.app.network.ApiClient
 import com.vet4pet.app.ui.adapters.ConversationAdapter
 import com.vet4pet.app.ui.viewmodels.MessagesViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MessagesFragment : Fragment() {
@@ -88,7 +87,7 @@ class MessagesFragment : Fragment() {
             .create()
         loadingDialog.show()
 
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val vets = ApiClient.get(requireContext()).getVets()
                 loadingDialog.dismiss()

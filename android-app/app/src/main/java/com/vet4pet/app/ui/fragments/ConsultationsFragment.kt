@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -22,8 +23,6 @@ import com.vet4pet.app.network.ApiClient
 import com.vet4pet.app.ui.adapters.ConsultationAdapter
 import com.vet4pet.app.ui.viewmodels.ConsultationsViewModel
 import com.vet4pet.app.ui.viewmodels.UiState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ConsultationsFragment : Fragment() {
@@ -34,6 +33,9 @@ class ConsultationsFragment : Fragment() {
 
     // Tracks the active consultation URL for the owner "vet ready" banner
     private var activeJitsiUrl: String? = null
+
+    // Id of the consultation the vet just accepted; opens the call once it turns active
+    private var pendingAcceptId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentConsultationsBinding.inflate(inflater, container, false)
@@ -59,14 +61,8 @@ class ConsultationsFragment : Fragment() {
             isOwner  = isOwner,
             onJoin   = { openJitsi(it.jitsiUrl) },
             onAccept = { c ->
+                pendingAcceptId = c.id
                 viewModel.accept(c.id)
-                // Open Jitsi immediately after accepting
-                viewModel.actionState.observe(viewLifecycleOwner) { state ->
-                    if (state is UiState.Success && state.data.id == c.id && state.data.status == "active") {
-                        openJitsi(state.data.jitsiUrl)
-                        viewModel.resetActionState()
-                    }
-                }
             },
             onDecline = { viewModel.decline(it.id) },
             onEnd     = { c ->
@@ -126,17 +122,21 @@ class ConsultationsFragment : Fragment() {
                 binding.bannerIncoming.isVisible = true
 
                 binding.btnBannerAccept.setOnClickListener {
+                    pendingAcceptId = first.id
                     viewModel.accept(first.id)
-                    viewModel.actionState.observe(viewLifecycleOwner) { state ->
-                        if (state is UiState.Success && state.data.id == first.id) {
-                            openJitsi(state.data.jitsiUrl)
-                            viewModel.resetActionState()
-                        }
-                    }
                 }
                 binding.btnBannerDecline.setOnClickListener { viewModel.decline(first.id) }
             } else {
                 binding.bannerIncoming.isVisible = false
+            }
+        }
+
+        // Open the call once the accepted consultation turns active (registered once)
+        viewModel.actionState.observe(viewLifecycleOwner) { state ->
+            if (state is UiState.Success && state.data.id == pendingAcceptId && state.data.status == "active") {
+                pendingAcceptId = null
+                openJitsi(state.data.jitsiUrl)
+                viewModel.resetActionState()
             }
         }
 
@@ -183,7 +183,7 @@ class ConsultationsFragment : Fragment() {
             .create()
         loadingDialog.show()
 
-        CoroutineScope(Dispatchers.Main).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val pets = ApiClient.get(requireContext()).getPets()
                 loadingDialog.dismiss()

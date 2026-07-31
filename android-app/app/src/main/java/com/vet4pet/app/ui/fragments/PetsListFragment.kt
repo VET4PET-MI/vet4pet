@@ -31,6 +31,9 @@ class PetsListFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: PetsViewModel by viewModels()
 
+    // Vet-only: results stay hidden until an owner-ID search is performed (medical privacy)
+    private var vetHasSearched = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPetsListBinding.inflate(inflater, container, false)
         return binding.root
@@ -80,6 +83,21 @@ class PetsListFragment : Fragment() {
                 performVetSearch()
                 true
             }
+
+            // Privacy: clearing the owner ID resets the list back to empty
+            binding.etNationalId.addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    if (s?.toString()?.trim().isNullOrEmpty()) {
+                        vetHasSearched = false
+                        adapter.submitList(emptyList())
+                        binding.progressPets.isVisible = false
+                        binding.tvEmptyPets.isVisible = true
+                        binding.tvEmptyPets.text = getString(R.string.vet_search_prompt)
+                    }
+                }
+            })
         } else {
             binding.fabAddPet.setOnClickListener { showAddPetDialog() }
 
@@ -106,6 +124,14 @@ class PetsListFragment : Fragment() {
         }
 
         viewModel.petsState.observe(viewLifecycleOwner) { state ->
+            // Vet privacy: show nothing until a search has been performed this session
+            if (isVet && !vetHasSearched) {
+                binding.progressPets.isVisible = false
+                adapter.submitList(emptyList())
+                binding.tvEmptyPets.isVisible = true
+                binding.tvEmptyPets.text = getString(R.string.vet_search_prompt)
+                return@observe
+            }
             binding.progressPets.isVisible = state is UiState.Loading
             if (state is UiState.Success) {
                 val list = state.data as List<Pet>
@@ -144,6 +170,7 @@ class PetsListFragment : Fragment() {
             return
         }
         binding.tilNationalId.error = null
+        vetHasSearched = true
         val petName = binding.etPetNameVet.text?.toString()?.trim()
         viewModel.searchPets(nationalId, petName)
     }

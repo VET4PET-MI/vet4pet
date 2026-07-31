@@ -15,6 +15,7 @@ class VaccinationReminderWorker(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        MyFirebaseMessagingService.ensureChannel(context)
         val cache = PetHealthCache(context)
         val now   = System.currentTimeMillis()
         val oneYearMs = 365L * 24 * 3600 * 1000

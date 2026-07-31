@@ -1,6 +1,7 @@
 package com.vet4pet.app.network
 
 import android.content.Context
+import com.vet4pet.app.BuildConfig
 import com.vet4pet.app.data.local.SessionManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -21,7 +22,8 @@ object ApiClient {
 
     private fun build(context: Context): ApiService {
         val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+                    else HttpLoggingInterceptor.Level.NONE
         }
         val client = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(SessionManager(context)))

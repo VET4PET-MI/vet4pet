@@ -32,7 +32,7 @@ class MedicalHistoryFragment : Fragment() {
     private var petId = ""
 
     companion object {
-        private val MEDICAL_TYPES       = "VISIT_SUMMARY,VACCINATION,LAB_RESULT,X_RAY,BLOOD_TEST,CONSULTATION"
+        private val MEDICAL_TYPES       = "VISIT_SUMMARY,VACCINATION,LAB_RESULT,XRAY,BLOOD_TEST,CONSULTATION"
         private val PRESCRIPTIONS_TYPES = "PRESCRIPTION"
         private val DOCS_TYPES          = "OTHER"
     }

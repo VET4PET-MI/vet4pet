@@ -1,5 +1,6 @@
 package com.vet4pet.app.service
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -43,6 +44,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String, body: String) {
+        ensureChannel(this)
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             putExtra(MainActivity.EXTRA_OPEN_NOTIFICATIONS, true)
@@ -68,5 +70,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     companion object {
         const val CHANNEL_ID = "vet4pet_main"
         private const val TAG = "FCM"
+
+        /** Creates the notification channel if it doesn't exist yet. Safe to call repeatedly. */
+        fun ensureChannel(context: Context) {
+            val manager = context.getSystemService(NotificationManager::class.java)
+            if (manager.getNotificationChannel(CHANNEL_ID) == null) {
+                val channel = NotificationChannel(
+                    CHANNEL_ID,
+                    "התראות VET4PET",
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply { description = "תורים, חיסונים והתראות כלליות" }
+                manager.createNotificationChannel(channel)
+            }
+        }
     }
 }
