@@ -79,7 +79,8 @@ class VideoCallFragment : Fragment() {
     }
 
     private fun loadCall() {
-        binding.webView.loadUrl(callUrl)
+        // Skip Jitsi's "open in app" interstitial — the call runs inside this WebView
+        binding.webView.loadUrl("$callUrl#config.disableDeepLinking=true")
     }
 
     override fun onDestroyView() {

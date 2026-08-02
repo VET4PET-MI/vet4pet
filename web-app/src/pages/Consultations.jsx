@@ -36,7 +36,7 @@ function VetJoinModal({ consultation, onClose, onJoined, onDeclined }) {
     setJoining(true)
     try {
       await api.patch(`/api/consultations/${consultation._id}/status`, { status: 'active' })
-      window.open(jitsiUrl(consultation._id), '_blank', 'noopener,noreferrer')
+      window.open(consultation.joinUrl || jitsiUrl(consultation._id), '_blank', 'noopener,noreferrer')
       onJoined()
     } catch { setJoining(false) }
   }
